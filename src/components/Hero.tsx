@@ -25,17 +25,13 @@ export default function Hero() {
       </div>
 
       <div className="relative mx-auto max-w-5xl text-center">
-        <h1 className="animate-reveal text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-6xl lg:text-7xl">
-          Empowering AI <br />
-          <span className="text-zinc-500">Builders & Creators</span>
+        <h1 className="animate-reveal text-4xl font-black font-serif tracking-tighter text-zinc-900 dark:text-zinc-50 sm:text-6xl lg:text-7xl">
+          Security, Privacy and AI Insights <br />
+          <span className="text-zinc-500 text-3xl sm:text-5xl lg:text-6xl mt-4 block">You Can Actually Apply</span>
         </h1>
         
-        <p className="mx-auto mt-8 max-w-2xl animate-reveal [animation-delay:200ms] text-lg font-semibold text-zinc-900 dark:text-zinc-50 sm:text-xl">
-          Access cutting-edge tools and a world-class academy.
-        </p>
-        
-        <p className="mx-auto mt-6 max-w-xl animate-reveal [animation-delay:400ms] text-base text-zinc-500 dark:text-zinc-400">
-          DAIR.AI provides the resources you need to learn, innovate, and build the future with artificial intelligence.
+        <p className="mx-auto mt-8 max-w-3xl animate-reveal [animation-delay:400ms] text-lg font-medium text-zinc-600 dark:text-zinc-400 sm:text-xl">
+          Explore practical frameworks, expert toolkits, podcast discussions and research paper summaries designed for modern professionals and technology leaders.
         </p>
 
         <div className="mt-10 flex animate-reveal [animation-delay:600ms] justify-center gap-4">
