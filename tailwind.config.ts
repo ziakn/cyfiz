@@ -13,12 +13,14 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "Inter", "sans-serif"],
+        sans: ["var(--font-work-sans)", "Work Sans", "sans-serif"],
+        serif: ["var(--font-ibm-plex-serif)", "IBM Plex Serif", "serif"],
         mono: ["var(--font-roboto-mono)", "monospace"],
       },
       animation: {
         float: "float 6s ease-in-out infinite",
         reveal: "reveal 0.8s cubic-bezier(0, 0, 0.2, 1) forwards",
+        scroll: "scroll 40s linear infinite",
       },
       keyframes: {
         float: {
@@ -28,6 +30,10 @@ const config: Config = {
         reveal: {
           from: { opacity: "0", transform: "translateY(20px)" },
           to: { opacity: "1", transform: "translateY(0)" },
+        },
+        scroll: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
         },
       },
     },

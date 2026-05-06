@@ -17,21 +17,31 @@ export default function TrustedBy() {
     { name: 'Atlassian' },
   ];
 
+  // Double the logos for seamless infinite scrolling
+  const allLogos = [...logos, ...logos];
+
   return (
-    <section className="bg-white py-20 dark:bg-black">
-      <div className="container mx-auto max-w-5xl px-4 text-center">
+    <section className="bg-white py-16 dark:bg-black overflow-hidden">
+      <div className="container mx-auto px-4 text-center mb-10">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600">
           Trusted by leading organizations worldwide
         </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-x-12 gap-y-8 opacity-30 grayscale transition-all hover:opacity-80 hover:grayscale-0">
-          {logos.map((logo) => (
-            <div key={logo.name} className="flex items-center gap-2">
-              <span className="text-sm font-black tracking-tighter text-zinc-900 dark:text-zinc-50 uppercase">
+      </div>
+
+      <div className="relative flex overflow-hidden py-4">
+        <div className="flex animate-scroll whitespace-nowrap gap-16 items-center">
+          {allLogos.map((logo, index) => (
+            <div key={`${logo.name}-${index}`} className="flex items-center">
+              <span className="text-xl font-black tracking-tighter text-zinc-900 dark:text-zinc-50 uppercase opacity-20 hover:opacity-100 transition-opacity cursor-default">
                 {logo.name}
               </span>
             </div>
           ))}
         </div>
+        
+        {/* Gradients for smooth fade out at edges */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white dark:from-black to-transparent"></div>
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white dark:from-black to-transparent"></div>
       </div>
     </section>
   );
