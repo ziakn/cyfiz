@@ -30,7 +30,7 @@ export default function Header() {
             Quiz
           </Link>
           <Link href="/profile" className="text-sm font-semibold text-zinc-600 transition-colors hover:text-black dark:text-zinc-400 dark:hover:text-white">
-            Profile
+            Who@m!
           </Link>
           <Link href="/connect" className="text-sm font-semibold text-zinc-600 transition-colors hover:text-black dark:text-zinc-400 dark:hover:text-white">
             Connect
