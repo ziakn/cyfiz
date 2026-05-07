@@ -103,7 +103,7 @@ export default function ProfilePage() {
               <div className="max-w-2xl">
                 <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">Portfolio · Resume</p>
                 <h1 className="mt-3 text-5xl font-black font-serif tracking-tighter text-zinc-900 dark:text-zinc-50 sm:text-6xl lg:text-7xl leading-[1.05]">
-                  Zia<br />Muhammad.
+                  Cyfiz<br />.
                 </h1>
                 <p className="mt-2 text-lg font-semibold text-zinc-500 dark:text-zinc-400">
                   AI Security Researcher · Privacy Advocate · Builder
