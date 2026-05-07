@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Zia Muhammad — AI & Cybersecurity Professional",
-  description: "Resume and portfolio of Zia Muhammad — AI security researcher, privacy advocate, and founder of Cyfiz.",
+  title: "Cyfiz — AI & Cybersecurity Professional",
+  description: "Resume and portfolio of Cyfiz — AI security researcher, privacy advocate, and founder of Cyfiz.",
 };
 
 const experience = [
@@ -21,7 +21,7 @@ const experience = [
     ],
   },
   {
-    company: "DAIR.AI",
+    company: "Cyfiz Community",
     role: "AI Research Contributor",
     period: "2023 — Present",
     location: "Remote",

@@ -32,7 +32,7 @@ export default function Academy() {
     <section className="bg-zinc-50 py-32 dark:bg-zinc-950/50">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">DAIR.AI Academy</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">Cyfiz Academy</p>
           <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
             Master AI with our expert-led courses
           </h2>

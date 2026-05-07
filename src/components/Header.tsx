@@ -13,7 +13,7 @@ export default function Header() {
               <div className="h-2 w-2 rounded-full bg-white dark:bg-black"></div>
             </div>
           </div>
-          <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50">DAIR.AI</span>
+          <span className="text-xl font-black font-serif tracking-tighter text-zinc-900 dark:text-zinc-50">Cyfiz.</span>
         </Link>
 
         <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">
