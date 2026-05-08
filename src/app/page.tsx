@@ -16,13 +16,13 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <TrustedBy />
+        {/* <TrustedBy /> */}
         <Newsletter />
         <Frameworks />
         <Research />
-        <Stats />
-        <Academy />
-        <Tools />
+        {/* <Stats /> */}
+        {/* <Academy /> */}
+        {/* <Tools /> */}
         <PreFooter />
       </main>
       <Footer />

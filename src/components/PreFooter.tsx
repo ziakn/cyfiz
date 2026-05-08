@@ -11,7 +11,7 @@ export default function PreFooter() {
               privacy, and AI converge.
             </h2>
             <p className="mt-6 text-lg font-medium text-zinc-600 dark:text-zinc-400">
-              Join 1,000+ professionals receiving a weekly 2-minute <br className="hidden sm:block" />
+              Join 1,000+ professionals receiving a weekly 5-minute <br className="hidden sm:block" />
               briefing built for modern digital leaders.
             </p>
           </div>

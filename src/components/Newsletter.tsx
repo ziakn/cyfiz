@@ -11,7 +11,7 @@ export default function Newsletter() {
           Cybersecurity, privacy, AI, regulations, insights and frameworks <br className="hidden sm:block" />
           extracted for busy professionals and leaders.
         </p>
-        
+
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <input
             type="email"
@@ -22,9 +22,9 @@ export default function Newsletter() {
             Subscribe
           </button>
         </div>
-        
+
         <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-600">
-          Join 50,000+ professionals. No spam, ever.
+          Join 1,000+ professionals. No spam, ever.
         </p>
       </div>
     </section>

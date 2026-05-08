@@ -20,10 +20,10 @@ export default function Hero() {
 
         <div className="mt-10 flex animate-reveal [animation-delay:600ms] justify-center gap-4">
           <Link
-            href="/academy"
+            href="/insights"
             className="rounded-full bg-black px-8 py-3 text-sm font-bold text-white transition-all hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
           >
-            Explore Academy
+            Explore Insights
           </Link>
         </div>
       </div>
