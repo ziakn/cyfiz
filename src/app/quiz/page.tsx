@@ -32,11 +32,11 @@ export default function QuizPage() {
         <section className="bg-white px-4 pt-24 pb-16 dark:bg-zinc-950 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">Weekly Quiz</p>
-            <h1 className="mt-4 max-w-3xl text-4xl font-black font-serif tracking-tighter text-zinc-900 dark:text-zinc-50 sm:text-6xl leading-[1.1]">
+            <h1 className="mt-4 text-4xl font-black font-serif tracking-tighter text-zinc-900 dark:text-zinc-50 sm:text-5xl lg:text-6xl leading-[1.1]">
               Test your expertise. Earn your rank.
             </h1>
             <p className="mt-6 max-w-2xl text-lg font-medium text-zinc-600 dark:text-zinc-400">
-              10 expert questions. Every Monday. Topics spanning AI security, cybersecurity, privacy, and policy — curated by practitioners.
+              10 practitioner-developed expert-level questions every Monday on AI security, cybersecurity, privacy and regulations.
             </p>
           </div>
         </section>
