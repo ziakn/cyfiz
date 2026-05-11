@@ -1,102 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 
-const summaries = [
-  {
-    tag: "AI Security",
-    date: "May 05, 2026",
-    title: "Securing LLM Production Pipelines at Scale",
-    excerpt:
-      "A deep dive into adversarial attacks and mitigation strategies for enterprise AI deployments. Covers prompt injection, model poisoning, and inference-time defences.",
-    readTime: "5 min read",
-    source: "arXiv:2405.0234",
-    citations: 127,
-  },
-  {
-    tag: "Data Privacy",
-    date: "Apr 28, 2026",
-    title: "Differential Privacy: From Theory to Large-Scale Deployment",
-    excerpt:
-      "How tech giants implement privacy-first machine learning at scale. Key trade-offs between privacy budgets and model utility.",
-    readTime: "5 min read",
-    source: "IEEE S&P 2026",
-    citations: 89,
-  },
-  {
-    tag: "Cybersecurity",
-    date: "Apr 20, 2026",
-    title: "The Rise of Autonomous Agents in Cybersecurity Operations",
-    excerpt:
-      "Analysing multi-agent system performance in threat detection. Benchmark results across 14 enterprise environments.",
-    readTime: "5 min read",
-    source: "USENIX Security 2026",
-    citations: 64,
-  },
-  {
-    tag: "AI Security",
-    date: "Apr 14, 2026",
-    title: "Backdoor Attacks on Foundation Models: A Systematic Review",
-    excerpt:
-      "Comprehensive taxonomy of backdoor attack vectors targeting pre-trained models and the defences that work in practice.",
-    readTime: "5 min read",
-    source: "arXiv:2404.1892",
-    citations: 203,
-  },
-  {
-    tag: "Data Privacy",
-    date: "Apr 08, 2026",
-    title: "Membership Inference Attacks Against Fine-Tuned LLMs",
-    excerpt:
-      "Researchers demonstrate that fine-tuning dramatically increases membership inference risk. Practical mitigations evaluated.",
-    readTime: "5 min read",
-    source: "CCS 2026",
-    citations: 156,
-  },
-  {
-    tag: "Regulations",
-    date: "Apr 01, 2026",
-    title: "Auditing AI Systems: A Framework for Independent Evaluators",
-    excerpt:
-      "A practical audit methodology bridging the gap between regulatory requirements and technical AI system evaluation.",
-    readTime: "5 min read",
-    source: "MIT CSAIL Technical Report",
-    citations: 71,
-  },
-  {
-    tag: "Embodied AI",
-    date: "Mar 25, 2026",
-    title: "Safety Verification for Autonomous Robotic Systems Using LLMs",
-    excerpt:
-      "Novel formal methods approach to verifying safety constraints in LLM-controlled robotic systems across 8 real-world scenarios.",
-    readTime: "5 min read",
-    source: "ICRA 2026",
-    citations: 45,
-  },
-  {
-    tag: "Cybersecurity",
-    date: "Mar 18, 2026",
-    title: "Post-Quantum Key Exchange in Real-World TLS Deployments",
-    excerpt:
-      "First large-scale study of post-quantum cryptography migration challenges. Performance overhead analysis across 200 enterprise networks.",
-    readTime: "5 min read",
-    source: "NDSS 2026",
-    citations: 112,
-  },
-  {
-    tag: "Embodied AI",
-    date: "Mar 10, 2026",
-    title: "Multi-Modal Perception for Secure Autonomous Navigation",
-    excerpt:
-      "Adversarial robustness evaluation of sensor fusion architectures in self-driving systems. New attack surfaces identified.",
-    readTime: "5 min read",
-    source: "arXiv:2403.4521",
-    citations: 38,
-  },
-];
+interface Summary {
+  id: number;
+  tag: string;
+  date: string;
+  title: string;
+  excerpt: string;
+  readTime?: string;
+  source?: string;
+  citations?: number;
+}
 
 const categories = [
   "All",
@@ -192,11 +110,47 @@ function ArrowRight({ className = "h-4 w-4" }: { className?: string }) {
 
 export default function SummariesContent() {
   const [activeCat, setActiveCat] = useState<string>("All");
+  const [summaries, setSummaries] = useState<Summary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchSummaries() {
+      try {
+        const response = await fetch("/api/summaries");
+        if (!response.ok) throw new Error("Failed to fetch summaries");
+        const data = await response.json();
+        setSummaries(data.summaries || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load summaries");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSummaries();
+  }, []);
 
   const filtered =
     activeCat === "All"
       ? summaries
       : summaries.filter((s) => s.tag === activeCat);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-zinc-500">Loading summaries...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-red-500">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <>

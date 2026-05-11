@@ -1,73 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 
-const featured = {
-  tag: "Deep Dive",
-  date: "May 07, 2026",
-  title: "The 2026 State of AI Security: What 500 CISOs told us",
-  excerpt:
-    "We surveyed 500 security leaders across Fortune 1000 companies. The results reveal a widening gap between AI adoption speed and security readiness.",
-};
-
-const articles = [
-  {
-    tag: "AI Security",
-    date: "May 06, 2026",
-    title:
-      "How agentic AI systems are reshaping the enterprise attack surface",
-    excerpt:
-      "As autonomous agents gain persistent memory and tool access, the threat model fundamentally changes. Here's what security teams must prepare for.",
-    readTime: "8 min read",
-  },
-  {
-    tag: "Privacy",
-    date: "May 04, 2026",
-    title: "The EU AI Act's privacy implications: A practical breakdown",
-    excerpt:
-      "Beyond compliance checkboxes — what the regulation actually requires from data teams building AI pipelines.",
-    readTime: "6 min read",
-  },
-  {
-    tag: "Cybersecurity",
-    date: "May 01, 2026",
-    title:
-      "Zero-trust in the age of LLMs: rethinking perimeter assumptions",
-    excerpt:
-      "Language models break classical authentication assumptions. This is how the industry is responding.",
-    readTime: "7 min read",
-  },
-  {
-    tag: "AI Policy",
-    date: "Apr 28, 2026",
-    title:
-      "NIST's AI Risk Management Framework: what practitioners need to know",
-    excerpt:
-      "A field guide to applying the RMF to your organisation's AI deployment pipeline.",
-    readTime: "5 min read",
-  },
-  {
-    tag: "Cybersecurity",
-    date: "Apr 24, 2026",
-    title:
-      "Supply chain attacks targeting ML model registries are rising",
-    excerpt:
-      "Adversaries are increasingly poisoning open-source model weights. Detection strategies and mitigations.",
-    readTime: "9 min read",
-  },
-  {
-    tag: "Privacy",
-    date: "Apr 20, 2026",
-    title:
-      "Federated learning in practice: lessons from three enterprise deployments",
-    excerpt:
-      "Privacy-preserving ML sounds great in theory. Real-world performance trade-offs tell a different story.",
-    readTime: "10 min read",
-  },
-];
+interface Article {
+  id: number;
+  tag: string;
+  date: string;
+  title: string;
+  excerpt: string;
+  readTime?: string;
+}
 
 const topics = [
   "All",
@@ -157,11 +102,47 @@ function ArrowRight({ className = "h-4 w-4" }: { className?: string }) {
 
 export default function InsightsContent() {
   const [activeTopic, setActiveTopic] = useState<string>("All");
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const response = await fetch("/api/articles");
+        if (!response.ok) throw new Error("Failed to fetch articles");
+        const data = await response.json();
+        setArticles(data.articles || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load articles");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchArticles();
+  }, []);
 
   const filtered =
     activeTopic === "All"
       ? articles
       : articles.filter((a) => a.tag === activeTopic);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-zinc-500">Loading articles...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-red-500">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -255,16 +236,16 @@ export default function InsightsContent() {
               {/* Text side */}
               <div className="flex flex-col justify-center p-8 lg:col-span-3 lg:p-12">
                 <div className="flex items-center gap-3">
-                  <TagBadge tag={featured.tag} />
+                  <TagBadge tag={articles.length > 0 ? articles[0].tag : "Deep Dive"} />
                   <span className="text-[10px] font-medium text-zinc-400">
-                    {featured.date}
+                    {articles.length > 0 ? articles[0].date : "May 07, 2026"}
                   </span>
                 </div>
                 <h2 className="mt-5 text-2xl font-black font-serif text-zinc-900 dark:text-zinc-50 leading-snug sm:text-3xl">
-                  {featured.title}
+                  {articles.length > 0 ? articles[0].title : "The 2026 State of AI Security: What 500 CISOs told us"}
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
-                  {featured.excerpt}
+                  {articles.length > 0 ? articles[0].excerpt : "We surveyed 500 security leaders across Fortune 1000 companies. The results reveal a widening gap between AI adoption speed and security readiness."}
                 </p>
                 <span className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-zinc-900 dark:text-zinc-50 transition-all group-hover:gap-3">
                   Read the full report

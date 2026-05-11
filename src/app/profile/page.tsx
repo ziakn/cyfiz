@@ -1,94 +1,103 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Cyfiz — AI & Cybersecurity Professional",
-  description: "Resume and portfolio of Cyfiz — AI security researcher, privacy advocate, and founder of Cyfiz.",
-};
+interface Experience {
+  company: string;
+  role: string;
+  period: string;
+  location: string;
+  bullets: string[];
+}
 
-const experience = [
-  {
-    company: "Cyfiz",
-    role: "Founder & Editor-in-Chief",
-    period: "2024 — Present",
-    location: "Remote",
-    bullets: [
-      "Built a cybersecurity & AI intelligence platform reaching 50,000+ monthly readers.",
-      "Curates weekly briefings distilling research papers, policy changes, and threat intelligence.",
-      "Leads a distributed team of researchers, writers, and engineers.",
-    ],
-  },
-  {
-    company: "Cyfiz Community",
-    role: "AI Research Contributor",
-    period: "2023 — Present",
-    location: "Remote",
-    bullets: [
-      "Contributed to open-source AI safety and alignment research initiatives.",
-      "Co-authored accessible technical summaries of frontier model research.",
-      "Helped grow the community to 200k+ members across platforms.",
-    ],
-  },
-  {
-    company: "Independent Consultant",
-    role: "AI & Cybersecurity Advisor",
-    period: "2022 — Present",
-    location: "Remote",
-    bullets: [
-      "Advises organisations on AI risk management frameworks and regulatory compliance.",
-      "Designed threat models for LLM-powered enterprise systems.",
-      "Delivered workshops on privacy-preserving ML and EU AI Act readiness.",
-    ],
-  },
-];
+interface SkillGroup {
+  category: string;
+  items: string[];
+}
 
-const skills = [
-  { category: "AI & ML", items: ["LLM Security", "AI Red Teaming", "Prompt Engineering", "AI Agents", "Privacy-Preserving ML"] },
-  { category: "Cybersecurity", items: ["Threat Modeling", "Zero-Trust Architecture", "Penetration Testing", "SOC Operations", "Incident Response"] },
-  { category: "Privacy & Policy", items: ["EU AI Act", "GDPR", "NIST AI RMF", "Data Governance", "Risk Assessment"] },
-  { category: "Engineering", items: ["Next.js", "TypeScript", "Python", "Node.js", "AWS / GCP"] },
-];
+interface Project {
+  name: string;
+  description: string;
+  tags: string[];
+  href: string;
+}
 
-const projects = [
-  {
-    name: "Cyfiz Platform",
-    description: "Full-stack intelligence platform for AI and cybersecurity professionals. Built with Next.js, featuring curated briefings, research summaries, weekly quizzes, and a course academy.",
-    tags: ["Next.js", "TypeScript", "TailwindCSS"],
-    href: "/",
-  },
-  {
-    name: "LLM Security Audit Framework",
-    description: "Open-source methodology for auditing large language model deployments in enterprise environments. Covers prompt injection, data leakage, and model inversion attacks.",
-    tags: ["Python", "AI Security", "Open Source"],
-    href: "#",
-  },
-  {
-    name: "EU AI Act Compliance Toolkit",
-    description: "A practical checklist and assessment tool helping organisations map their AI systems to EU AI Act risk categories and compliance requirements.",
-    tags: ["AI Policy", "Risk Management"],
-    href: "#",
-  },
-];
+interface Education {
+  institution: string;
+  degree: string;
+  period: string;
+  detail: string;
+}
 
-const education = [
-  {
-    institution: "University of [Your University]",
-    degree: "BSc Computer Science",
-    period: "2018 — 2022",
-    detail: "Specialisation in Information Security. Dissertation on adversarial machine learning.",
-  },
-];
-
-const certifications = [
-  "CISSP — Certified Information Systems Security Professional",
-  "CEH — Certified Ethical Hacker",
-  "AWS Certified Security — Specialty",
-  "Google Professional Cloud Security Engineer",
-];
+interface ProfileData {
+  experience: Experience[];
+  skills: SkillGroup[];
+  projects: Project[];
+  education: Education[];
+  certifications: string[];
+  stats: { value: string; label: string; }[];
+  socialLinks: { label: string; href: string; }[];
+}
 
 export default function ProfilePage() {
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchProfileData() {
+      try {
+        const response = await fetch("/api/profile");
+        if (!response.ok) throw new Error("Failed to fetch profile data");
+        const data = await response.json();
+        setProfileData(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load profile data");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProfileData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-zinc-500">Loading profile data...</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !profileData) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-red-500">Error: {error || "Failed to load profile data"}</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const {
+    experience,
+    skills,
+    projects,
+    education,
+    certifications,
+    stats = [],
+    socialLinks = []
+  } = profileData;
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -114,12 +123,7 @@ export default function ProfilePage() {
 
                 {/* Social links */}
                 <div className="mt-6 flex flex-wrap items-center gap-3">
-                  {[
-                    { label: "GitHub", href: "https://github.com/ziakn" },
-                    { label: "LinkedIn", href: "#" },
-                    { label: "X / Twitter", href: "#" },
-                    { label: "Email", href: "mailto:zia@cyfiz.com" },
-                  ].map((s) => (
+                  {socialLinks.map((s) => (
                     <Link
                       key={s.label}
                       href={s.href}
@@ -148,12 +152,7 @@ export default function ProfilePage() {
               <div className="w-full max-w-xs shrink-0">
                 <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[#001D33] to-[#003056] p-8 shadow-2xl">
                   <div className="space-y-5">
-                    {[
-                      { value: "3+", label: "Years in AI Security" },
-                      { value: "50k+", label: "Platform Readers" },
-                      { value: "8M+", label: "Content Impressions" },
-                      { value: "4", label: "Certifications" },
-                    ].map((stat) => (
+                    {stats.map((stat) => (
                       <div key={stat.label} className="border-b border-white/10 pb-5 last:border-0 last:pb-0">
                         <div className="text-3xl font-black font-serif text-white">{stat.value}</div>
                         <div className="mt-0.5 text-xs font-semibold text-white/50 uppercase tracking-wider">{stat.label}</div>

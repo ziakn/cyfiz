@@ -1,28 +1,81 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Weekly Quiz — Cyfiz",
-  description: "Test your knowledge on AI security, cybersecurity, and privacy with Cyfiz's weekly expert quiz.",
-};
+interface LeaderboardEntry {
+  rank: number;
+  name: string;
+  score: number;
+  streak: number;
+}
 
-const leaderboard = [
-  { rank: 1, name: "Sarah K.", score: 980, streak: 12 },
-  { rank: 2, name: "Mohammed A.", score: 960, streak: 8 },
-  { rank: 3, name: "Priya R.", score: 945, streak: 15 },
-  { rank: 4, name: "Daniel M.", score: 920, streak: 5 },
-  { rank: 5, name: "Yuki T.", score: 900, streak: 9 },
-];
+interface PastQuiz {
+  week: string;
+  topic: string;
+  participants: number;
+  avgScore: string;
+}
 
-const pastQuizzes = [
-  { week: "Week 18", topic: "LLM Security & Prompt Injection", participants: 4821, avgScore: "72%" },
-  { week: "Week 17", topic: "EU AI Act Deep Dive", participants: 5340, avgScore: "68%" },
-  { week: "Week 16", topic: "Zero-Trust Architecture", participants: 4210, avgScore: "74%" },
-  { week: "Week 15", topic: "Federated Learning Fundamentals", participants: 3987, avgScore: "61%" },
-];
+interface QuizData {
+  leaderboard: LeaderboardEntry[];
+  pastQuizzes: PastQuiz[];
+  currentQuiz?: {
+    week: string;
+    topic: string;
+    participants: number;
+  };
+}
 
 export default function QuizPage() {
+  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchQuizData() {
+      try {
+        const response = await fetch("/api/quiz");
+        if (!response.ok) throw new Error("Failed to fetch quiz data");
+        const data = await response.json();
+        setQuizData(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load quiz data");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchQuizData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-zinc-500">Loading quiz data...</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !quizData) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-red-500">Error: {error || "Failed to load quiz data"}</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const { leaderboard, pastQuizzes, currentQuiz } = quizData;
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -48,10 +101,10 @@ export default function QuizPage() {
               <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
                 <div className="max-w-xl">
                   <span className="inline-block rounded-full bg-white/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-white/70">
-                    Week 19 · Live Now
+                    {currentQuiz ? `${currentQuiz.week} · Live Now` : "Week 19 · Live Now"}
                   </span>
                   <h2 className="mt-4 text-2xl font-black font-serif text-white sm:text-3xl">
-                    This Week: Agentic AI Threat Models
+                    This Week: {currentQuiz ? currentQuiz.topic : "Agentic AI Threat Models"}
                   </h2>
                   <p className="mt-3 text-white/70">
                     How well do you understand the security implications of autonomous AI agents? 10 questions. 8 minutes. No retries.
@@ -59,7 +112,7 @@ export default function QuizPage() {
                   <div className="mt-4 flex gap-6 text-sm text-white/60">
                     <span>⏱ ~8 minutes</span>
                     <span>🎯 10 questions</span>
-                    <span>👥 2,341 taken so far</span>
+                    <span>👥 {currentQuiz ? currentQuiz.participants.toLocaleString() : "2,341"} taken so far</span>
                   </div>
                 </div>
                 <button className="shrink-0 rounded-full bg-white px-10 py-4 text-sm font-black text-[#001D33] transition-all hover:bg-zinc-100 hover:scale-105 active:scale-95 shadow-lg">
