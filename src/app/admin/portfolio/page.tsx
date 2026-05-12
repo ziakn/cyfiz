@@ -5,6 +5,29 @@ import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 import PortfolioList from "./PortfolioList";
 
+interface ExperienceRow extends RowDataPacket {
+  id: number;
+  company: string;
+  role: string;
+  period: string;
+  status: number;
+}
+
+interface SkillRow extends RowDataPacket {
+  id: number;
+  category: string;
+  items: string;
+  status: number;
+}
+
+interface ProjectRow extends RowDataPacket {
+  id: number;
+  name: string;
+  tags: string;
+  image_url?: string | null;
+  status: number;
+}
+
 export default async function AdminPortfolioPage() {
   const cookiesStore = await cookies();
   const cookieValue = cookiesStore.get(AUTH_COOKIE_NAME)?.value ?? null;
@@ -14,16 +37,16 @@ export default async function AdminPortfolioPage() {
   }
 
   const [experience, skills, projects] = await Promise.all([
-    query<RowDataPacket[]>("SELECT id, company, role, period, status FROM profile_experience ORDER BY id DESC"),
-    query<RowDataPacket[]>("SELECT id, category, items, status FROM profile_skills"),
-    query<RowDataPacket[]>("SELECT id, name, tags, image_url, status FROM profile_projects")
+    query<ExperienceRow[]>("SELECT id, company, role, period, status FROM profile_experience ORDER BY id DESC"),
+    query<SkillRow[]>("SELECT id, category, items, status FROM profile_skills"),
+    query<ProjectRow[]>("SELECT id, name, tags, image_url, status FROM profile_projects")
   ]);
 
   return (
     <PortfolioList 
-      initialExperience={experience as any} 
-      initialSkills={skills as any} 
-      initialProjects={projects as any} 
+      initialExperience={experience} 
+      initialSkills={skills} 
+      initialProjects={projects} 
     />
   );
 }

@@ -1,6 +1,11 @@
 import React from 'react';
 
-export default function TrustedBy({ partners }: { partners: { name: string }[] }) {
+interface PartnerLogo {
+  name: string;
+  image_url?: string | null;
+}
+
+export default function TrustedBy({ partners }: { partners: PartnerLogo[] }) {
   const logos = partners && partners.length > 0 ? partners : [
     { name: 'Google' },
     { name: 'Meta' },

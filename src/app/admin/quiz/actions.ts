@@ -3,14 +3,18 @@
 import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Action failed";
+}
+
 export async function deleteQuizAction(id: number) {
   try {
     await query("DELETE FROM past_quizzes WHERE id = ?", [id]);
     revalidatePath("/admin/quiz");
     revalidatePath("/quiz");
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }
 
@@ -30,8 +34,8 @@ export async function addQuizAction(formData: FormData) {
     revalidatePath("/admin/quiz");
     revalidatePath("/quiz");
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }
 
@@ -49,7 +53,7 @@ export async function editQuizAction(id: number, formData: FormData) {
     revalidatePath("/admin/quiz");
     revalidatePath("/quiz");
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }

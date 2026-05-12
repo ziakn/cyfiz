@@ -5,6 +5,18 @@ import { join } from "path";
 import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
+const ALLOWED_IMAGE_TABLES = new Set([
+  "articles",
+  "research_summaries",
+  "team_members",
+  "profile_projects",
+  "partners",
+]);
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Failed to upload image";
+}
+
 export async function uploadImageAction(formData: FormData) {
   try {
     const file = formData.get("file") as File;
@@ -14,6 +26,10 @@ export async function uploadImageAction(formData: FormData) {
 
     if (!file || !table || !id || !folder) {
       return { error: "Missing required fields" };
+    }
+
+    if (!ALLOWED_IMAGE_TABLES.has(table)) {
+      return { error: "Invalid image target" };
     }
 
     const bytes = await file.arrayBuffer();
@@ -54,8 +70,8 @@ export async function uploadImageAction(formData: FormData) {
     }
 
     return { success: true, imageUrl: publicPath };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error uploading image:", error);
-    return { error: error.message || "Failed to upload image" };
+    return { error: getErrorMessage(error) };
   }
 }

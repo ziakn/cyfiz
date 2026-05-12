@@ -9,6 +9,10 @@ function revalidateAll() {
   REVALIDATE_PATHS.forEach(path => revalidatePath(path));
 }
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Action failed";
+}
+
 // Experience Actions
 export async function addExperienceAction(formData: FormData) {
   const company = formData.get("company") as string;
@@ -21,7 +25,7 @@ export async function addExperienceAction(formData: FormData) {
     await query("INSERT INTO profile_experience (company, role, period, status) VALUES (?, ?, ?, 1)", [company, role, period]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }
 
 export async function editExperienceAction(id: number, formData: FormData) {
@@ -33,7 +37,7 @@ export async function editExperienceAction(id: number, formData: FormData) {
     await query("UPDATE profile_experience SET company = ?, role = ?, period = ? WHERE id = ?", [company, role, period, id]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }
 
 export async function deleteExperienceAction(id: number) {
@@ -41,7 +45,7 @@ export async function deleteExperienceAction(id: number) {
     await query("DELETE FROM profile_experience WHERE id = ?", [id]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }
 
 // Project Actions
@@ -55,7 +59,7 @@ export async function addProjectAction(formData: FormData) {
     await query("INSERT INTO profile_projects (name, tags, status) VALUES (?, ?, 1)", [name, tags]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }
 
 export async function editProjectAction(id: number, formData: FormData) {
@@ -66,7 +70,7 @@ export async function editProjectAction(id: number, formData: FormData) {
     await query("UPDATE profile_projects SET name = ?, tags = ? WHERE id = ?", [name, tags, id]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }
 
 export async function deleteProjectAction(id: number) {
@@ -74,7 +78,7 @@ export async function deleteProjectAction(id: number) {
     await query("DELETE FROM profile_projects WHERE id = ?", [id]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }
 
 // Skill Actions
@@ -88,7 +92,7 @@ export async function addSkillAction(formData: FormData) {
     await query("INSERT INTO profile_skills (category, items, status) VALUES (?, ?, 1)", [category, items]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }
 
 export async function editSkillAction(id: number, formData: FormData) {
@@ -99,7 +103,7 @@ export async function editSkillAction(id: number, formData: FormData) {
     await query("UPDATE profile_skills SET category = ?, items = ? WHERE id = ?", [category, items, id]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }
 
 export async function deleteSkillAction(id: number) {
@@ -107,5 +111,5 @@ export async function deleteSkillAction(id: number) {
     await query("DELETE FROM profile_skills WHERE id = ?", [id]);
     revalidateAll();
     return { success: true };
-  } catch (e: any) { return { error: e.message }; }
+  } catch (e: unknown) { return { error: getErrorMessage(e) }; }
 }

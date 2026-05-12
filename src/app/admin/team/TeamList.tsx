@@ -24,7 +24,7 @@ export default function TeamList({ initialTeam }: { initialTeam: TeamMember[] })
     name: "",
   });
   const [isDeleting, setIsDeleting] = useState(false);
-  const [modal, setModal] = useState<{ open: boolean; action: 'add' | 'edit'; data: any }>({
+  const [modal, setModal] = useState<{ open: boolean; action: 'add' | 'edit'; data: Partial<TeamMember> | null }>({
     open: false,
     action: 'add',
     data: null,
@@ -176,9 +176,17 @@ export default function TeamList({ initialTeam }: { initialTeam: TeamMember[] })
             </div>
 
             <form action={async (formData) => {
-              const result = modal.action === 'add' 
-                ? await actions.addTeamMemberAction(formData) 
-                : await actions.editTeamMemberAction(modal.data.id, formData);
+              const editId = modal.data?.id;
+              let result;
+              if (modal.action === 'add') {
+                result = await actions.addTeamMemberAction(formData);
+              } else {
+                if (editId === undefined) {
+                  alert("Missing team member id");
+                  return;
+                }
+                result = await actions.editTeamMemberAction(editId, formData);
+              }
               
               if (result.success) setModal({ ...modal, open: false });
               else alert(result.error || "Action failed");

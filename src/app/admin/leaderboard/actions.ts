@@ -3,14 +3,18 @@
 import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Action failed";
+}
+
 export async function deleteLeaderboardEntryAction(id: number) {
   try {
     await query("DELETE FROM quiz_leaderboard WHERE id = ?", [id]);
     revalidatePath("/admin/leaderboard");
     revalidatePath("/leaderboard");
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }
 
@@ -30,8 +34,8 @@ export async function addLeaderboardEntryAction(formData: FormData) {
     revalidatePath("/admin/leaderboard");
     revalidatePath("/leaderboard");
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }
 
@@ -49,7 +53,7 @@ export async function editLeaderboardEntryAction(id: number, formData: FormData)
     revalidatePath("/admin/leaderboard");
     revalidatePath("/leaderboard");
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }

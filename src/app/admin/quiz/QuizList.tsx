@@ -23,7 +23,7 @@ export default function QuizList({ initialQuizzes }: { initialQuizzes: QuizItem[
     topic: "",
   });
   const [isDeleting, setIsDeleting] = useState(false);
-  const [modal, setModal] = useState<{ open: boolean; action: 'add' | 'edit'; data: any }>({
+  const [modal, setModal] = useState<{ open: boolean; action: 'add' | 'edit'; data: Partial<QuizItem> | null }>({
     open: false,
     action: 'add',
     data: null,
@@ -169,9 +169,17 @@ export default function QuizList({ initialQuizzes }: { initialQuizzes: QuizItem[
             </div>
 
             <form action={async (formData) => {
-              const result = modal.action === 'add' 
-                ? await actions.addQuizAction(formData) 
-                : await actions.editQuizAction(modal.data.id, formData);
+              const editId = modal.data?.id;
+              let result;
+              if (modal.action === 'add') {
+                result = await actions.addQuizAction(formData);
+              } else {
+                if (editId === undefined) {
+                  alert("Missing quiz id");
+                  return;
+                }
+                result = await actions.editQuizAction(editId, formData);
+              }
               
               if (result.success) setModal({ ...modal, open: false });
               else alert(result.error || "Action failed");

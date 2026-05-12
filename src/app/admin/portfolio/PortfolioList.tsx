@@ -36,9 +36,11 @@ interface PortfolioListProps {
   initialProjects: ProjectItem[];
 }
 
+type PortfolioModalData = Partial<ExperienceItem & ProjectItem & SkillItem> | null;
+
 export default function PortfolioList({ initialExperience, initialSkills, initialProjects }: PortfolioListProps) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const [modal, setModal] = useState<{ open: boolean; type: 'experience' | 'project' | 'skill'; action: 'add' | 'edit'; data: any }>({
+  const [modal, setModal] = useState<{ open: boolean; type: 'experience' | 'project' | 'skill'; action: 'add' | 'edit'; data: PortfolioModalData }>({
     open: false,
     type: 'experience',
     action: 'add',
@@ -287,13 +289,38 @@ export default function PortfolioList({ initialExperience, initialSkills, initia
             </div>
 
             <form action={async (formData) => {
+              const editId = modal.data?.id;
               let result;
               if (modal.type === 'experience') {
-                result = modal.action === 'add' ? await actions.addExperienceAction(formData) : await actions.editExperienceAction(modal.data.id, formData);
+                if (modal.action === 'add') {
+                  result = await actions.addExperienceAction(formData);
+                } else {
+                  if (editId === undefined) {
+                    alert("Missing portfolio item id");
+                    return;
+                  }
+                  result = await actions.editExperienceAction(editId, formData);
+                }
               } else if (modal.type === 'project') {
-                result = modal.action === 'add' ? await actions.addProjectAction(formData) : await actions.editProjectAction(modal.data.id, formData);
+                if (modal.action === 'add') {
+                  result = await actions.addProjectAction(formData);
+                } else {
+                  if (editId === undefined) {
+                    alert("Missing portfolio item id");
+                    return;
+                  }
+                  result = await actions.editProjectAction(editId, formData);
+                }
               } else {
-                result = modal.action === 'add' ? await actions.addSkillAction(formData) : await actions.editSkillAction(modal.data.id, formData);
+                if (modal.action === 'add') {
+                  result = await actions.addSkillAction(formData);
+                } else {
+                  if (editId === undefined) {
+                    alert("Missing portfolio item id");
+                    return;
+                  }
+                  result = await actions.editSkillAction(editId, formData);
+                }
               }
               
               if (result.success) setModal({ ...modal, open: false });

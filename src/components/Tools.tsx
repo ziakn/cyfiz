@@ -16,7 +16,7 @@ export default function Tools() {
           <p className="text-zinc-500"># System Prompt</p>
           <p className="mt-1 text-white">You are a helpful assistant...</p>
           <p className="mt-2 text-zinc-500"># Few-shot examples</p>
-          <p className="mt-1">Input: Translate 'Hello'</p>
+          <p className="mt-1">Input: Translate &apos;Hello&apos;</p>
           <p>Output: Hola</p>
           <div className="mt-4 rounded bg-zinc-800 p-2 text-zinc-300">
             Current Agent: Reasoning Engine

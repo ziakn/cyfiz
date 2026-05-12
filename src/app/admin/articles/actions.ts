@@ -3,6 +3,10 @@
 import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
+function getErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}
+
 export async function deleteArticleAction(id: number) {
   try {
     await query("DELETE FROM articles WHERE id = ?", [id]);
@@ -10,9 +14,9 @@ export async function deleteArticleAction(id: number) {
     revalidatePath("/insights");
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting article:", error);
-    return { error: error.message || "Failed to delete article" };
+    return { error: getErrorMessage(error, "Failed to delete article") };
   }
 }
 
@@ -36,9 +40,9 @@ export async function addArticleAction(formData: FormData) {
     revalidatePath("/insights");
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error adding article:", error);
-    return { error: error.message || "Failed to add article" };
+    return { error: getErrorMessage(error, "Failed to add article") };
   }
 }
 export async function editArticleAction(id: number, formData: FormData) {
@@ -61,8 +65,8 @@ export async function editArticleAction(id: number, formData: FormData) {
     revalidatePath("/insights");
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error editing article:", error);
-    return { error: error.message || "Failed to edit article" };
+    return { error: getErrorMessage(error, "Failed to edit article") };
   }
 }

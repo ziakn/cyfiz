@@ -8,6 +8,7 @@ interface AdminUser {
   id: number;
   email: string;
   role: string;
+  status: number;
   createdAt: string;
 }
 
@@ -19,7 +20,7 @@ export default async function AdminUsersPage() {
     redirect("/admin");
   }
 
-  const users = (await getAllAdminUsers()) as any[];
+  const users = (await getAllAdminUsers()) as AdminUser[];
 
   return <UserList initialUsers={users} currentUserEmail={user.email} />;
 }

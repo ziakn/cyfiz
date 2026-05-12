@@ -21,6 +21,10 @@ interface AdminUser {
   createdAt: string;
 }
 
+interface CountRow {
+  count: number;
+}
+
 export default async function AdminDashboardPage() {
   const cookiesStore = await cookies();
   const cookieValue = cookiesStore.get(AUTH_COOKIE_NAME)?.value ?? null;
@@ -32,10 +36,10 @@ export default async function AdminDashboardPage() {
   const [modules, users, articles, quizzes, team] = (await Promise.all([
     getAllModules(), 
     getAllAdminUsers(),
-    query("SELECT COUNT(*) as count FROM articles"),
-    query("SELECT COUNT(*) as count FROM past_quizzes"),
-    query("SELECT COUNT(*) as count FROM team_members")
-  ])) as [ModuleItem[], AdminUser[], any[], any[], any[]];
+    query<CountRow[]>("SELECT COUNT(*) as count FROM articles"),
+    query<CountRow[]>("SELECT COUNT(*) as count FROM past_quizzes"),
+    query<CountRow[]>("SELECT COUNT(*) as count FROM team_members")
+  ])) as [ModuleItem[], AdminUser[], CountRow[], CountRow[], CountRow[]];
 
   const stats = [
     { label: "Articles", value: articles[0].count.toString(), icon: "📄", color: "#9155FD" },

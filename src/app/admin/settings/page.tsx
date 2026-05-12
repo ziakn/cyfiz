@@ -5,6 +5,27 @@ import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 import SettingsList from "./SettingsList";
 
+interface SettingRow extends RowDataPacket {
+  id: number;
+  setting_key: string;
+  setting_value: string;
+  status: number;
+}
+
+interface StatRow extends RowDataPacket {
+  id: number;
+  value: string;
+  label: string;
+  status: number;
+}
+
+interface PartnerRow extends RowDataPacket {
+  id: number;
+  name: string;
+  image_url?: string | null;
+  status: number;
+}
+
 export default async function AdminSettingsPage() {
   const cookiesStore = await cookies();
   const cookieValue = cookiesStore.get(AUTH_COOKIE_NAME)?.value ?? null;
@@ -14,9 +35,9 @@ export default async function AdminSettingsPage() {
   }
 
   const [settings, stats, partners] = await Promise.all([
-    query<RowDataPacket[]>("SELECT * FROM site_settings ORDER BY id ASC"),
-    query<RowDataPacket[]>("SELECT * FROM site_stats ORDER BY id ASC"),
-    query<RowDataPacket[]>("SELECT * FROM partners ORDER BY id ASC")
+    query<SettingRow[]>("SELECT * FROM site_settings ORDER BY id ASC"),
+    query<StatRow[]>("SELECT * FROM site_stats ORDER BY id ASC"),
+    query<PartnerRow[]>("SELECT * FROM partners ORDER BY id ASC")
   ]);
 
   return (
@@ -27,9 +48,9 @@ export default async function AdminSettingsPage() {
       </div>
       
       <SettingsList 
-        initialSettings={settings as any} 
-        initialStats={stats as any}
-        initialPartners={partners as any}
+        initialSettings={settings} 
+        initialStats={stats}
+        initialPartners={partners}
       />
     </div>
   );

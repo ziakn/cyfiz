@@ -23,7 +23,7 @@ export default function LeaderboardList({ initialLeaderboard }: { initialLeaderb
     name: "",
   });
   const [isDeleting, setIsDeleting] = useState(false);
-  const [modal, setModal] = useState<{ open: boolean; action: 'add' | 'edit'; data: any }>({
+  const [modal, setModal] = useState<{ open: boolean; action: 'add' | 'edit'; data: Partial<LeaderboardItem> | null }>({
     open: false,
     action: 'add',
     data: null,
@@ -177,9 +177,17 @@ export default function LeaderboardList({ initialLeaderboard }: { initialLeaderb
             </div>
 
             <form action={async (formData) => {
-              const result = modal.action === 'add' 
-                ? await actions.addLeaderboardEntryAction(formData) 
-                : await actions.editLeaderboardEntryAction(modal.data.id, formData);
+              const editId = modal.data?.id;
+              let result;
+              if (modal.action === 'add') {
+                result = await actions.addLeaderboardEntryAction(formData);
+              } else {
+                if (editId === undefined) {
+                  alert("Missing leaderboard entry id");
+                  return;
+                }
+                result = await actions.editLeaderboardEntryAction(editId, formData);
+              }
               
               if (result.success) setModal({ ...modal, open: false });
               else alert(result.error || "Action failed");

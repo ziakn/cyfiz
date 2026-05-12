@@ -32,7 +32,7 @@ export default function DeleteConfirmationModal({
           </div>
           <h3 className="text-xl font-bold text-[#3A3541] opacity-[0.87]">{title}</h3>
           <p className="mt-3 text-sm text-[#3A3541] opacity-[0.6]">
-            Are you sure you want to delete <span className="font-semibold text-[#3A3541] opacity-[0.87]">"{itemName}"</span>? This action cannot be undone.
+            Are you sure you want to delete <span className="font-semibold text-[#3A3541] opacity-[0.87]">&quot;{itemName}&quot;</span>? This action cannot be undone.
           </p>
         </div>
 

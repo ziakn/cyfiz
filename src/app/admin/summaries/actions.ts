@@ -3,6 +3,10 @@
 import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
+function getErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}
+
 export async function deleteSummaryAction(id: number) {
   try {
     await query("DELETE FROM research_summaries WHERE id = ?", [id]);
@@ -10,9 +14,9 @@ export async function deleteSummaryAction(id: number) {
     revalidatePath("/summaries");
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting summary:", error);
-    return { error: error.message || "Failed to delete summary" };
+    return { error: getErrorMessage(error, "Failed to delete summary") };
   }
 }
 
@@ -37,9 +41,9 @@ export async function addSummaryAction(formData: FormData) {
     revalidatePath("/summaries");
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error adding summary:", error);
-    return { error: error.message || "Failed to add summary" };
+    return { error: getErrorMessage(error, "Failed to add summary") };
   }
 }
 
@@ -64,8 +68,8 @@ export async function editSummaryAction(id: number, formData: FormData) {
     revalidatePath("/summaries");
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error editing summary:", error);
-    return { error: error.message || "Failed to edit summary" };
+    return { error: getErrorMessage(error, "Failed to edit summary") };
   }
 }

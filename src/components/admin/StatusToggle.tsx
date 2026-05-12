@@ -4,7 +4,7 @@ import { useState } from "react";
 
 interface StatusToggleProps {
   initialStatus: number;
-  onToggle: (newStatus: number) => Promise<boolean>;
+  onToggle: (newStatus: number) => Promise<boolean | undefined>;
 }
 
 export default function StatusToggle({ initialStatus, onToggle }: StatusToggleProps) {
@@ -18,7 +18,7 @@ export default function StatusToggle({ initialStatus, onToggle }: StatusTogglePr
     setIsChanging(true);
     
     const success = await onToggle(newStatus);
-    if (success) {
+    if (success === true) {
       setStatus(newStatus);
     }
     

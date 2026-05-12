@@ -43,7 +43,7 @@ export default function SettingsList({
 
   const handleToggle = async (table: string, id: number, currentStatus: number) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
-    const result = await toggleStatusAction(table, id, newStatus);
+    const result = await toggleStatusAction(table, id, newStatus, "/admin/settings");
     return result.success;
   };
 

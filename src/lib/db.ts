@@ -10,6 +10,24 @@ const pool = mysql.createPool({
 
 type QueryParams = Array<string | number | boolean | null | Date>;
 
+const ALLOWED_STATUS_TABLES = new Set([
+  "admin_users",
+  "articles",
+  "past_quizzes",
+  "partners",
+  "profile_certifications",
+  "profile_education",
+  "profile_experience",
+  "profile_projects",
+  "profile_skills",
+  "quiz_leaderboard",
+  "research_summaries",
+  "site_settings",
+  "site_stats",
+  "social_links",
+  "team_members",
+]);
+
 export async function query<T = unknown>(sql: string, params: QueryParams = []) {
   const [rows] = await pool.query<RowDataPacket[]>(sql, params);
   return rows as T;
@@ -139,6 +157,10 @@ export async function deleteAdminUser(id: number) {
 }
 
 export async function updateStatus(table: string, id: number | string, status: number) {
+  if (!ALLOWED_STATUS_TABLES.has(table)) {
+    throw new Error("Invalid table for status update");
+  }
+
   await execute(`UPDATE ${table} SET status = ? WHERE id = ?`, [status, id]);
 }
 

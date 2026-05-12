@@ -3,14 +3,18 @@
 import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Action failed";
+}
+
 export async function deleteTeamMemberAction(id: number) {
   try {
     await query("DELETE FROM team_members WHERE id = ?", [id]);
     revalidatePath("/admin/team");
     revalidatePath("/about"); // Assuming team is shown on about page
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }
 
@@ -29,8 +33,8 @@ export async function addTeamMemberAction(formData: FormData) {
     revalidatePath("/admin/team");
     revalidatePath("/about");
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }
 
@@ -47,7 +51,7 @@ export async function editTeamMemberAction(id: number, formData: FormData) {
     revalidatePath("/admin/team");
     revalidatePath("/about");
     return { success: true };
-  } catch (e: any) {
-    return { error: e.message };
+  } catch (e: unknown) {
+    return { error: getErrorMessage(e) };
   }
 }
