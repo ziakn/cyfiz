@@ -8,6 +8,8 @@ import Footer from "@/components/Footer";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 
+export const dynamic = "force-dynamic";
+
 interface LandingArticle extends RowDataPacket {
   id: number;
   tag: string;

@@ -7,11 +7,15 @@ function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Action failed";
 }
 
+function revalidateTeam() {
+  revalidatePath("/admin/team");
+  revalidatePath("/connect");
+}
+
 export async function deleteTeamMemberAction(id: number) {
   try {
     await query("DELETE FROM team_members WHERE id = ?", [id]);
-    revalidatePath("/admin/team");
-    revalidatePath("/about"); // Assuming team is shown on about page
+    revalidateTeam();
     return { success: true };
   } catch (e: unknown) {
     return { error: getErrorMessage(e) };
@@ -30,8 +34,7 @@ export async function addTeamMemberAction(formData: FormData) {
       "INSERT INTO team_members (name, role, initials, status) VALUES (?, ?, ?, 1)",
       [name, role, initials || name.split(' ').map(n => n[0]).join('').toUpperCase()]
     );
-    revalidatePath("/admin/team");
-    revalidatePath("/about");
+    revalidateTeam();
     return { success: true };
   } catch (e: unknown) {
     return { error: getErrorMessage(e) };
@@ -48,8 +51,7 @@ export async function editTeamMemberAction(id: number, formData: FormData) {
       "UPDATE team_members SET name = ?, role = ?, initials = ? WHERE id = ?",
       [name, role, initials, id]
     );
-    revalidatePath("/admin/team");
-    revalidatePath("/about");
+    revalidateTeam();
     return { success: true };
   } catch (e: unknown) {
     return { error: getErrorMessage(e) };

@@ -7,11 +7,15 @@ function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Action failed";
 }
 
+function revalidateLeaderboard() {
+  revalidatePath("/admin/leaderboard");
+  revalidatePath("/quiz");
+}
+
 export async function deleteLeaderboardEntryAction(id: number) {
   try {
     await query("DELETE FROM quiz_leaderboard WHERE id = ?", [id]);
-    revalidatePath("/admin/leaderboard");
-    revalidatePath("/leaderboard");
+    revalidateLeaderboard();
     return { success: true };
   } catch (e: unknown) {
     return { error: getErrorMessage(e) };
@@ -31,8 +35,7 @@ export async function addLeaderboardEntryAction(formData: FormData) {
       "INSERT INTO quiz_leaderboard (name, score, streak, rank, status) VALUES (?, ?, ?, ?, 1)",
       [name, score, streak, rank]
     );
-    revalidatePath("/admin/leaderboard");
-    revalidatePath("/leaderboard");
+    revalidateLeaderboard();
     return { success: true };
   } catch (e: unknown) {
     return { error: getErrorMessage(e) };
@@ -50,8 +53,7 @@ export async function editLeaderboardEntryAction(id: number, formData: FormData)
       "UPDATE quiz_leaderboard SET name = ?, score = ?, streak = ?, rank = ? WHERE id = ?",
       [name, score, streak, rank, id]
     );
-    revalidatePath("/admin/leaderboard");
-    revalidatePath("/leaderboard");
+    revalidateLeaderboard();
     return { success: true };
   } catch (e: unknown) {
     return { error: getErrorMessage(e) };

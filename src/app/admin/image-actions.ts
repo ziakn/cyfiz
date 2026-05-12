@@ -76,7 +76,7 @@ export async function uploadImageAction(formData: FormData) {
       revalidatePath("/connect");
       revalidatePath("/admin/team");
     } else if (table === "profile_projects") {
-      revalidatePath("/portfolio");
+      revalidatePath("/profile");
       revalidatePath("/admin/portfolio");
     } else if (table === "partners") {
       revalidatePath("/");
