@@ -36,16 +36,16 @@ export default async function Home() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <Hero 
-          title={settings.hero_title} 
-          subtitle={settings.hero_subtitle} 
-          description={settings.hero_description} 
+        <Hero
+          title={settings.hero_title}
+          subtitle={settings.hero_subtitle}
+          description={settings.hero_description}
         />
-        <TrustedBy partners={partners as any} />
-        <Newsletter 
-          title={settings.newsletter_title} 
-          description={settings.newsletter_description} 
-        />
+        {/* <TrustedBy partners={partners as any} /> */}
+        {/* <Newsletter
+          title={settings.newsletter_title}
+          description={settings.newsletter_description}
+        /> */}
         <Frameworks articles={articles as any} />
         <Research summaries={summaries as any} />
         <Stats stats={stats as any} />
