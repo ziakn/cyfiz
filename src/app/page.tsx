@@ -69,7 +69,7 @@ export default async function Home() {
         /> */}
         <Frameworks articles={articles} />
         <Research summaries={summaries} />
-        <Stats stats={stats} />
+        {/* <Stats stats={stats} /> */}
         {/* <Academy /> */}
         {/* <Tools /> */}
         <PreFooter />
