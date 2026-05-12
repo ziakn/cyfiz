@@ -19,6 +19,7 @@ interface TeamMember {
   initials: string;
   name: string;
   role: string;
+  image_url?: string | null;
 }
 
 interface Stats {
@@ -142,8 +143,12 @@ export default function ConnectPage() {
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {team.map((member) => (
                 <div key={member.name} className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#001D33] to-[#003056] text-sm font-black text-white">
-                    {member.initials}
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#001D33] to-[#003056] text-sm font-black text-white overflow-hidden">
+                    {member.image_url ? (
+                      <img src={member.image_url} alt={member.name} className="h-full w-full object-cover" />
+                    ) : (
+                      member.initials
+                    )}
                   </div>
                   <div>
                     <div className="font-bold text-zinc-900 dark:text-zinc-50 text-sm">{member.name}</div>

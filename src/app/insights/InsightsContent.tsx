@@ -12,6 +12,7 @@ interface Article {
   title: string;
   excerpt: string;
   readTime?: string;
+  image_url?: string | null;
 }
 
 const topics = [
@@ -206,8 +207,13 @@ export default function InsightsContent() {
           <Link href="#" className="group block">
             <div className="grid overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition-all duration-300 group-hover:shadow-xl dark:border-zinc-800 dark:bg-zinc-900 lg:grid-cols-5">
               {/* Visual side */}
-              <div className="relative flex items-end overflow-hidden lg:col-span-2">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#001D33] via-[#002845] to-[#003A60]" />
+              <div className="relative flex items-end overflow-hidden lg:col-span-2 min-h-[300px]">
+                {articles.length > 0 && articles[0].image_url ? (
+                  <img src={articles[0].image_url} alt={articles[0].title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#001D33] via-[#002845] to-[#003A60]" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 {/* Decorative grid pattern */}
                 <div className="absolute inset-0 opacity-[0.06]"
                   style={{
@@ -216,19 +222,14 @@ export default function InsightsContent() {
                     backgroundSize: "40px 40px",
                   }}
                 />
-                {/* Floating accent */}
-                <div className="absolute right-6 top-6 h-20 w-20 rounded-full bg-blue-400/20 blur-2xl" />
-                <div className="absolute left-10 bottom-10 h-16 w-16 rounded-full bg-emerald-400/15 blur-xl" />
-
-                <div className="relative p-8 lg:p-10">
+                
+                <div className="relative p-8 lg:p-10 z-10 w-full">
                   <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white/70 backdrop-blur-md">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     Featured report
                   </div>
                   <p className="mt-6 text-3xl font-black font-serif text-white leading-tight lg:text-4xl">
-                    State of AI
-                    <br />
-                    Security 2026
+                    {articles.length > 0 ? articles[0].title : "State of AI Security 2026"}
                   </p>
                 </div>
               </div>

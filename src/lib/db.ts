@@ -99,6 +99,49 @@ export async function deleteModule(id: string) {
 
 export async function getAllAdminUsers() {
   return await query<RowDataPacket[]>(
-    "SELECT id, email, role, created_at AS createdAt FROM admin_users ORDER BY created_at DESC"
+    "SELECT id, email, role, status, created_at AS createdAt FROM admin_users ORDER BY created_at DESC"
   );
+}
+
+export async function createAdminUser(data: { email: string; passwordHash: string; role: string }) {
+  const result = await execute(
+    "INSERT INTO admin_users (email, password_hash, role) VALUES (?, ?, ?)",
+    [data.email, data.passwordHash, data.role]
+  );
+  return result.insertId;
+}
+
+export async function updateAdminUser(id: number, data: { email?: string; passwordHash?: string; role?: string }) {
+  const updates: string[] = [];
+  const values: QueryParams = [];
+
+  if (data.email !== undefined) {
+    updates.push("email = ?");
+    values.push(data.email);
+  }
+  if (data.passwordHash !== undefined) {
+    updates.push("password_hash = ?");
+    values.push(data.passwordHash);
+  }
+  if (data.role !== undefined) {
+    updates.push("role = ?");
+    values.push(data.role);
+  }
+
+  if (updates.length === 0) return;
+
+  values.push(id);
+  await execute(`UPDATE admin_users SET ${updates.join(", ")} WHERE id = ?`, values);
+}
+
+export async function deleteAdminUser(id: number) {
+  await execute("DELETE FROM admin_users WHERE id = ?", [id]);
+}
+
+export async function updateStatus(table: string, id: number | string, status: number) {
+  await execute(`UPDATE ${table} SET status = ? WHERE id = ?`, [status, id]);
+}
+
+export async function updateUserStatus(id: number, status: number) {
+  await updateStatus("admin_users", id, status);
 }

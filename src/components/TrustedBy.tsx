@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default function TrustedBy() {
-  const logos = [
+export default function TrustedBy({ partners }: { partners: { name: string }[] }) {
+  const logos = partners && partners.length > 0 ? partners : [
     { name: 'Google' },
     { name: 'Meta' },
     { name: 'Apple' },
@@ -32,9 +32,13 @@ export default function TrustedBy() {
         <div className="flex animate-scroll whitespace-nowrap gap-16 items-center">
           {allLogos.map((logo, index) => (
             <div key={`${logo.name}-${index}`} className="flex items-center">
-              <span className="text-xl font-black tracking-tighter text-zinc-900 dark:text-zinc-50 uppercase opacity-20 hover:opacity-100 transition-opacity cursor-default">
-                {logo.name}
-              </span>
+              {logo.image_url ? (
+                <img src={logo.image_url} alt={logo.name} className="h-8 w-auto grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all cursor-default" />
+              ) : (
+                <span className="text-xl font-black tracking-tighter text-zinc-900 dark:text-zinc-50 uppercase opacity-20 hover:opacity-100 transition-opacity cursor-default">
+                  {logo.name}
+                </span>
+              )}
             </div>
           ))}
         </div>

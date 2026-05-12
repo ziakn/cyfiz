@@ -1,32 +1,15 @@
 import React from 'react';
 
-export default function Research() {
-  const summaries = [
-    {
-      headerTitle: 'AI SECURITY FUNDAMENTALS',
-      date: 'May 02, 2026',
-      title: 'New research on securing LLM production pipelines',
-      description: "A deep dive into adversarial attacks and mitigation strategies for enterprise AI.",
-      author: 'Lewis Walker',
-      tags: ['Research', 'AI Safety'],
-    },
-    {
-      headerTitle: 'PRIVACY PRESERVING ML',
-      date: 'Apr 28, 2026',
-      title: 'Differential Privacy: From theory to large scale deployment',
-      description: 'How tech giants are implementing privacy-first machine learning at scale.',
-      author: 'Lewis Walker',
-      tags: ['Privacy', 'ML'],
-    },
-    {
-      headerTitle: 'AGENTIC WORKFLOWS 2026',
-      date: 'Apr 20, 2026',
-      title: 'The rise of autonomous agents in cybersecurity operations',
-      description: 'Analyzing the performance of multi-agent systems in threat detection.',
-      author: 'Lewis Walker',
-      tags: ['Agents', 'Cyber'],
-    },
-  ];
+interface SummaryItem {
+  tag: string;
+  date: string;
+  title: string;
+  excerpt: string;
+  source: string;
+  image_url?: string | null;
+}
+
+export default function Research({ summaries }: { summaries: SummaryItem[] }) {
 
   return (
     <section className="bg-white py-24 dark:bg-black">
@@ -48,17 +31,21 @@ export default function Research() {
             {summaries.map((summary, i) => (
               <div key={i} className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
                 {/* Dark Header */}
-                <div className="relative h-48 bg-[#001D33] p-6 flex flex-col justify-between">
-                  <div className="flex gap-2">
-                    {summary.tags.map(tag => (
-                      <span key={tag} className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold text-white/80 backdrop-blur-md">
-                        {tag}
+                <div className="relative h-48 bg-[#001D33] overflow-hidden group">
+                  {summary.image_url ? (
+                    <img src={summary.image_url} alt={summary.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  ) : null}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#001D33] via-transparent to-transparent opacity-60"></div>
+                  <div className="relative h-full p-6 flex flex-col justify-between z-10">
+                    <div className="flex gap-2">
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold text-white/80 backdrop-blur-md">
+                        {summary.tag}
                       </span>
-                    ))}
+                    </div>
+                    <h4 className="text-xl font-black text-white leading-tight uppercase">
+                      {summary.source || summary.tag}
+                    </h4>
                   </div>
-                  <h4 className="text-xl font-black text-white leading-tight uppercase">
-                    {summary.headerTitle}
-                  </h4>
                 </div>
 
                 {/* Content */}
@@ -76,8 +63,8 @@ export default function Research() {
                     {summary.title}
                   </h5>
                   
-                  <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                    {summary.description}
+                  <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3">
+                    {summary.excerpt}
                   </p>
                   
                   <div className="mt-auto pt-6 flex items-center gap-3">
@@ -85,7 +72,7 @@ export default function Research() {
                       <span className="text-[10px] font-bold">LW</span>
                     </div>
                     <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
-                      {summary.author}
+                      Lewis Walker
                     </span>
                   </div>
                 </div>

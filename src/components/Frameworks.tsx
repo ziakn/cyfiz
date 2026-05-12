@@ -1,33 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
 
-export default function Frameworks() {
-  const frameworks = [
-    {
-      headerTitle: 'GOOGLE CLOUD CEO KEYNOTE PREVIEW',
-      date: 'Apr 22, 2026',
-      title: 'What Google Cloud CEO told Enterprise AI Executive',
-      description: "Plus, blockchain-AI convergence, OpenAI's jobs framework, and more.",
-      author: 'Lewis Walker',
-      tags: ['Generative AI', '+4'],
-    },
-    {
-      headerTitle: 'CLAUDE MYTHOS DEFENSE PLAN',
-      date: 'Apr 15, 2026',
-      title: 'Claude Mythos attacks: Executives\' 11-point defense plan',
-      description: 'Plus, Stanford\'s AI Index, board AI principles, and more.',
-      author: 'Lewis Walker',
-      tags: ['Generative AI', '+4'],
-    },
-    {
-      headerTitle: 'ENTERPRISE AI INFRASTRUCTURE',
-      date: 'Apr 01, 2026',
-      title: 'Deloitte\'s inaugural 515-leader AI survey',
-      description: 'Plus, Accenture-Wharton co-intelligence, agentic AIOps, and more.',
-      author: 'Lewis Walker',
-      tags: ['Generative AI', '+4'],
-    },
-  ];
+interface ArticleItem {
+  tag: string;
+  date: string;
+  title: string;
+  excerpt: string;
+  image_url?: string | null;
+}
+
+export default function Frameworks({ articles }: { articles: ArticleItem[] }) {
 
   return (
     <section className="bg-zinc-50 py-24 dark:bg-zinc-950/50">
@@ -37,20 +19,24 @@ export default function Frameworks() {
         </h2>
 
         <div className="grid gap-8 md:grid-cols-3">
-          {frameworks.map((fw, i) => (
+          {articles.map((fw, i) => (
             <div key={i} className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
               {/* Dark Header */}
-              <div className="relative h-48 bg-[#003056] p-6 flex flex-col justify-between">
-                <div className="flex gap-2">
-                  {fw.tags.map(tag => (
-                    <span key={tag} className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold text-white/80 backdrop-blur-md">
-                      {tag}
+              <div className="relative h-48 bg-[#003056] overflow-hidden group">
+                {fw.image_url ? (
+                  <img src={fw.image_url} alt={fw.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                ) : null}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#003056] via-transparent to-transparent opacity-60"></div>
+                <div className="relative h-full p-6 flex flex-col justify-between z-10">
+                  <div className="flex gap-2">
+                    <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold text-white/80 backdrop-blur-md">
+                      {fw.tag}
                     </span>
-                  ))}
+                  </div>
+                  <h3 className="text-xl font-black text-white leading-tight uppercase">
+                    {fw.title}
+                  </h3>
                 </div>
-                <h3 className="text-xl font-black text-white leading-tight">
-                  {fw.headerTitle}
-                </h3>
               </div>
 
               {/* Content */}
@@ -64,12 +50,12 @@ export default function Frameworks() {
                   </button>
                 </div>
                 
-                <h4 className="mt-4 text-lg font-bold text-zinc-900 dark:text-zinc-50 leading-snug">
+                <h4 className="mt-4 text-lg font-bold text-zinc-900 dark:text-zinc-50 leading-snug line-clamp-2">
                   {fw.title}
                 </h4>
                 
-                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                  {fw.description}
+                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3">
+                  {fw.excerpt}
                 </p>
                 
                 <div className="mt-auto pt-6 flex items-center gap-3">
@@ -77,7 +63,7 @@ export default function Frameworks() {
                     <span className="text-[10px] font-bold">LW</span>
                   </div>
                   <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
-                    {fw.author}
+                    Lewis Walker
                   </span>
                 </div>
               </div>

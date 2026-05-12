@@ -4,13 +4,13 @@ import { query } from "@/lib/db";
 export async function GET() {
   try {
     const [experience, skills, projects, education, certifications, socialLinks, stats] = await Promise.all([
-      query("SELECT company, role, period, location, bullets FROM profile_experience ORDER BY period DESC"),
-      query("SELECT category, items FROM profile_skills"),
-      query("SELECT name, description, tags, href FROM profile_projects"),
-      query("SELECT institution, degree, period, detail FROM profile_education"),
-      query("SELECT certification FROM profile_certifications"),
-      query("SELECT name, href FROM social_links ORDER BY id ASC"),
-      query("SELECT value, label FROM site_stats ORDER BY id ASC")
+      query("SELECT company, role, period, location, bullets FROM profile_experience WHERE status = 1 ORDER BY period DESC"),
+      query("SELECT category, items FROM profile_skills WHERE status = 1"),
+      query("SELECT name, description, tags, href, image_url FROM profile_projects WHERE status = 1"),
+      query("SELECT institution, degree, period, detail FROM profile_education WHERE status = 1"),
+      query("SELECT certification FROM profile_certifications WHERE status = 1"),
+      query("SELECT name, href FROM social_links WHERE status = 1 ORDER BY id ASC"),
+      query("SELECT value, label FROM site_stats WHERE status = 1 ORDER BY id ASC")
     ]);
 
     // Process bullets from JSON-like string to array

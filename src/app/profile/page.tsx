@@ -23,6 +23,7 @@ interface Project {
   description: string;
   tags: string[];
   href: string;
+  image_url?: string | null;
 }
 
 interface Education {
@@ -247,11 +248,15 @@ export default function ProfilePage() {
                   href={project.href}
                   className="group flex flex-col rounded-2xl border border-zinc-200 bg-white p-6 transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#001D33] to-[#003056] text-white">
-                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                   <div className="flex items-start justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#001D33] to-[#003056] text-white overflow-hidden">
+                      {project.image_url ? (
+                        <img src={project.image_url} alt={project.name} className="h-full w-full object-cover" />
+                      ) : (
+                        <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
                     </div>
                     <svg className="h-4 w-4 text-zinc-300 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-zinc-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M7 17L17 7M17 7H7M17 7v10" strokeLinecap="round" strokeLinejoin="round" />

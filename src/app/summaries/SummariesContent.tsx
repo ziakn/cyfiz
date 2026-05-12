@@ -14,6 +14,7 @@ interface Summary {
   readTime?: string;
   source?: string;
   citations?: number;
+  image_url?: string | null;
 }
 
 const categories = [
@@ -250,11 +251,17 @@ export default function SummariesContent() {
           {filtered.map((s, i) => (
             <Link href="#" key={i} className="group block">
               <article className="flex flex-col gap-5 rounded-2xl border border-zinc-200/80 bg-white p-6 transition-all duration-300 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:flex-row sm:items-center sm:p-8">
-                {/* Number column */}
+                {/* Number or Image column */}
                 <div className="hidden shrink-0 sm:flex">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-100 text-lg font-black font-serif text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+                  {s.image_url ? (
+                    <div className="h-16 w-16 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+                      <img src={s.image_url} alt={s.title} className="h-full w-full object-cover" />
+                    </div>
+                  ) : (
+                    <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-100 text-lg font-black font-serif text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  )}
                 </div>
 
                 {/* Content */}
