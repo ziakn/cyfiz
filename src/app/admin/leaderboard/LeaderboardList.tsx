@@ -51,7 +51,7 @@ export default function LeaderboardList({ initialLeaderboard }: { initialLeaderb
   };
 
   const handleStatusToggle = async (entryId: number, newStatus: number) => {
-    const result = await toggleStatusAction("quiz_leaderboard", entryId, newStatus, "/admin/leaderboard");
+    const result = await toggleStatusAction("quiz_leaderboard", entryId, newStatus, ["/admin/leaderboard", "/quiz"]);
     return result.success;
   };
 

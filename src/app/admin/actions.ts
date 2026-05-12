@@ -7,10 +7,11 @@ function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Failed to update status";
 }
 
-export async function toggleStatusAction(table: string, id: number | string, status: number, path: string) {
+export async function toggleStatusAction(table: string, id: number | string, status: number, paths: string | string[]) {
   try {
     await updateStatus(table, id, status);
-    revalidatePath(path);
+    const revalidateTargets = Array.isArray(paths) ? paths : [paths];
+    revalidateTargets.forEach((path) => revalidatePath(path));
     return { success: true };
   } catch (error: unknown) {
     console.error(`Error updating status for ${table}:`, error);

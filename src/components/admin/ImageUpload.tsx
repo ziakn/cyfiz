@@ -20,6 +20,8 @@ export default function ImageUpload({ table, id, folder, currentImage, onSuccess
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const previousPreview = preview;
+
     // Local preview
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -34,13 +36,22 @@ export default function ImageUpload({ table, id, folder, currentImage, onSuccess
     formData.append("id", id.toString());
     formData.append("folder", folder);
 
-    const result = await uploadImageAction(formData);
-    setIsUploading(false);
+    try {
+      const result = await uploadImageAction(formData);
 
-    if (result.success && result.imageUrl) {
-      if (onSuccess) onSuccess(result.imageUrl);
-    } else {
-      alert(result.error || "Upload failed");
+      if (result.success && result.imageUrl) {
+        setPreview(result.imageUrl);
+        if (onSuccess) onSuccess(result.imageUrl);
+      } else {
+        setPreview(previousPreview);
+        alert(result.error || "Upload failed");
+      }
+    } catch (error) {
+      setPreview(previousPreview);
+      alert(error instanceof Error ? error.message : "Upload failed");
+    } finally {
+      setIsUploading(false);
+      e.target.value = "";
     }
   };
 

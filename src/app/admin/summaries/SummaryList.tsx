@@ -62,7 +62,7 @@ export default function SummaryList({ initialSummaries }: { initialSummaries: Su
   };
 
   const handleStatusToggle = async (summaryId: number, newStatus: number) => {
-    const result = await toggleStatusAction("research_summaries", summaryId, newStatus, "/admin/summaries");
+    const result = await toggleStatusAction("research_summaries", summaryId, newStatus, ["/admin/summaries", "/summaries", "/"]);
     return result.success;
   };
 

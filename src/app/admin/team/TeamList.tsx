@@ -53,7 +53,7 @@ export default function TeamList({ initialTeam }: { initialTeam: TeamMember[] })
   };
 
   const handleStatusToggle = async (memberId: number, newStatus: number) => {
-    const result = await toggleStatusAction("team_members", memberId, newStatus, "/admin/team");
+    const result = await toggleStatusAction("team_members", memberId, newStatus, ["/admin/team", "/connect"]);
     return result.success;
   };
 

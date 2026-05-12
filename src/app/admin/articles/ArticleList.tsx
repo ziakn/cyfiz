@@ -60,7 +60,7 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
   };
 
   const handleStatusToggle = async (articleId: number, newStatus: number) => {
-    const result = await toggleStatusAction("articles", articleId, newStatus, "/admin/articles");
+    const result = await toggleStatusAction("articles", articleId, newStatus, ["/admin/articles", "/insights", "/"]);
     return result.success;
   };
 

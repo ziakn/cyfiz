@@ -13,6 +13,8 @@ const ALLOWED_IMAGE_TABLES = new Set([
   "partners",
 ]);
 
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+
 function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Failed to upload image";
 }
@@ -26,6 +28,18 @@ export async function uploadImageAction(formData: FormData) {
 
     if (!file || !table || !id || !folder) {
       return { error: "Missing required fields" };
+    }
+
+    if (!(file instanceof File) || file.size === 0) {
+      return { error: "Please choose a valid image file" };
+    }
+
+    if (!file.type.startsWith("image/")) {
+      return { error: "Only image files can be uploaded" };
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      return { error: "Image must be 10MB or smaller" };
     }
 
     if (!ALLOWED_IMAGE_TABLES.has(table)) {

@@ -52,7 +52,7 @@ export default function QuizList({ initialQuizzes }: { initialQuizzes: QuizItem[
   };
 
   const handleStatusToggle = async (quizId: number, newStatus: number) => {
-    const result = await toggleStatusAction("past_quizzes", quizId, newStatus, "/admin/quiz");
+    const result = await toggleStatusAction("past_quizzes", quizId, newStatus, ["/admin/quiz", "/quiz"]);
     return result.success;
   };
 
