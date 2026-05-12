@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "@/lib/auth";
-import { getAllAdminUsers, getAllModules } from "@/lib/db";
+import { getAllAdminUsers, getAllModules, query } from "@/lib/db";
 
 interface ModuleItem {
   id: number;
@@ -29,12 +29,18 @@ export default async function AdminDashboardPage() {
     redirect("/admin");
   }
 
-  const [modules, users] = (await Promise.all([getAllModules(), getAllAdminUsers()])) as [ModuleItem[], AdminUser[]];
+  const [modules, users, articles, quizzes, team] = (await Promise.all([
+    getAllModules(), 
+    getAllAdminUsers(),
+    query("SELECT COUNT(*) as count FROM articles"),
+    query("SELECT COUNT(*) as count FROM past_quizzes"),
+    query("SELECT COUNT(*) as count FROM team_members")
+  ])) as [ModuleItem[], AdminUser[], any[], any[], any[]];
 
   const stats = [
-    { label: "Articles", value: "24", icon: "📄", color: "#9155FD" },
-    { label: "Active Quizzes", value: "12", icon: "🏆", color: "#56CA00" },
-    { label: "Team Members", value: "6", icon: "👥", color: "#03C3EC" },
+    { label: "Articles", value: articles[0].count.toString(), icon: "📄", color: "#9155FD" },
+    { label: "Active Quizzes", value: quizzes[0].count.toString(), icon: "🏆", color: "#56CA00" },
+    { label: "Team Members", value: team[0].count.toString(), icon: "👥", color: "#03C3EC" },
     { label: "Admin Users", value: users.length.toString(), icon: "👤", color: "#FFB400" },
   ];
 
