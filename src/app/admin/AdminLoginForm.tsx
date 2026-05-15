@@ -69,7 +69,7 @@ export default function AdminLoginForm() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="admin@example.com"
-                className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-4 py-3 text-sm outline-none transition-colors focus:border-[#9155FD] focus:border-opacity-100"
+                className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-4 py-3 text-sm text-[#3A3541] outline-none transition-colors placeholder:text-gray-400 focus:border-[#9155FD] focus:border-opacity-100"
                 required
               />
             </div>
@@ -82,7 +82,7 @@ export default function AdminLoginForm() {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="Password"
-                  className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-4 py-3 pr-12 text-sm outline-none transition-colors focus:border-[#9155FD] focus:border-opacity-100"
+                  className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-4 py-3 pr-12 text-sm text-[#3A3541] outline-none transition-colors placeholder:text-gray-400 focus:border-[#9155FD] focus:border-opacity-100"
                   required
                 />
                 <button
