@@ -25,7 +25,8 @@ export function verifyAuthToken(token: string) {
 export function createAuthCookie(token: string) {
   return serialize(AUTH_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    // secure: process.env.NODE_ENV === "production",
+    secure: false,
     path: "/",
     maxAge: 8 * 60 * 60,
     sameSite: "lax",
@@ -35,7 +36,8 @@ export function createAuthCookie(token: string) {
 export function clearAuthCookie() {
   return serialize(AUTH_COOKIE_NAME, "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    // secure: process.env.NODE_ENV === "production",
+    secure: false,
     path: "/",
     maxAge: 0,
     sameSite: "lax",
