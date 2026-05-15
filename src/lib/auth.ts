@@ -4,8 +4,9 @@ import { serialize, parse } from "cookie";
 
 export const AUTH_COOKIE_NAME = "cyfiz_admin";
 const JWT_SECRET = process.env.JWT_SECRET ?? "replace_this_secret";
-const TOKEN_EXPIRY = "8h";
-export const AUTH_COOKIE_MAX_AGE = 8 * 60 * 60;
+const AUTH_LIFETIME_DAYS = 3650;
+const TOKEN_EXPIRY = `${AUTH_LIFETIME_DAYS}d`;
+export const AUTH_COOKIE_MAX_AGE = AUTH_LIFETIME_DAYS * 24 * 60 * 60;
 
 export function hashPassword(password: string) {
   return bcrypt.hashSync(password, 10);
