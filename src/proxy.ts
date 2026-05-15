@@ -21,15 +21,20 @@ function hasValidAdminSession(request: NextRequest) {
 
 export function proxy(request: NextRequest) {
   const isLoginRoute = request.nextUrl.pathname === "/admin";
+  const isLoginPage = request.nextUrl.pathname === "/admin/login";
   const isLogoutRoute = request.nextUrl.pathname === "/admin/logout";
   const hasSession = hasValidAdminSession(request);
 
-  if (isLoginRoute && hasSession) {
+  if ((isLoginRoute || isLoginPage) && hasSession) {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
-  if (!isLoginRoute && !isLogoutRoute && !hasSession) {
-    return NextResponse.redirect(new URL("/admin", request.url));
+  if (isLoginRoute && !hasSession) {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
+  }
+
+  if (!isLoginPage && !isLogoutRoute && !hasSession) {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
   return NextResponse.next();

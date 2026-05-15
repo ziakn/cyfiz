@@ -9,19 +9,26 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname === "/admin" || pathname === "/admin/logout") {
-    return NextResponse.next();
+  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+  const isAdminRoot = pathname === "/admin";
+  const isLoginPage = pathname === "/admin/login";
+  const isLogoutPage = pathname === "/admin/logout";
+
+  if ((isAdminRoot || isLoginPage) && token) {
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
-  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+  if (isAdminRoot && !token) {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
+  }
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/admin", request.url));
+  if (!isLoginPage && !isLogoutPage && !token) {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*"],
 };

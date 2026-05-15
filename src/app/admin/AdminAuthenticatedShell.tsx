@@ -14,7 +14,7 @@ interface AdminAuthenticatedShellProps {
 export default function AdminAuthenticatedShell({ children, user }: AdminAuthenticatedShellProps) {
   const pathname = usePathname();
 
-  if (pathname === "/admin") {
+  if (pathname === "/admin" || pathname === "/admin/login") {
     return (
       <div className="relative min-h-screen bg-[#F4F5FA] text-[#3A3541]">
         <main className="relative z-0">{children}</main>
