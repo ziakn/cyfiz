@@ -1,6 +1,3 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 import PortfolioList from "./PortfolioList";
@@ -33,13 +30,6 @@ interface ProjectRow extends RowDataPacket {
 }
 
 export default async function AdminPortfolioPage() {
-  const cookiesStore = await cookies();
-  const cookieValue = cookiesStore.get(AUTH_COOKIE_NAME)?.value ?? null;
-  const user = getSessionUserFromCookie(cookieValue);
-  if (!user) {
-    redirect("/admin");
-  }
-
   const [experience, skills, projects] = await Promise.all([
     query<ExperienceRow[]>("SELECT id, company, role, period, location, bullets, status FROM profile_experience ORDER BY id DESC"),
     query<SkillRow[]>("SELECT id, category, items, status FROM profile_skills"),

@@ -1,6 +1,3 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 import SettingsList from "./SettingsList";
@@ -27,13 +24,6 @@ interface PartnerRow extends RowDataPacket {
 }
 
 export default async function AdminSettingsPage() {
-  const cookiesStore = await cookies();
-  const cookieValue = cookiesStore.get(AUTH_COOKIE_NAME)?.value ?? null;
-  const user = getSessionUserFromCookie(cookieValue);
-  if (!user) {
-    redirect("/admin");
-  }
-
   const [settings, stats, partners] = await Promise.all([
     query<SettingRow[]>("SELECT * FROM site_settings ORDER BY id ASC"),
     query<StatRow[]>("SELECT * FROM site_stats ORDER BY id ASC"),
