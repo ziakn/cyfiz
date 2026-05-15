@@ -7,14 +7,14 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // public admin routes
-  if (pathname === "/admin" || pathname === "/admin/logout") {
+  if (pathname === "/admin" || pathname === "/admin/login" || pathname === "/admin/logout") {
     return NextResponse.next();
   }
 
   // protect all admin child routes
   if (pathname.startsWith("/admin")) {
     if (!token) {
-      return NextResponse.redirect(new URL("/admin", request.url));
+      return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }
 
