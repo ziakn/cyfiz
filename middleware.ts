@@ -3,27 +3,19 @@ import { NextRequest, NextResponse } from "next/server";
 const AUTH_COOKIE_NAME = "cyfiz_admin";
 
 export function middleware(request: NextRequest) {
+  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
   const { pathname } = request.nextUrl;
 
-  if (!pathname.startsWith("/admin")) {
+  // public admin routes
+  if (pathname === "/admin" || pathname === "/admin/logout") {
     return NextResponse.next();
   }
 
-  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
-  const isAdminRoot = pathname === "/admin";
-  const isLoginPage = pathname === "/admin/login";
-  const isLogoutPage = pathname === "/admin/logout";
-
-  if ((isAdminRoot || isLoginPage) && token) {
-    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-  }
-
-  if (isAdminRoot && !token) {
-    return NextResponse.redirect(new URL("/admin/login", request.url));
-  }
-
-  if (!isLoginPage && !isLogoutPage && !token) {
-    return NextResponse.redirect(new URL("/admin/login", request.url));
+  // protect all admin child routes
+  if (pathname.startsWith("/admin")) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
   }
 
   return NextResponse.next();
