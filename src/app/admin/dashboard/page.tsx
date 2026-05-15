@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "@/lib/auth";
 import { getAllAdminUsers, getAllModules, query } from "@/lib/db";
+import LogoutButton from "../LogoutButton";
 
 interface ModuleItem {
   id: number;
@@ -57,9 +58,9 @@ export default async function AdminDashboardPage() {
             <Link href="/admin/articles" className="rounded-md bg-white px-6 py-2 text-xs font-bold uppercase tracking-wider text-[#9155FD] shadow-lg transition-transform hover:scale-105">
               Add New Article
             </Link>
-            <Link href="/admin/logout" className="rounded-md border border-white border-opacity-40 px-6 py-2 text-xs font-bold uppercase tracking-wider text-white transition-all hover:bg-white hover:bg-opacity-10">
+            <LogoutButton className="rounded-md border border-white border-opacity-40 px-6 py-2 text-xs font-bold uppercase tracking-wider text-white transition-all hover:bg-white hover:bg-opacity-10 disabled:opacity-70">
               Logout Session
-            </Link>
+            </LogoutButton>
           </div>
         </div>
         {/* Abstract Background Shapes */}
