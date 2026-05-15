@@ -5,6 +5,7 @@ import { serialize, parse } from "cookie";
 export const AUTH_COOKIE_NAME = "cyfiz_admin";
 const JWT_SECRET = process.env.JWT_SECRET ?? "replace_this_secret";
 const TOKEN_EXPIRY = "8h";
+export const AUTH_COOKIE_MAX_AGE = 8 * 60 * 60;
 
 export function hashPassword(password: string) {
   return bcrypt.hashSync(password, 10);
@@ -25,10 +26,9 @@ export function verifyAuthToken(token: string) {
 export function createAuthCookie(token: string) {
   return serialize(AUTH_COOKIE_NAME, token, {
     httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 8 * 60 * 60,
+    maxAge: AUTH_COOKIE_MAX_AGE,
     sameSite: "lax",
   });
 }
@@ -36,12 +36,16 @@ export function createAuthCookie(token: string) {
 export function clearAuthCookie() {
   return serialize(AUTH_COOKIE_NAME, "", {
     httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 0,
     sameSite: "lax",
   });
+}
+
+export function isSecureRequest(request: Request) {
+  const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  return forwardedProto === "https" || new URL(request.url).protocol === "https:";
 }
 
 export function getSessionUserFromCookie(cookieValue: string | undefined | null) {

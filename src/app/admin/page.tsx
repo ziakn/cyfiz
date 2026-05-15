@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
@@ -10,6 +10,23 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function redirectAuthenticatedUser() {
+      const response = await fetch("/api/admin/session", { cache: "no-store" });
+      if (!cancelled && response.ok) {
+        router.replace("/admin/dashboard");
+      }
+    }
+
+    redirectAuthenticatedUser();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,7 +42,8 @@ export default function AdminLoginPage() {
     setLoading(false);
 
     if (response.ok) {
-      router.push("/admin/dashboard");
+      router.replace("/admin/dashboard");
+      router.refresh();
       return;
     }
 
