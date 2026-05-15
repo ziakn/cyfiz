@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "@/lib/auth";
-import { getAllModules } from "@/lib/db";
 
 export default async function AdminLayout({
   children,
@@ -28,8 +27,6 @@ export default async function AdminLayout({
       </div>
     );
   }
-
-  const modules = await getAllModules();
 
   return (
     <div className="flex min-h-screen bg-[#F4F5FA] text-[#3A3541]">
