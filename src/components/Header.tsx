@@ -5,15 +5,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200/50 bg-white/80 backdrop-blur-md dark:border-zinc-800/50 dark:bg-black/80">
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-black dark:bg-white">
-            <div className="grid grid-cols-2 gap-0.5">
-              <div className="h-2 w-2 rounded-full bg-white dark:bg-black"></div>
-              <div className="h-2 w-2 rounded-full bg-white dark:bg-black"></div>
-              <div className="h-2 w-2 rounded-full bg-white dark:bg-black"></div>
-              <div className="h-2 w-2 rounded-full bg-white dark:bg-black"></div>
-            </div>
-          </div>
-          <span className="text-xl font-black font-serif tracking-tighter text-zinc-900 dark:text-zinc-50">Cyfiz.</span>
+          <img src="/logo.jpeg" alt="Cyfiz Logo" className="h-10 w-auto" />
         </Link>
 
         <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">

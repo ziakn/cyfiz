@@ -39,16 +39,7 @@ export default function AdminLoginForm() {
       <div className="w-full max-w-[448px] overflow-hidden rounded-lg bg-white shadow-[0_4px_24px_0_rgba(58,53,65,0.1)]">
         <div className="p-8 sm:p-12">
           <div className="mb-8 flex items-center justify-center gap-3">
-            <svg width="34" height="24" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" clipRule="evenodd" d="M0.00012207 0L13.6749 24H20.325L33.9999 0H27.325L17 18.1408L6.6749 0H0.00012207Z" fill="#9155FD" />
-              <path fillRule="evenodd" clipRule="evenodd" d="M6.6749 0H13.6749L17 5.83333L20.325 0H27.325L17 18.1408L6.6749 0Z" fill="url(#paint0_linear)" fillOpacity="0.2" />
-              <defs>
-                <linearGradient id="paint0_linear" x1="17" y1="0" x2="17" y2="18.1408" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="white" />
-                  <stop offset="1" stopColor="white" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
+            <img src="/logo.jpeg" alt="Cyfiz Logo" className="h-10 w-auto" />
             <span className="text-2xl font-bold uppercase tracking-tight text-[#3A3541] opacity-[0.87]">Cyfiz Admin</span>
           </div>
 
