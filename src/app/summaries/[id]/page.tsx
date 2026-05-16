@@ -82,9 +82,10 @@ export default async function SummaryDetail({ params }: { params: Promise<{ id: 
                     <div className="prose prose-zinc dark:prose-invert max-w-none">
                         <div className="rounded-xl bg-zinc-50 dark:bg-zinc-900/50 p-8 border-l-4 border-zinc-900 dark:border-zinc-50 mb-12">
                             <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 mt-0">Research Excerpt</h2>
-                            <p className="text-lg italic text-zinc-700 dark:text-zinc-300 mb-0">
-                                "{summary.excerpt}"
-                            </p>
+                            <div 
+                                className="text-lg italic text-zinc-700 dark:text-zinc-300 mb-0"
+                                dangerouslySetInnerHTML={{ __html: summary.excerpt }}
+                            />
                         </div>
                         
                         <div className="space-y-6 text-lg leading-relaxed text-zinc-800 dark:text-zinc-200">

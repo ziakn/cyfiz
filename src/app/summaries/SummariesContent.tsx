@@ -284,9 +284,10 @@ export default function SummariesContent() {
                     {s.title}
                   </h2>
 
-                  <p className="mt-2 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 line-clamp-2">
-                    {s.excerpt}
-                  </p>
+                  <div 
+                    className="mt-3 line-clamp-2 text-sm text-zinc-500 dark:text-zinc-400 sm:text-base"
+                    dangerouslySetInnerHTML={{ __html: s.excerpt }}
+                  />
 
                   {/* Meta row */}
                   <div className="mt-3 flex flex-wrap items-center gap-4 text-[10px] font-medium text-zinc-400">
