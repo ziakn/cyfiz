@@ -1,7 +1,8 @@
-import React from 'react';
-import Image from 'next/image';
+import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 
 interface ArticleItem {
+  id: number;
   tag: string;
   date: string;
   title: string;
@@ -20,7 +21,11 @@ export default function Frameworks({ articles }: { articles: ArticleItem[] }) {
 
         <div className="grid gap-8 md:grid-cols-3">
           {articles.map((fw, i) => (
-            <div key={i} className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
+            <Link 
+              key={i} 
+              href={`/insights/${fw.id}-${slugify(fw.title)}`}
+              className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+            >
               {/* Dark Header */}
               <div className="relative h-48 bg-[#003056] overflow-hidden group">
                 {fw.image_url ? (
@@ -67,7 +72,7 @@ export default function Frameworks({ articles }: { articles: ArticleItem[] }) {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { slugify } from "@/lib/utils";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 
@@ -249,7 +250,7 @@ export default function SummariesContent() {
       <section className="bg-white px-4 py-12 dark:bg-zinc-950 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl space-y-4">
           {filtered.map((s, i) => (
-            <Link href="#" key={i} className="group block">
+            <Link href={`/summaries/${s.id}-${slugify(s.title)}`} key={i} className="group block">
               <article className="flex flex-col gap-5 rounded-2xl border border-zinc-200/80 bg-white p-6 transition-all duration-300 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:flex-row sm:items-center sm:p-8">
                 {/* Number or Image column */}
                 <div className="hidden shrink-0 sm:flex">

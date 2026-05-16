@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { slugify } from "@/lib/utils";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 
@@ -204,7 +205,7 @@ export default function InsightsContent() {
             </p>
           </div>
 
-          <Link href="#" className="group block">
+          <Link href={`/insights/${articles[0]?.id}-${slugify(articles[0]?.title || '')}`} className="group block">
             <div className="grid overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition-all duration-300 group-hover:shadow-xl dark:border-zinc-800 dark:bg-zinc-900 lg:grid-cols-5">
               {/* Visual side */}
               <div className="relative flex items-end overflow-hidden lg:col-span-2 min-h-[300px]">
@@ -284,7 +285,7 @@ export default function InsightsContent() {
             <div className="lg:col-span-2">
               <div className="grid gap-8 sm:grid-cols-2">
                 {filtered.map((article, i) => (
-                  <Link href="#" key={i} className="group block">
+                  <Link href={`/insights/${article.id}-${slugify(article.title)}`} key={i} className="group block">
                     <article className="flex h-full flex-col rounded-2xl border border-zinc-200/80 bg-white p-6 transition-all duration-300 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
                       <div className="flex items-center justify-between">
                         <TagBadge tag={article.tag} />
