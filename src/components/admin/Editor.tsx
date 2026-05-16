@@ -284,7 +284,7 @@ const Editor = ({ value, onChange, placeholder }: EditorProps) => {
         },
         editorProps: {
             attributes: {
-                class: 'max-w-none focus:outline-none min-h-[320px] max-h-[70vh] overflow-y-auto px-4 py-3 bg-white text-zinc-800',
+                class: 'max-w-none focus:outline-none min-h-[220px] max-h-[min(42vh,420px)] overflow-y-auto px-4 py-3 bg-white text-zinc-800',
             },
         },
     });
@@ -309,16 +309,16 @@ const Editor = ({ value, onChange, placeholder }: EditorProps) => {
                     height: 0;
                 }
                 .tiptap {
-                    min-height: 320px;
-                    max-height: 70vh;
+                    min-height: 220px;
+                    max-height: min(42vh, 420px);
                     overflow-y: auto;
                 }
                 .tiptap-editor-wrapper .tiptap:focus {
                     outline: none;
                 }
                 .tiptap-editor-wrapper .ProseMirror {
-                    min-height: 320px;
-                    max-height: 70vh;
+                    min-height: 220px;
+                    max-height: min(42vh, 420px);
                     overflow-y: auto;
                     resize: vertical;
                 }

@@ -79,25 +79,27 @@ export default async function SummaryDetail({ params }: { params: Promise<{ id: 
                     )}
 
                     {/* Content */}
-                    <div className="prose prose-zinc dark:prose-invert max-w-none">
+                    <div className="max-w-none">
                         <div className="rounded-xl bg-zinc-50 dark:bg-zinc-900/50 p-8 border-l-4 border-zinc-900 dark:border-zinc-50 mb-12">
                             <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 mt-0">Research Excerpt</h2>
                             <div 
-                                className="text-lg italic text-zinc-700 dark:text-zinc-300 mb-0"
+                                className="rich-text mb-0"
                                 dangerouslySetInnerHTML={{ __html: summary.excerpt }}
                             />
                         </div>
                         
-                        <div className="space-y-6 text-lg leading-relaxed text-zinc-800 dark:text-zinc-200">
-                            <p>
-                                This research paper summary is currently being expanded. Our research team distill complex academic findings 
-                                into 5-minute actionable briefings for cybersecurity and AI practitioners.
-                            </p>
-                            <p>
-                                We analyze methodology, key findings, and practical implications for current system architectures. 
-                                Full briefing for "{summary.title}" will be available shortly.
-                            </p>
-                        </div>
+                        {!summary.excerpt && (
+                            <div className="space-y-6 text-lg leading-relaxed text-zinc-800 dark:text-zinc-200">
+                                <p>
+                                    This research paper summary is currently being expanded. Our research team distill complex academic findings 
+                                    into 5-minute actionable briefings for cybersecurity and AI practitioners.
+                                </p>
+                                <p>
+                                    We analyze methodology, key findings, and practical implications for current system architectures. 
+                                    Full briefing for &quot;{summary.title}&quot; will be available shortly.
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Footer / CTA */}

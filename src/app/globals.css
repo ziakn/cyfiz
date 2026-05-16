@@ -35,3 +35,54 @@
     -webkit-mask-image: radial-gradient(circle, black, transparent 80%);
   }
 }
+
+@layer components {
+  .rich-text {
+    @apply text-lg leading-relaxed text-zinc-800 dark:text-zinc-200;
+  }
+
+  .rich-text p {
+    @apply mb-5;
+  }
+
+  .rich-text p:empty::after {
+    content: "\00a0";
+  }
+
+  .rich-text h1 {
+    @apply mb-5 mt-8 text-4xl font-bold leading-tight text-zinc-950 dark:text-zinc-50;
+  }
+
+  .rich-text h2 {
+    @apply mb-4 mt-7 text-3xl font-bold leading-tight text-zinc-950 dark:text-zinc-50;
+  }
+
+  .rich-text ul,
+  .rich-text ol {
+    @apply mb-5 ml-6 pl-5;
+  }
+
+  .rich-text ul {
+    list-style: disc;
+  }
+
+  .rich-text ol {
+    list-style: decimal;
+  }
+
+  .rich-text li {
+    @apply my-2 pl-1;
+  }
+
+  .rich-text blockquote {
+    @apply my-6 border-l-4 border-zinc-900 pl-5 text-zinc-600 dark:border-zinc-50 dark:text-zinc-300;
+  }
+
+  .rich-text a {
+    @apply font-semibold text-[#9155FD] underline underline-offset-4;
+  }
+
+  .rich-text strong {
+    @apply font-bold text-zinc-950 dark:text-zinc-50;
+  }
+}

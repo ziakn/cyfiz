@@ -71,22 +71,24 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
                     )}
 
                     {/* Content */}
-                    <div className="prose prose-zinc dark:prose-invert max-w-none">
+                    <div className="max-w-none">
                         <div 
-                            className="text-xl font-medium leading-relaxed text-zinc-600 dark:text-zinc-300 mb-8"
+                            className="rich-text mb-8"
                             dangerouslySetInnerHTML={{ __html: article.excerpt }}
                         />
                         
                         {/* Fallback if no content yet */}
-                        <div className="space-y-6 text-lg leading-relaxed text-zinc-800 dark:text-zinc-200">
-                            <p>
-                                Full analysis and deep dive content for this framework is currently being processed by our editorial team. 
-                                We prioritize accuracy and depth in our reporting to ensure decision-makers receive the most reliable intelligence.
-                            </p>
-                            <p>
-                                In the meantime, you can explore other research summaries or connect with our team for specific inquiries regarding {article.title}.
-                            </p>
-                        </div>
+                        {!article.excerpt && (
+                            <div className="space-y-6 text-lg leading-relaxed text-zinc-800 dark:text-zinc-200">
+                                <p>
+                                    Full analysis and deep dive content for this framework is currently being processed by our editorial team. 
+                                    We prioritize accuracy and depth in our reporting to ensure decision-makers receive the most reliable intelligence.
+                                </p>
+                                <p>
+                                    In the meantime, you can explore other research summaries or connect with our team for specific inquiries regarding {article.title}.
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Footer / CTA */}
