@@ -77,9 +77,10 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
 
                     {/* Content */}
                     <div className="prose prose-zinc dark:prose-invert max-w-none">
-                        <p className="text-xl font-medium leading-relaxed text-zinc-600 dark:text-zinc-300 mb-8">
-                            {article.excerpt}
-                        </p>
+                        <div 
+                            className="text-xl font-medium leading-relaxed text-zinc-600 dark:text-zinc-300 mb-8"
+                            dangerouslySetInnerHTML={{ __html: article.excerpt }}
+                        />
                         
                         {/* Fallback if no content yet */}
                         <div className="space-y-6 text-lg leading-relaxed text-zinc-800 dark:text-zinc-200">

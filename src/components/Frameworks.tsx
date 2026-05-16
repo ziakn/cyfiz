@@ -59,9 +59,10 @@ export default function Frameworks({ articles }: { articles: ArticleItem[] }) {
                   {fw.title}
                 </h4>
                 
-                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3">
-                  {fw.excerpt}
-                </p>
+                <div 
+                  className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3"
+                  dangerouslySetInnerHTML={{ __html: fw.excerpt }}
+                />
                 
                 <div className="mt-auto pt-6 flex items-center gap-3">
                   <div className="h-8 w-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center overflow-hidden">

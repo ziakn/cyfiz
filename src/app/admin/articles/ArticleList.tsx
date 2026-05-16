@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import DeleteConfirmationModal from "@/components/admin/DeleteConfirmationModal";
 import StatusToggle from "@/components/admin/StatusToggle";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { toggleStatusAction } from "../actions";
 import { deleteArticleAction, addArticleAction, editArticleAction } from "./actions";
+import { stripHtml } from "@/lib/utils";
+
+const Editor = dynamic(() => import("@/components/admin/Editor"), { 
+  ssr: false,
+  loading: () => <div className="h-[200px] w-full animate-pulse rounded-md bg-gray-100" />
+});
 
 interface ArticleItem {
   id: number;
@@ -27,10 +34,24 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
   });
   const [isDeleting, setIsDeleting] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addExcerpt, setAddExcerpt] = useState("");
   const [editModal, setEditModal] = useState<{ open: boolean; article: ArticleItem | null }>({
     open: false,
     article: null,
   });
+  const [editExcerpt, setEditExcerpt] = useState("");
+
+  useEffect(() => {
+    if (editModal.article) {
+      setEditExcerpt(editModal.article.excerpt);
+    }
+  }, [editModal.article]);
+
+  useEffect(() => {
+    if (!addModalOpen) {
+      setAddExcerpt("");
+    }
+  }, [addModalOpen]);
 
   const filteredArticles = initialArticles.filter(a => 
     a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -127,7 +148,7 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-[#3A3541] opacity-[0.87]">{article.title}</span>
-                      <span className="line-clamp-1 text-[10px] text-[#3A3541] opacity-[0.38]">{article.excerpt}</span>
+                      <span className="line-clamp-1 text-[10px] text-[#3A3541] opacity-[0.38]">{stripHtml(article.excerpt)}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -224,7 +245,12 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Excerpt</label>
-                <textarea name="excerpt" required rows={3} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+                <Editor 
+                  value={addExcerpt} 
+                  onChange={setAddExcerpt} 
+                  placeholder="Enter article excerpt..."
+                />
+                <input type="hidden" name="excerpt" value={addExcerpt} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
@@ -294,7 +320,12 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Excerpt</label>
-                <textarea name="excerpt" required rows={3} defaultValue={editModal.article.excerpt} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+                <Editor 
+                  value={editExcerpt} 
+                  onChange={setEditExcerpt} 
+                  placeholder="Edit article excerpt..."
+                />
+                <input type="hidden" name="excerpt" value={editExcerpt} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
