@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { slugify } from "@/lib/utils";
+import { slugify, truncate } from "@/lib/utils";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 
@@ -284,10 +284,9 @@ export default function SummariesContent() {
                     {s.title}
                   </h2>
 
-                  <div 
-                    className="mt-3 line-clamp-2 text-sm text-zinc-500 dark:text-zinc-400 sm:text-base"
-                    dangerouslySetInnerHTML={{ __html: s.excerpt }}
-                  />
+                  <p className="mt-3 line-clamp-2 text-sm text-zinc-500 dark:text-zinc-400 sm:text-base">
+                    {truncate(s.excerpt, 150)}
+                  </p>
 
                   {/* Meta row */}
                   <div className="mt-3 flex flex-wrap items-center gap-4 text-[10px] font-medium text-zinc-400">

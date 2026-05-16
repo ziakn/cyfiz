@@ -13,3 +13,10 @@ export function slugify(text: string) {
 export function stripHtml(html: string) {
   return html.replace(/<[^>]*>?/gm, '');
 }
+
+export function truncate(text: string, length: number = 150) {
+  if (!text) return "";
+  const cleanText = stripHtml(text);
+  if (cleanText.length <= length) return cleanText;
+  return cleanText.slice(0, length).trim() + "...";
+}

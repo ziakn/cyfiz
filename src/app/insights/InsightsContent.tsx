@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { slugify } from "@/lib/utils";
+import { slugify, truncate } from "@/lib/utils";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 
@@ -247,7 +247,7 @@ export default function InsightsContent() {
                   {articles.length > 0 ? articles[0].title : "The 2026 State of AI Security: What 500 CISOs told us"}
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
-                  {articles.length > 0 ? articles[0].excerpt : "We surveyed 500 security leaders across Fortune 1000 companies. The results reveal a widening gap between AI adoption speed and security readiness."}
+                  {articles.length > 0 ? truncate(articles[0].excerpt, 200) : "..."}
                 </p>
                 <span className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-zinc-900 dark:text-zinc-50 transition-all group-hover:gap-3">
                   Read the full report
@@ -297,7 +297,7 @@ export default function InsightsContent() {
                         {article.title}
                       </h3>
                       <p className="mt-3 flex-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
-                        {article.excerpt}
+                        {truncate(article.excerpt, 150)}
                       </p>
                       <div className="mt-6 flex items-center justify-between border-t border-zinc-100 pt-4 dark:border-zinc-800/60">
                         <span className="text-[10px] font-medium text-zinc-400">

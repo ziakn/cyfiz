@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { slugify } from '@/lib/utils';
+import { slugify, truncate } from '@/lib/utils';
 
 interface ArticleItem {
   id: number;
@@ -59,10 +59,9 @@ export default function Frameworks({ articles }: { articles: ArticleItem[] }) {
                   {fw.title}
                 </h4>
                 
-                <div 
-                  className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3"
-                  dangerouslySetInnerHTML={{ __html: fw.excerpt }}
-                />
+                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3">
+                  {truncate(fw.excerpt, 120)}
+                </p>
                 
               </div>
             </Link>

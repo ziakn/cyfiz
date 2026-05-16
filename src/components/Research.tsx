@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { slugify } from '@/lib/utils';
+import { slugify, truncate } from '@/lib/utils';
 
 interface SummaryItem {
   id: number;
@@ -69,10 +69,9 @@ export default function Research({ summaries }: { summaries: SummaryItem[] }) {
                     {summary.title}
                   </h5>
                   
-                  <div 
-                    className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3"
-                    dangerouslySetInnerHTML={{ __html: summary.excerpt }}
-                  />
+                  <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3">
+                    {truncate(summary.excerpt, 120)}
+                  </p>
                   
                 </div>
               </Link>
