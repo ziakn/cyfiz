@@ -10,8 +10,11 @@ export async function GET() {
       query("SELECT week, topic, participants, avg_score as avgScore FROM past_quizzes WHERE status = 1 ORDER BY week DESC")
     ]);
     return NextResponse.json({ leaderboard, pastQuizzes });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching quiz data:", error);
-    return NextResponse.json({ error: "Failed to fetch quiz data" }, { status: 500 });
+    return NextResponse.json({ 
+      error: "Failed to fetch quiz data", 
+      details: error?.message || "Unknown error" 
+    }, { status: 500 });
   }
 }

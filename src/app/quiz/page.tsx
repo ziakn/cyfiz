@@ -37,7 +37,10 @@ export default function QuizPage() {
     async function fetchQuizData() {
       try {
         const response = await fetch("/api/quiz");
-        if (!response.ok) throw new Error("Failed to fetch quiz data");
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.details || "Failed to fetch quiz data");
+        }
         const data = await response.json();
         setQuizData(data);
       } catch (err) {
