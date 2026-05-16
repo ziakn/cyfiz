@@ -126,7 +126,7 @@ const Editor = ({ value, onChange, placeholder }: EditorProps) => {
         },
         editorProps: {
             attributes: {
-                class: 'prose prose-sm sm:prose max-w-none focus:outline-none min-h-[200px] px-4 py-3 bg-white text-zinc-800',
+                class: 'prose prose-sm sm:prose max-w-none focus:outline-none min-h-[200px] max-h-[400px] overflow-y-auto px-4 py-3 bg-white text-zinc-800',
             },
         },
     });
@@ -152,12 +152,16 @@ const Editor = ({ value, onChange, placeholder }: EditorProps) => {
                 }
                 .tiptap {
                     min-height: 200px;
+                    max-height: 400px;
+                    overflow-y: auto;
                 }
                 .tiptap-editor-wrapper .tiptap:focus {
                     outline: none;
                 }
                 .tiptap-editor-wrapper .ProseMirror {
                     min-height: 200px;
+                    max-height: 400px;
+                    overflow-y: auto;
                 }
             `}</style>
         </div>
