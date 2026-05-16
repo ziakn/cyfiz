@@ -5,7 +5,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200/50 bg-white/80 backdrop-blur-md dark:border-zinc-800/50 dark:bg-black/80">
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-          <img src="/logo.jpeg" alt="Cyfiz Logo" className="h-10 w-auto" />
+          <img src="/logo-transparent.png" alt="Cyfiz Logo" className="h-16 w-auto" />
         </Link>
 
         <nav className="hidden flex-1 items-center justify-center gap-8 md:flex">

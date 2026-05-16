@@ -39,7 +39,7 @@ export default function AdminLoginForm() {
       <div className="w-full max-w-[448px] overflow-hidden rounded-lg bg-white shadow-[0_4px_24px_0_rgba(58,53,65,0.1)]">
         <div className="p-8 sm:p-12">
           <div className="mb-8 flex items-center justify-center gap-3">
-            <img src="/logo.jpeg" alt="Cyfiz Logo" className="h-10 w-auto" />
+            <img src="/logo-transparent.png" alt="Cyfiz Logo" className="h-10 w-auto" />
             <span className="text-2xl font-bold uppercase tracking-tight text-[#3A3541] opacity-[0.87]">Cyfiz Admin</span>
           </div>
 

@@ -28,7 +28,7 @@ export default function AdminAuthenticatedShell({ children, user }: AdminAuthent
       <aside className="fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-[0_4px_24px_0_rgba(58,53,65,0.1)] transition-transform sm:translate-x-0">
         <div className="flex h-full flex-col overflow-y-auto px-4 py-6">
           <div className="mb-8 flex items-center gap-3 px-2">
-            <img src="/logo.jpeg" alt="Cyfiz Logo" className="h-8 w-auto" />
+            <img src="/logo-transparent.png" alt="Cyfiz Logo" className="h-8 w-auto" />
             <span className="text-xl font-bold uppercase tracking-tight text-[#3A3541] opacity-[0.87]">Cyfiz Admin</span>
           </div>
 

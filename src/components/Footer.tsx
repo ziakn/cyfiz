@@ -9,7 +9,7 @@ export default function Footer() {
           {/* Column 1: Branding & Philosophy */}
           <div>
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl font-black font-serif tracking-tight text-zinc-900 dark:text-zinc-50">Cyfiz.</span>
+              <img src="/logo-transparent.png" alt="Cyfiz Logo" className="h-16 w-auto" />
             </Link>
             <p className="mt-6 max-w-xs text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
               Explore what matters, uncover what others miss and use practical frameworks to build what comes next.
