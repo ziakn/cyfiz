@@ -74,14 +74,6 @@ export default function Research({ summaries }: { summaries: SummaryItem[] }) {
                     dangerouslySetInnerHTML={{ __html: summary.excerpt }}
                   />
                   
-                  <div className="mt-auto pt-6 flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center overflow-hidden">
-                      <span className="text-[10px] font-bold">LW</span>
-                    </div>
-                    <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
-                      Lewis Walker
-                    </span>
-                  </div>
                 </div>
               </Link>
             ))}

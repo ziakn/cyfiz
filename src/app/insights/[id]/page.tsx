@@ -53,11 +53,6 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
                             {article.title}
                         </h1>
                         <div className="mt-8 flex items-center gap-6 text-sm text-zinc-500 dark:text-zinc-400">
-                            <div className="flex items-center gap-2">
-                                <div className="h-8 w-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">LW</div>
-                                <span className="font-bold text-zinc-900 dark:text-zinc-50">Lewis Walker</span>
-                            </div>
-                            <div className="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
                             <span>{article.date}</span>
                             <div className="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
                             <span>{article.read_time}</span>
