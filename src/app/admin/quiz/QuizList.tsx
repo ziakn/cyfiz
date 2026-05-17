@@ -1,225 +1,205 @@
 "use client";
 
 import { useState } from "react";
-import DeleteConfirmationModal from "@/components/admin/DeleteConfirmationModal";
 import StatusToggle from "@/components/admin/StatusToggle";
 import { toggleStatusAction } from "../actions";
 import * as actions from "./actions";
 
-interface QuizItem {
+interface AdminQuiz {
   id: number;
-  week: string;
-  topic: string;
-  participants: number;
-  avgScore: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  duration_minutes: number;
+  passing_percentage: number;
+  question_order: "sequential" | "random";
+  status: number;
+  question_count: number;
+  registered_count: number;
+  attempt_count: number;
+  completed_attempt_count: number;
+}
+
+interface AdminQuestion {
+  id: number;
+  quiz_id: number;
+  question: string;
+  option_a: string;
+  option_b: string;
+  option_c: string;
+  option_d: string;
+  correct_option: "A" | "B" | "C" | "D";
+  explanation: string | null;
+  reference_text: string | null;
+  sort_order: number;
   status: number;
 }
 
-export default function QuizList({ initialQuizzes }: { initialQuizzes: QuizItem[] }) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [deleteModal, setDeleteModal] = useState<{ open: boolean; quizId: number | null; topic: string }>({
-    open: false,
-    quizId: null,
-    topic: "",
-  });
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [modal, setModal] = useState<{ open: boolean; action: 'add' | 'edit'; data: Partial<QuizItem> | null }>({
-    open: false,
-    action: 'add',
-    data: null,
-  });
+export default function QuizList({
+  initialQuizzes,
+  initialQuestions,
+}: {
+  initialQuizzes: AdminQuiz[];
+  initialQuestions: AdminQuestion[];
+}) {
+  const [quizModal, setQuizModal] = useState<{ open: boolean; data: Partial<AdminQuiz> | null }>({ open: false, data: null });
+  const [questionModal, setQuestionModal] = useState<{ open: boolean; data: Partial<AdminQuestion> | null; quizId?: number }>({ open: false, data: null });
+  const [selectedQuizId, setSelectedQuizId] = useState(initialQuizzes[0]?.id ?? 0);
+  const selectedQuestions = initialQuestions.filter((question) => question.quiz_id === selectedQuizId);
 
-  const filteredQuizzes = initialQuizzes.filter(q => 
-    q.topic.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    q.week.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleDeleteClick = (quiz: QuizItem) => {
-    setDeleteModal({
-      open: true,
-      quizId: quiz.id,
-      topic: quiz.topic,
-    });
-  };
-
-  const confirmDelete = async () => {
-    if (!deleteModal.quizId) return;
-    setIsDeleting(true);
-    const result = await actions.deleteQuizAction(deleteModal.quizId);
-    setIsDeleting(false);
-    if (result.success) setDeleteModal({ open: false, quizId: null, topic: "" });
-    else alert(result.error || "Delete failed");
-  };
-
-  const handleStatusToggle = async (quizId: number, newStatus: number) => {
-    const result = await toggleStatusAction("past_quizzes", quizId, newStatus, ["/admin/quiz", "/quiz"]);
+  async function toggleQuiz(id: number, status: number) {
+    const result = await toggleStatusAction("quizzes", id, status, ["/admin/quiz", "/portal/quizzes", "/quiz"]);
     return result.success;
-  };
+  }
+
+  async function toggleQuestion(id: number, status: number) {
+    const result = await toggleStatusAction("quiz_questions", id, status, ["/admin/quiz", "/portal/quizzes", "/quiz"]);
+    return result.success;
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Header Actions */}
-      <div className="flex flex-col gap-4 rounded-lg bg-white p-6 shadow-[0_2px_10px_0_rgba(58,53,65,0.1)] sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-sm">
-          <input 
-            type="text" 
-            placeholder="Search Quiz" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-4 py-2 text-sm outline-none transition-colors focus:border-[#9155FD]"
-          />
+    <div className="space-y-8">
+      <div className="flex items-center justify-between rounded-lg bg-white p-6 shadow-[0_2px_10px_0_rgba(58,53,65,0.1)]">
+        <div>
+          <h1 className="text-2xl font-bold text-[#3A3541]">Quiz Bank</h1>
+          <p className="mt-1 text-sm text-[#3A3541] opacity-60">Manage portal quizzes, questions, answers, explanations, and publishing.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="inline-flex items-center gap-2 rounded-md border border-[#3A3541] border-opacity-[0.12] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#3A3541] opacity-[0.6] hover:bg-gray-50">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-            Export
-          </button>
-          <button 
-            onClick={() => setModal({ open: true, action: 'add', data: null })}
-            className="inline-flex items-center gap-2 rounded-md bg-[#9155FD] px-6 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[0_2px_10px_0_rgba(145,85,253,0.3)] transition-all hover:bg-[#804BDF]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Add New Quiz
-          </button>
+        <button onClick={() => setQuizModal({ open: true, data: null })} className="rounded-md bg-[#9155FD] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white">
+          Add Quiz
+        </button>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+        <div className="space-y-4">
+          {initialQuizzes.map((quiz) => (
+            <button
+              key={quiz.id}
+              onClick={() => setSelectedQuizId(quiz.id)}
+              className={`block w-full rounded-lg border bg-white p-5 text-left shadow-sm ${selectedQuizId === quiz.id ? "border-[#9155FD]" : "border-transparent"}`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 className="font-bold text-[#3A3541]">{quiz.title}</h2>
+                  <p className="mt-1 line-clamp-2 text-xs text-[#3A3541] opacity-60">{quiz.description}</p>
+                </div>
+                <StatusToggle initialStatus={quiz.status} onToggle={(status) => toggleQuiz(quiz.id, status)} />
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-bold text-[#3A3541] opacity-60">
+                <span>{quiz.question_count} questions</span>
+                <span>{quiz.registered_count} candidates</span>
+                <span>{quiz.attempt_count} attempts</span>
+                <span>{quiz.duration_minutes} min</span>
+                <span>{quiz.passing_percentage}% pass</span>
+              </div>
+              <div className="mt-4 flex gap-2">
+                <span onClick={(event) => { event.stopPropagation(); setQuizModal({ open: true, data: quiz }); }} className="rounded-md border border-[#3A3541]/20 px-3 py-1 text-xs font-bold text-[#3A3541]">Edit</span>
+                <span onClick={(event) => { event.stopPropagation(); actions.deleteQuizAction(quiz.id); }} className="rounded-md border border-red-200 px-3 py-1 text-xs font-bold text-red-500">Delete</span>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-lg bg-white p-6 shadow-[0_2px_10px_0_rgba(58,53,65,0.1)]">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[#3A3541]">Questions</h2>
+            <button
+              disabled={!selectedQuizId}
+              onClick={() => setQuestionModal({ open: true, data: null, quizId: selectedQuizId })}
+              className="rounded-md bg-[#9155FD] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white disabled:opacity-50"
+            >
+              Add Question
+            </button>
+          </div>
+
+          <div className="mt-5 space-y-3">
+            {selectedQuestions.length === 0 ? (
+              <p className="rounded-lg bg-[#F9FAFB] p-4 text-sm text-[#3A3541] opacity-60">No questions yet.</p>
+            ) : (
+              selectedQuestions.map((question) => (
+                <div key={question.id} className="rounded-lg border border-[#3A3541]/10 p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-wider text-[#9155FD]">Q{question.sort_order || question.id} · Answer {question.correct_option}</p>
+                      <p className="mt-2 text-sm font-semibold text-[#3A3541]">{question.question}</p>
+                    </div>
+                    <StatusToggle initialStatus={question.status} onToggle={(status) => toggleQuestion(question.id, status)} />
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <button onClick={() => setQuestionModal({ open: true, data: question })} className="rounded-md border border-[#3A3541]/20 px-3 py-1 text-xs font-bold text-[#3A3541]">Edit</button>
+                    <button onClick={() => actions.deleteQuestionAction(question.id)} className="rounded-md border border-red-200 px-3 py-1 text-xs font-bold text-red-500">Delete</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Table Container */}
-      <div className="overflow-hidden rounded-lg bg-white shadow-[0_2px_10px_0_rgba(58,53,65,0.1)]">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-[#F9FAFB] border-b border-[#3A3541] border-opacity-[0.12]">
-              <tr>
-                <th className="px-6 py-4">
-                  <input type="checkbox" className="h-4 w-4 rounded border-[#3A3541] border-opacity-[0.22] text-[#9155FD]" />
-                </th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Week</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Topic</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Participants</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Avg. Score</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Status</th>
-                <th className="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#3A3541] divide-opacity-[0.12]">
-              {filteredQuizzes.map((quiz) => (
-                <tr key={quiz.id} className="transition-colors hover:bg-[#F9FAFB]">
-                  <td className="px-6 py-4">
-                    <input type="checkbox" className="h-4 w-4 rounded border-[#3A3541] border-opacity-[0.22] text-[#9155FD]" />
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-[#3A3541] opacity-[0.87]">
-                    {quiz.week}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#3A3541] opacity-[0.87]">
-                    {quiz.topic}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#3A3541] opacity-[0.6]">
-                    {quiz.participants}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-bold text-[#FFB400]">{quiz.avgScore}%</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <StatusToggle 
-                        initialStatus={quiz.status} 
-                        onToggle={(newStatus) => handleStatusToggle(quiz.id, newStatus)} 
-                      />
-                      <span className={`text-[10px] font-bold uppercase tracking-wider ${
-                        quiz.status === 1 ? "text-[#56CA00]" : "text-gray-400"
-                      }`}>
-                        {quiz.status === 1 ? "Active" : "Inactive"}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <button 
-                        onClick={() => setModal({ open: true, action: 'edit', data: quiz })}
-                        className="p-1.5 text-[#3A3541] opacity-[0.54] hover:text-[#9155FD] hover:opacity-100"
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteClick(quiz)}
-                        className="p-1.5 text-[#3A3541] opacity-[0.54] hover:text-[#FF4D49] hover:opacity-100"
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Quiz Modal */}
-      {modal.open && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#3A3541] bg-opacity-50 p-4 transition-opacity">
-          <div className="w-full max-w-lg scale-100 rounded-lg bg-white p-8 shadow-[0_12px_40px_rgba(58,53,65,0.2)] transition-transform">
-            <div className="mb-6 flex items-center justify-between">
-              <h3 className="text-xl font-bold text-[#3A3541] opacity-[0.87]">
-                {modal.action === 'add' ? 'Add New' : 'Edit'} Quiz
-              </h3>
-              <button onClick={() => setModal({ ...modal, open: false })} className="text-[#3A3541] opacity-[0.54] hover:opacity-100">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-              </button>
-            </div>
-
+      {quizModal.open && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-xl rounded-lg bg-white p-6">
+            <h3 className="text-xl font-bold">{quizModal.data?.id ? "Edit" : "Add"} Quiz</h3>
             <form action={async (formData) => {
-              const editId = modal.data?.id;
-              let result;
-              if (modal.action === 'add') {
-                result = await actions.addQuizAction(formData);
-              } else {
-                if (editId === undefined) {
-                  alert("Missing quiz id");
-                  return;
-                }
-                result = await actions.editQuizAction(editId, formData);
-              }
-              
-              if (result.success) setModal({ ...modal, open: false });
-              else alert(result.error || "Action failed");
-            }} className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Week</label>
-                <input name="week" required defaultValue={modal.data?.week} placeholder="e.g. Week 15" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+              const result = quizModal.data?.id ? await actions.editQuizAction(quizModal.data.id, formData) : await actions.addQuizAction(formData);
+              if (result.success) setQuizModal({ open: false, data: null });
+              else alert(result.error);
+            }} className="mt-5 space-y-4">
+              <input name="title" required defaultValue={quizModal.data?.title} placeholder="Quiz title" className="w-full rounded-md border px-3 py-2 text-sm" />
+              <textarea name="description" defaultValue={quizModal.data?.description ?? ""} placeholder="Description" rows={3} className="w-full rounded-md border px-3 py-2 text-sm" />
+              <div className="grid gap-4 sm:grid-cols-3">
+                <input name="duration_minutes" type="number" defaultValue={quizModal.data?.duration_minutes ?? 60} className="w-full rounded-md border px-3 py-2 text-sm" />
+                <input name="passing_percentage" type="number" defaultValue={quizModal.data?.passing_percentage ?? 70} className="w-full rounded-md border px-3 py-2 text-sm" />
+                <select name="question_order" defaultValue={quizModal.data?.question_order ?? "sequential"} className="w-full rounded-md border px-3 py-2 text-sm">
+                  <option value="sequential">Sequential</option>
+                  <option value="random">Random</option>
+                </select>
               </div>
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Topic</label>
-                <input name="topic" required defaultValue={modal.data?.topic} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Participants</label>
-                  <input name="participants" type="number" required defaultValue={modal.data?.participants} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Avg. Score (%)</label>
-                  <input name="avgScore" type="number" required defaultValue={modal.data?.avgScore} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
-                </div>
-              </div>
-
-              <div className="mt-8 flex items-center gap-4">
-                <button type="button" onClick={() => setModal({ ...modal, open: false })} className="flex-1 rounded-md border border-[#3A3541] border-opacity-[0.22] py-2.5 text-xs font-bold uppercase tracking-wider text-[#3A3541] opacity-[0.6] hover:bg-gray-50">Cancel</button>
-                <button type="submit" className="flex-1 rounded-md bg-[#9155FD] py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_2px_10px_0_rgba(145,85,253,0.3)] hover:bg-[#804BDF]">Save</button>
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setQuizModal({ open: false, data: null })} className="flex-1 rounded-md border py-2 text-sm font-bold">Cancel</button>
+                <button className="flex-1 rounded-md bg-[#9155FD] py-2 text-sm font-bold text-white">Save</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      <DeleteConfirmationModal 
-        isOpen={deleteModal.open}
-        onClose={() => setDeleteModal({ ...deleteModal, open: false })}
-        onConfirm={confirmDelete}
-        title="Delete Quiz"
-        itemName={deleteModal.topic}
-        isDeleting={isDeleting}
-      />
+      {questionModal.open && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/40 p-4">
+          <div className="my-8 w-full max-w-3xl rounded-lg bg-white p-6">
+            <h3 className="text-xl font-bold">{questionModal.data?.id ? "Edit" : "Add"} Question</h3>
+            <form action={async (formData) => {
+              if (!questionModal.data?.id && questionModal.quizId) formData.set("quiz_id", String(questionModal.quizId));
+              const result = questionModal.data?.id ? await actions.editQuestionAction(questionModal.data.id, formData) : await actions.addQuestionAction(formData);
+              if (result.success) setQuestionModal({ open: false, data: null });
+              else alert(result.error);
+            }} className="mt-5 space-y-4">
+              <input type="hidden" name="quiz_id" value={questionModal.data?.quiz_id ?? questionModal.quizId ?? ""} />
+              <textarea name="question" required defaultValue={questionModal.data?.question ?? ""} placeholder="Question" rows={3} className="w-full rounded-md border px-3 py-2 text-sm" />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <input name="option_a" required defaultValue={questionModal.data?.option_a ?? ""} placeholder="Option A" className="rounded-md border px-3 py-2 text-sm" />
+                <input name="option_b" required defaultValue={questionModal.data?.option_b ?? ""} placeholder="Option B" className="rounded-md border px-3 py-2 text-sm" />
+                <input name="option_c" required defaultValue={questionModal.data?.option_c ?? ""} placeholder="Option C" className="rounded-md border px-3 py-2 text-sm" />
+                <input name="option_d" required defaultValue={questionModal.data?.option_d ?? ""} placeholder="Option D" className="rounded-md border px-3 py-2 text-sm" />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <select name="correct_option" defaultValue={questionModal.data?.correct_option ?? "A"} className="rounded-md border px-3 py-2 text-sm">
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                  <option value="D">D</option>
+                </select>
+                <input name="sort_order" type="number" defaultValue={questionModal.data?.sort_order ?? selectedQuestions.length + 1} className="rounded-md border px-3 py-2 text-sm" />
+              </div>
+              <textarea name="explanation" defaultValue={questionModal.data?.explanation ?? ""} placeholder="Explanation" rows={4} className="w-full rounded-md border px-3 py-2 text-sm" />
+              <textarea name="reference_text" defaultValue={questionModal.data?.reference_text ?? ""} placeholder="References" rows={3} className="w-full rounded-md border px-3 py-2 text-sm" />
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setQuestionModal({ open: false, data: null })} className="flex-1 rounded-md border py-2 text-sm font-bold">Cancel</button>
+                <button className="flex-1 rounded-md bg-[#9155FD] py-2 text-sm font-bold text-white">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

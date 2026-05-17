@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Link from "next/link";
 
 interface LeaderboardEntry {
   rank: number;
@@ -118,9 +119,14 @@ export default function QuizPage() {
                     <span>👥 {currentQuiz ? currentQuiz.participants.toLocaleString() : "2,341"} taken so far</span>
                   </div>
                 </div>
-                <button className="shrink-0 rounded-full bg-white px-10 py-4 text-sm font-black text-[#001D33] transition-all hover:bg-zinc-100 hover:scale-105 active:scale-95 shadow-lg">
-                  Start Quiz →
-                </button>
+                <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+                  <Link href="/portal/register" className="rounded-full bg-white px-8 py-4 text-center text-sm font-black text-[#001D33] transition-all hover:bg-zinc-100 hover:scale-105 active:scale-95 shadow-lg">
+                    Register for Quiz
+                  </Link>
+                  <Link href="/portal/login" className="rounded-full border border-white/30 px-8 py-4 text-center text-sm font-black text-white transition-all hover:bg-white/10">
+                    Portal Login
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -183,9 +189,9 @@ export default function QuizPage() {
                     <h3 className="mt-1 font-bold text-zinc-900 dark:text-zinc-50">{q.topic}</h3>
                     <p className="mt-1 text-xs text-zinc-500">{q.participants.toLocaleString()} participants · Avg score {q.avgScore}</p>
                   </div>
-                  <button className="shrink-0 rounded-full border border-zinc-200 px-5 py-2 text-xs font-bold text-zinc-700 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800">
-                    Practice Mode
-                  </button>
+                  <Link href="/portal/register" className="shrink-0 rounded-full border border-zinc-200 px-5 py-2 text-xs font-bold text-zinc-700 transition-all hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800">
+                    Register
+                  </Link>
                 </div>
               ))}
             </div>
