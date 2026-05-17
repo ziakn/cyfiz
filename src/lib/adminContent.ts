@@ -182,6 +182,10 @@ export const adminContentModules: AdminContentModule[] = [
       { key: "initials", label: "Initials", type: "text", required: true },
       { key: "name", label: "Name", type: "text", required: true },
       { key: "role", label: "Role", type: "text", required: true },
+      { key: "bio", label: "Bio", type: "textarea" },
+      { key: "expertise", label: "Expertise", type: "textarea" },
+      { key: "portfolio_highlights", label: "Portfolio Highlights", type: "textarea" },
+      { key: "portfolio_url", label: "Portfolio URL", type: "text" },
     ],
   },
   {

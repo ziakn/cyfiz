@@ -21,6 +21,10 @@ ALTER TABLE site_stats ADD COLUMN IF NOT EXISTS status INT DEFAULT 1;
 ALTER TABLE social_links ADD COLUMN IF NOT EXISTS status INT DEFAULT 1;
 ALTER TABLE team_members ADD COLUMN IF NOT EXISTS status INT DEFAULT 1;
 ALTER TABLE team_members ADD COLUMN IF NOT EXISTS image_url VARCHAR(255);
+ALTER TABLE team_members ADD COLUMN IF NOT EXISTS bio TEXT;
+ALTER TABLE team_members ADD COLUMN IF NOT EXISTS expertise TEXT;
+ALTER TABLE team_members ADD COLUMN IF NOT EXISTS portfolio_highlights TEXT;
+ALTER TABLE team_members ADD COLUMN IF NOT EXISTS portfolio_url VARCHAR(255);
 
 -- For admin_modules, it already has an enum status. 
 -- Standardizing it to INT to match others if needed, but let's keep it for now unless asked.

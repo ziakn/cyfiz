@@ -13,6 +13,10 @@ interface TeamMember {
   name: string;
   role: string;
   image_url?: string | null;
+  bio?: string | null;
+  expertise?: string | null;
+  portfolio_highlights?: string | null;
+  portfolio_url?: string | null;
   status: number;
 }
 
@@ -202,6 +206,22 @@ export default function TeamList({ initialTeam }: { initialTeam: TeamMember[] })
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Initials (Optional)</label>
                 <input name="initials" defaultValue={modal.data?.initials} placeholder="e.g. JD" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Bio</label>
+                <textarea name="bio" defaultValue={modal.data?.bio ?? ""} rows={4} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Expertise</label>
+                <input name="expertise" defaultValue={modal.data?.expertise ?? ""} placeholder="Laravel, React, Next.js" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Portfolio Highlights</label>
+                <textarea name="portfolio_highlights" defaultValue={modal.data?.portfolio_highlights ?? ""} rows={4} placeholder="One highlight per line" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Portfolio URL</label>
+                <input name="portfolio_url" defaultValue={modal.data?.portfolio_url ?? ""} placeholder="https://example.com" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
               </div>
 
               <div className="mt-8 flex items-center gap-4">

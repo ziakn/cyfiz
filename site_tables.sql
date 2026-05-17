@@ -118,6 +118,10 @@ CREATE TABLE team_members (
   name VARCHAR(100) NOT NULL,
   role VARCHAR(100) NOT NULL,
   image_url VARCHAR(255),
+  bio TEXT,
+  expertise TEXT,
+  portfolio_highlights TEXT,
+  portfolio_url VARCHAR(255),
   status INT DEFAULT 1
 );
 
