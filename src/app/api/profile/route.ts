@@ -28,6 +28,15 @@ interface CertificationRow {
   certification: string;
 }
 
+interface ResearchPaperRow {
+  id: number;
+  title: string;
+  tag: string;
+  source?: string | null;
+  date: string;
+  readTime?: string | null;
+}
+
 interface SocialLinkRow {
   name: string;
   href?: string | null;
@@ -35,12 +44,13 @@ interface SocialLinkRow {
 
 export async function GET() {
   try {
-    const [experience, skills, projects, education, certifications, socialLinks, stats] = await Promise.all([
+    const [experience, skills, projects, education, certifications, researchPapers, socialLinks, stats] = await Promise.all([
       query<ExperienceRow[]>("SELECT company, role, period, location, bullets FROM profile_experience WHERE status = 1 ORDER BY period DESC"),
       query<SkillRow[]>("SELECT category, items FROM profile_skills WHERE status = 1"),
       query<ProjectRow[]>("SELECT name, description, tags, href, image_url FROM profile_projects WHERE status = 1"),
       query("SELECT institution, degree, period, detail FROM profile_education WHERE status = 1"),
       query<CertificationRow[]>("SELECT certification FROM profile_certifications WHERE status = 1"),
+      query<ResearchPaperRow[]>("SELECT id, title, tag, source, DATE_FORMAT(date, '%M %d, %Y') as date, read_time as readTime FROM research_summaries WHERE status = 1 ORDER BY date DESC LIMIT 3"),
       query<SocialLinkRow[]>("SELECT name, href FROM social_links WHERE status = 1 ORDER BY id ASC"),
       query("SELECT value, label FROM site_stats WHERE status = 1 ORDER BY id ASC")
     ]);
@@ -69,6 +79,7 @@ export async function GET() {
       projects: processedProjects,
       education,
       certifications: certifications.map((cert) => cert.certification),
+      researchPapers,
       socialLinks: socialLinks.map((link) => ({ label: link.name, href: link.href })),
       stats
     });

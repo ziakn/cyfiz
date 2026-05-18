@@ -33,12 +33,22 @@ interface Education {
   detail: string;
 }
 
+interface ResearchPaper {
+  id: number;
+  title: string;
+  tag: string;
+  source?: string | null;
+  date: string;
+  readTime?: string | null;
+}
+
 interface ProfileData {
   experience: Experience[];
   skills: SkillGroup[];
   projects: Project[];
   education: Education[];
   certifications: string[];
+  researchPapers: ResearchPaper[];
   stats: { value: string; label: string; }[];
   socialLinks: { label: string; href: string; }[];
 }
@@ -95,6 +105,7 @@ export default function ProfilePage() {
     projects,
     education,
     certifications,
+    researchPapers = [],
     stats = [],
     socialLinks = []
   } = profileData;
@@ -295,6 +306,37 @@ export default function ProfilePage() {
                   </div>
                 ))}
               </div>
+
+              {researchPapers.length > 0 && (
+                <div className="mt-12">
+                  <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400">Publications</h2>
+                  <h3 className="mt-2 text-3xl font-black font-serif text-zinc-900 dark:text-zinc-50">Research Papers</h3>
+                  <div className="mt-8 space-y-4">
+                    {researchPapers.map((paper) => (
+                      <Link
+                        key={paper.id}
+                        href={`/summaries/${paper.id}`}
+                        className="group block rounded-xl border border-zinc-200 bg-zinc-50 p-5 transition-all hover:border-zinc-300 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="text-xs font-bold uppercase tracking-widest text-zinc-400">{paper.tag}</div>
+                            <h4 className="mt-2 font-black text-zinc-900 dark:text-zinc-50">{paper.title}</h4>
+                          </div>
+                          <svg className="mt-1 h-4 w-4 shrink-0 text-zinc-300 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-zinc-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M7 17L17 7M17 7H7M17 7v10" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+                          {paper.source && <span>{paper.source}</span>}
+                          <span>{paper.date}</span>
+                          {paper.readTime && <span>{paper.readTime}</span>}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Certifications */}
