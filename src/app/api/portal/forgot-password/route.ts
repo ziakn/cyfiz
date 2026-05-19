@@ -43,7 +43,13 @@ export async function POST(request: Request) {
 
   const resetUrl = new URL("/portal/reset-password", getBaseUrl(request));
   resetUrl.searchParams.set("token", token);
-  await sendPortalPasswordResetEmail(user.email, resetUrl.toString());
+
+  try {
+    await sendPortalPasswordResetEmail(user.email, resetUrl.toString());
+  } catch (error) {
+    console.error("Failed to send portal password reset email", error);
+    return NextResponse.json({ error: "Unable to send reset email. Please try again later." }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }

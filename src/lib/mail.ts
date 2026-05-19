@@ -1,16 +1,14 @@
 import nodemailer from "nodemailer";
 
 function createSmtpTransporter() {
-  const host = process.env.SMTP_HOST;
-
-  if (!host) {
-    return null;
-  }
-
   return nodemailer.createTransport({
-    host,
+    host: process.env.SMTP_HOST || "127.0.0.1",
     port: Number(process.env.SMTP_PORT || 25),
     secure: false,
+    ignoreTLS: true,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 20_000,
   });
 }
 
@@ -33,12 +31,6 @@ function escapeHtml(value: string) {
 
 export async function sendPortalPasswordResetEmail(email: string, resetUrl: string) {
   const transporter = createSmtpTransporter();
-
-  if (!transporter) {
-    console.info(`Portal password reset link for ${email}: ${resetUrl}`);
-    return;
-  }
-
   const escapedResetUrl = escapeHtml(resetUrl);
 
   await transporter.sendMail({
