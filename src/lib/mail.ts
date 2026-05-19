@@ -26,7 +26,7 @@ function escapeHtml(value: string) {
 export async function sendPasswordResetEmail({ to, resetUrl }: { to: string; resetUrl: string }) {
   const escapedResetUrl = escapeHtml(resetUrl);
 
-  await transporter.sendMail({
+  const result = await transporter.sendMail({
     from: process.env.SMTP_FROM || "\"Cyfiz\" <no-reply@cyfiz.com>",
     to,
     subject: "Reset your Cyfiz password",
@@ -39,6 +39,14 @@ export async function sendPasswordResetEmail({ to, resetUrl }: { to: string; res
         <p>This link will expire soon. If you did not request this, ignore this email.</p>
       </div>
     `,
+  });
+
+  console.info("Password reset email SMTP result", {
+    to,
+    messageId: result.messageId,
+    accepted: result.accepted,
+    rejected: result.rejected,
+    response: result.response,
   });
 }
 
