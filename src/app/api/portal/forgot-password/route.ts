@@ -13,7 +13,7 @@ interface PortalResetUserRow extends RowDataPacket {
 }
 
 function getBaseUrl(request: Request) {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? request.headers.get("origin") ?? new URL(request.url).origin;
+  return process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? request.headers.get("origin") ?? new URL(request.url).origin;
 }
 
 export async function POST(request: Request) {
