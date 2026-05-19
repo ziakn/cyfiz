@@ -5,6 +5,10 @@ const transporter = nodemailer.createTransport({
   port: Number(process.env.SMTP_PORT || 25),
   secure: false,
   ignoreTLS: true,
+  requireTLS: false,
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 function escapeHtml(value: string) {
