@@ -10,6 +10,7 @@ function getErrorMessage(error: unknown) {
 function revalidateTeam() {
   revalidatePath("/admin/team");
   revalidatePath("/connect");
+  revalidatePath("/connect/team/[id]", "page");
 }
 
 export async function deleteTeamMemberAction(id: number) {

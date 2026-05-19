@@ -17,6 +17,7 @@ interface Social {
 }
 
 interface TeamMember {
+  id: number;
   initials: string;
   name: string;
   role: string;
@@ -36,6 +37,16 @@ interface ConnectData {
   socials: Social[];
   team: TeamMember[];
   stats: Stats[];
+}
+
+function createTeamSlug(member: TeamMember) {
+  const slug = member.name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return `${member.id}${slug ? `-${slug}` : ""}`;
 }
 
 export default function ConnectPage() {
@@ -85,14 +96,6 @@ export default function ConnectPage() {
   }
 
   const { socials, team, stats } = connectData;
-  const formatList = (value?: string | null) =>
-    value
-      ? value
-          .split(/\r?\n|,/)
-          .map((item) => item.trim())
-          .filter(Boolean)
-      : [];
-
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -154,66 +157,30 @@ export default function ConnectPage() {
             <h2 className="text-3xl font-black font-serif text-zinc-900 dark:text-zinc-50">The Team</h2>
             <div className="mt-8 space-y-4">
               {team.map((member) => (
-                <details
-                  key={member.name}
-                  className="group rounded-xl border border-zinc-200 bg-white p-5 transition-all open:shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+                <div
+                  key={member.id}
+                  className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-5 transition-all hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
-                    <div className="flex min-w-0 items-center gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#001D33] to-[#003056] text-sm font-black text-white">
-                        {member.image_url ? (
-                          <Image src={member.image_url} alt={member.name} width={48} height={48} className="h-full w-full object-cover" />
-                        ) : (
-                          member.initials
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="truncate font-bold text-zinc-900 dark:text-zinc-50 text-sm">{member.name}</div>
-                        <div className="text-xs text-zinc-500 dark:text-zinc-400">{member.role}</div>
-                      </div>
+                  <div className="flex min-w-0 items-center gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#001D33] to-[#003056] text-sm font-black text-white">
+                      {member.image_url ? (
+                        <Image src={member.image_url} alt={member.name} width={48} height={48} className="h-full w-full object-cover" />
+                      ) : (
+                        member.initials
+                      )}
                     </div>
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-200 text-zinc-500 transition-transform group-open:rotate-180 dark:border-zinc-700 dark:text-zinc-400">
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                  </summary>
-
-                  <div className="mt-5 border-t border-zinc-100 pt-5 dark:border-zinc-800">
-                    {member.bio && (
-                      <p className="max-w-4xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                        {member.bio}
-                      </p>
-                    )}
-
-                    {formatList(member.expertise).length > 0 && (
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {formatList(member.expertise).map((item) => (
-                          <span
-                            key={item}
-                            className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {formatList(member.portfolio_highlights).length > 0 && (
-                      <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                        {formatList(member.portfolio_highlights).map((item) => (
-                          <div
-                            key={item}
-                            className="rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300"
-                          >
-                            {item}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
+                    <div className="min-w-0">
+                      <div className="truncate font-bold text-zinc-900 dark:text-zinc-50 text-sm">{member.name}</div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400">{member.role}</div>
+                    </div>
                   </div>
-                </details>
+                  <Link
+                    href={`/connect/team/${createTeamSlug(member)}`}
+                    className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                  >
+                    View Profile
+                  </Link>
+                </div>
               ))}
             </div>
 
