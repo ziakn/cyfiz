@@ -5,6 +5,11 @@ import StatusToggle from "@/components/admin/StatusToggle";
 import { toggleStatusAction } from "../actions";
 import * as actions from "./actions";
 
+const CSV_TEMPLATE = [
+  "question,option_a,option_b,option_c,option_d,correct_option,sort_order,explanation,reference_text",
+  '"What is AI governance?","Policies and controls for AI systems","A firewall setting","A database backup","A router protocol","A",1,"Optional explanation","Optional reference"',
+].join("\n");
+
 interface AdminQuiz {
   id: number;
   title: string;
@@ -46,6 +51,7 @@ export default function QuizList({
   const [questionModal, setQuestionModal] = useState<{ open: boolean; data: Partial<AdminQuestion> | null; quizId?: number }>({ open: false, data: null });
   const [selectedQuizId, setSelectedQuizId] = useState(initialQuizzes[0]?.id ?? 0);
   const selectedQuestions = initialQuestions.filter((question) => question.quiz_id === selectedQuizId);
+  const csvTemplateHref = `data:text/csv;charset=utf-8,${encodeURIComponent(CSV_TEMPLATE)}`;
 
   async function toggleQuiz(id: number, status: number) {
     const result = await toggleStatusAction("quizzes", id, status, ["/admin/quiz", "/portal/quizzes", "/quiz"]);
@@ -100,15 +106,54 @@ export default function QuizList({
         </div>
 
         <div className="rounded-lg bg-white p-6 shadow-[0_2px_10px_0_rgba(58,53,65,0.1)]">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <h2 className="text-lg font-bold text-[#3A3541]">Questions</h2>
-            <button
-              disabled={!selectedQuizId}
-              onClick={() => setQuestionModal({ open: true, data: null, quizId: selectedQuizId })}
-              className="rounded-md bg-[#9155FD] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white disabled:opacity-50"
-            >
-              Add Question
-            </button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <a
+                href={csvTemplateHref}
+                download="quiz-questions-template.csv"
+                className="rounded-md border border-[#3A3541]/20 px-4 py-2 text-center text-xs font-bold uppercase tracking-wider text-[#3A3541]"
+              >
+                CSV Template
+              </a>
+              <form
+                action={async (formData) => {
+                  const result = await actions.importQuestionsCsvAction(formData);
+                  const fileInput = document.getElementById("questions_csv") as HTMLInputElement | null;
+                  if (result.success) {
+                    if (fileInput) fileInput.value = "";
+                    alert(`Imported ${result.importedCount} questions.`);
+                  } else {
+                    alert(result.error);
+                  }
+                }}
+                className="flex flex-col gap-2 sm:flex-row sm:items-center"
+              >
+                <input type="hidden" name="quiz_id" value={selectedQuizId} />
+                <input
+                  id="questions_csv"
+                  name="questions_csv"
+                  type="file"
+                  accept=".csv,text/csv"
+                  required
+                  disabled={!selectedQuizId}
+                  className="max-w-52 text-xs text-[#3A3541] file:mr-3 file:rounded-md file:border-0 file:bg-[#F4F5FA] file:px-3 file:py-2 file:text-xs file:font-bold file:text-[#3A3541] disabled:opacity-50"
+                />
+                <button
+                  disabled={!selectedQuizId}
+                  className="rounded-md border border-[#9155FD] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#9155FD] disabled:opacity-50"
+                >
+                  Import
+                </button>
+              </form>
+              <button
+                disabled={!selectedQuizId}
+                onClick={() => setQuestionModal({ open: true, data: null, quizId: selectedQuizId })}
+                className="rounded-md bg-[#9155FD] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white disabled:opacity-50"
+              >
+                Add Question
+              </button>
+            </div>
           </div>
 
           <div className="mt-5 space-y-3">

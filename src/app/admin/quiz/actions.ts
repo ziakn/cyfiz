@@ -21,6 +21,81 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+function parseCsvLine(line: string) {
+  const cells: string[] = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    const nextChar = line[index + 1];
+
+    if (char === '"' && inQuotes && nextChar === '"') {
+      current += '"';
+      index += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+
+    if (char === "," && !inQuotes) {
+      cells.push(current.trim());
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  cells.push(current.trim());
+  return cells;
+}
+
+function parseCsvRows(csvText: string) {
+  const rows: string[][] = [];
+  let currentLine = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < csvText.length; index += 1) {
+    const char = csvText[index];
+    const nextChar = csvText[index + 1];
+
+    if (char === '"' && inQuotes && nextChar === '"') {
+      currentLine += char + nextChar;
+      index += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    }
+
+    if ((char === "\n" || char === "\r") && !inQuotes) {
+      if (currentLine.trim()) rows.push(parseCsvLine(currentLine));
+      currentLine = "";
+      if (char === "\r" && nextChar === "\n") index += 1;
+      continue;
+    }
+
+    currentLine += char;
+  }
+
+  if (currentLine.trim()) rows.push(parseCsvLine(currentLine));
+  return rows;
+}
+
+function normalizeHeader(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, "_");
+}
+
+function getCsvValue(row: string[], headerMap: Map<string, number>, key: string) {
+  const index = headerMap.get(key);
+  return index === undefined ? "" : String(row[index] ?? "").trim();
+}
+
 export async function addQuizAction(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
@@ -98,6 +173,85 @@ export async function addQuestionAction(formData: FormData) {
     );
     revalidateQuizPaths();
     return { success: true };
+  } catch (error: unknown) {
+    return { error: getErrorMessage(error) };
+  }
+}
+
+export async function importQuestionsCsvAction(formData: FormData) {
+  const quizId = Number(formData.get("quiz_id"));
+  const file = formData.get("questions_csv");
+
+  if (!quizId) return { error: "Quiz is required" };
+  if (!(file instanceof File) || file.size === 0) return { error: "CSV file is required" };
+
+  try {
+    const csvText = (await file.text()).replace(/^\uFEFF/, "");
+    const rows = parseCsvRows(csvText);
+
+    if (rows.length < 2) {
+      return { error: "CSV must include a header row and at least one question row" };
+    }
+
+    const headerMap = new Map(rows[0].map((header, index) => [normalizeHeader(header), index]));
+    const requiredColumns = ["question", "option_a", "option_b", "option_c", "option_d", "correct_option"];
+    const missingColumns = requiredColumns.filter((column) => !headerMap.has(column));
+
+    if (missingColumns.length > 0) {
+      return { error: `Missing required columns: ${missingColumns.join(", ")}` };
+    }
+
+    const errors: string[] = [];
+    const validRows = rows.slice(1).flatMap((row, rowIndex) => {
+      const rowNumber = rowIndex + 2;
+      const question = getCsvValue(row, headerMap, "question");
+      const optionA = getCsvValue(row, headerMap, "option_a");
+      const optionB = getCsvValue(row, headerMap, "option_b");
+      const optionC = getCsvValue(row, headerMap, "option_c");
+      const optionD = getCsvValue(row, headerMap, "option_d");
+      const correct = getCsvValue(row, headerMap, "correct_option").toUpperCase();
+      const explanation = getCsvValue(row, headerMap, "explanation");
+      const referenceText = getCsvValue(row, headerMap, "reference_text");
+      const sortOrderValue = getCsvValue(row, headerMap, "sort_order");
+      const sortOrder = sortOrderValue ? Number(sortOrderValue) : rowIndex + 1;
+
+      if (!question || !optionA || !optionB || !optionC || !optionD) {
+        errors.push(`Row ${rowNumber}: question and all four options are required`);
+        return [];
+      }
+
+      if (!["A", "B", "C", "D"].includes(correct)) {
+        errors.push(`Row ${rowNumber}: correct_option must be A, B, C, or D`);
+        return [];
+      }
+
+      if (!Number.isFinite(sortOrder)) {
+        errors.push(`Row ${rowNumber}: sort_order must be a number`);
+        return [];
+      }
+
+      return [{ question, optionA, optionB, optionC, optionD, correct, explanation, referenceText, sortOrder }];
+    });
+
+    if (errors.length > 0) {
+      return { error: errors.slice(0, 8).join("; ") };
+    }
+
+    if (validRows.length === 0) {
+      return { error: "No valid question rows found" };
+    }
+
+    for (const row of validRows) {
+      await execute(
+        `INSERT INTO quiz_questions
+          (quiz_id, question, option_a, option_b, option_c, option_d, correct_option, explanation, reference_text, sort_order, status)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+        [quizId, row.question, row.optionA, row.optionB, row.optionC, row.optionD, row.correct, row.explanation, row.referenceText, row.sortOrder]
+      );
+    }
+
+    revalidateQuizPaths();
+    return { success: true, importedCount: validRows.length };
   } catch (error: unknown) {
     return { error: getErrorMessage(error) };
   }
