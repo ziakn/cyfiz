@@ -80,6 +80,9 @@ export default function Footer() {
             <Link href="/privacy" className="text-xs font-semibold text-zinc-400 transition-colors hover:text-black dark:text-zinc-600 dark:hover:text-white">
               Privacy policy
             </Link>
+            <Link href="/cookie-policy" className="text-xs font-semibold text-zinc-400 transition-colors hover:text-black dark:text-zinc-600 dark:hover:text-white">
+              Cookie policy
+            </Link>
             <Link href="/terms" className="text-xs font-semibold text-zinc-400 transition-colors hover:text-black dark:text-zinc-600 dark:hover:text-white">
               Terms of use
             </Link>

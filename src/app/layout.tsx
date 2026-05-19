@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Work_Sans, IBM_Plex_Serif, Roboto_Mono } from "next/font/google";
+import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
 
 const workSans = Work_Sans({
@@ -38,7 +39,10 @@ export default function RootLayout({
       lang="en"
       className={`${workSans.variable} ${ibmPlexSerif.variable} ${robotoMono.variable} h-full font-sans antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   );
 }
