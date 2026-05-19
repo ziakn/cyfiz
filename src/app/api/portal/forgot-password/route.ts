@@ -4,6 +4,8 @@ import { execute, query } from "@/lib/db";
 import { createPortalPasswordResetToken, hashPortalPasswordResetToken } from "@/lib/portalAuth";
 import { sendPortalPasswordResetEmail } from "@/lib/mail";
 
+export const runtime = "nodejs";
+
 interface PortalResetUserRow extends RowDataPacket {
   id: number;
   email: string;
