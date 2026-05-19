@@ -65,7 +65,14 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
             <input name="email" type="email" required className={inputClass} />
           </div>
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Password</label>
+            <div className="flex items-center justify-between gap-3">
+              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Password</label>
+              {!isRegister && (
+                <Link href="/portal/forgot-password" className="text-xs font-bold text-[#2B167C]">
+                  Forgot password?
+                </Link>
+              )}
+            </div>
             <input name="password" type="password" required minLength={6} className={inputClass} />
           </div>
 
