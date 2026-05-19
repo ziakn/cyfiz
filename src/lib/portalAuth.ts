@@ -52,6 +52,10 @@ export function createPortalPasswordResetToken(payload: { id: number; email: str
   );
 }
 
+export function hashPortalPasswordResetToken(token: string) {
+  return createHash("sha256").update(token).digest("hex");
+}
+
 export function verifyPortalPasswordResetToken(token: string, passwordHash: string) {
   const payload = verify(token, JWT_SECRET) as PortalPasswordResetPayload & { iat: number; exp: number };
   if (payload.purpose !== "portal-password-reset") return null;

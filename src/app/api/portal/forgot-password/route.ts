@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { RowDataPacket } from "mysql2";
-import { query } from "@/lib/db";
-import { createPortalPasswordResetToken } from "@/lib/portalAuth";
+import { execute, query } from "@/lib/db";
+import { createPortalPasswordResetToken, hashPortalPasswordResetToken } from "@/lib/portalAuth";
 import { sendPortalPasswordResetEmail } from "@/lib/mail";
 
 interface PortalResetUserRow extends RowDataPacket {
@@ -33,6 +33,12 @@ export async function POST(request: Request) {
   }
 
   const token = createPortalPasswordResetToken({ id: user.id, email: user.email, passwordHash: user.password_hash });
+  const tokenHash = hashPortalPasswordResetToken(token);
+  await execute(
+    "UPDATE portal_users SET password_reset_token_hash = ?, password_reset_expires_at = DATE_ADD(NOW(), INTERVAL 30 MINUTE) WHERE id = ?",
+    [tokenHash, user.id]
+  );
+
   const resetUrl = new URL("/portal/reset-password", getBaseUrl(request));
   resetUrl.searchParams.set("token", token);
   await sendPortalPasswordResetEmail(user.email, resetUrl.toString());
