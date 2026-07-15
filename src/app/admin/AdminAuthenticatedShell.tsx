@@ -59,6 +59,10 @@ export default function AdminAuthenticatedShell({ children, user }: AdminAuthent
             <div className="pt-4">
               <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Apps & Features</p>
               <div className="mt-2 space-y-1">
+                <Link href="/admin/ai-summarizer" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"></path><circle cx="8.5" cy="14.5" r="1"></circle><circle cx="15.5" cy="14.5" r="1"></circle></svg>
+                  AI Summarizer
+                </Link>
                 <Link href="/admin/quiz" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                   Quizzes
