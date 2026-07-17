@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { query, execute } from "@/lib/db";
 import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "@/lib/auth";
 import { summarizePaper, isGeminiConfigured, MAX_PDF_SIZE } from "@/lib/gemini";
+import { toDateValue } from "@/lib/utils";
 
 const PAPERS_FOLDER = "papers";
 
@@ -238,7 +239,7 @@ export async function publishSummaryAction(id: number, formData: FormData) {
     const combinedExcerpt = keyFindings
       ? `${excerpt}<p><strong>Key findings:</strong></p>${keyFindings}`
       : excerpt;
-    const date = new Date().toISOString().split("T")[0];
+    const date = toDateValue();
 
     const existing = (await query(
       "SELECT published_summary_id FROM ai_summaries WHERE id = ? LIMIT 1",

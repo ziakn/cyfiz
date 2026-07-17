@@ -7,7 +7,7 @@ import StatusToggle from "@/components/admin/StatusToggle";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { toggleStatusAction } from "../actions";
 import { deleteArticleAction, addArticleAction, editArticleAction } from "./actions";
-import { stripHtml } from "@/lib/utils";
+import { stripHtml, toDateValue, formatDateDisplay } from "@/lib/utils";
 
 const Editor = dynamic(() => import("@/components/admin/Editor"), { 
   ssr: false,
@@ -148,7 +148,7 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-[#3A3541] opacity-[0.6]">
-                    {new Date(article.date).toLocaleDateString()}
+                    {formatDateDisplay(article.date)}
                   </td>
                   <td className="px-6 py-4 text-sm text-[#3A3541] opacity-[0.6]">
                     {article.readTime}
@@ -335,7 +335,7 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Date</label>
-                  <input type="date" name="date" required defaultValue={new Date(editModal.article.date).toISOString().split('T')[0]} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+                  <input type="date" name="date" required defaultValue={toDateValue(editModal.article.date)} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
                 </div>
               </div>
               

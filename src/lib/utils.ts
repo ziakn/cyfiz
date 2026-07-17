@@ -20,3 +20,30 @@ export function truncate(text: string, length: number = 150) {
   if (cleanText.length <= length) return cleanText;
   return cleanText.slice(0, length).trim() + "...";
 }
+
+// The timezone the site's publication dates are expressed in. Pinned so the
+// stored day does not depend on the host's TZ (production runs UTC) or on the
+// editor's browser.
+export const SITE_TIMEZONE = "Asia/Qatar";
+
+// Formats a date as YYYY-MM-DD for a DATE column or an <input type="date">.
+// Already-formatted strings pass through untouched: a "YYYY-MM-DD" from the DB
+// has no time or zone, so re-parsing it would only reintroduce a shift.
+export function toDateValue(date: Date | string = new Date()) {
+  if (typeof date === "string") {
+    const match = date.match(/^\d{4}-\d{2}-\d{2}/);
+    if (match) return match[0];
+  }
+  const d = typeof date === "string" ? new Date(date) : date;
+  // en-CA renders as YYYY-MM-DD.
+  return d.toLocaleDateString("en-CA", { timeZone: SITE_TIMEZONE });
+}
+
+// Renders a stored publication date for display. Anchored to UTC because
+// "YYYY-MM-DD" parses as UTC midnight, which would otherwise show the previous
+// day to anyone west of Greenwich.
+export function formatDateDisplay(date: Date | string) {
+  return new Date(`${toDateValue(date)}T00:00:00Z`).toLocaleDateString(undefined, {
+    timeZone: "UTC",
+  });
+}

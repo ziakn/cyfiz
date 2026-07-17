@@ -1,6 +1,7 @@
 "use server";
 
 import { query } from "@/lib/db";
+import { toDateValue } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
 function getErrorMessage(error: unknown, fallback: string) {
@@ -25,7 +26,7 @@ export async function addArticleAction(formData: FormData) {
   const tag = formData.get("tag") as string;
   const excerpt = formData.get("excerpt") as string;
   const readTime = formData.get("readTime") as string;
-  const date = formData.get("date") as string || new Date().toISOString().split('T')[0];
+  const date = formData.get("date") as string || toDateValue();
 
   if (!title || !tag || !excerpt || !readTime) {
     return { error: "Missing required fields" };

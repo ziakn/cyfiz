@@ -6,6 +6,10 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  // Return DATE columns as "YYYY-MM-DD" strings. Parsed as Date objects they
+  // land on the server's timezone midnight, which shifts the day once the value
+  // reaches a browser in another zone.
+  dateStrings: ["DATE"],
 });
 
 type QueryParams = Array<string | number | boolean | null | Date>;

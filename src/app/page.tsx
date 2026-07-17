@@ -36,8 +36,8 @@ interface SiteSetting extends RowDataPacket {
 
 async function getLandingData() {
   const [articles, summaries, stats, settings] = await Promise.all([
-    query<LandingArticle[]>("SELECT id, tag, DATE_FORMAT(date, '%M %d, %Y') as date, title, excerpt, read_time as readTime, image_url FROM articles WHERE status = 1 ORDER BY date DESC, id DESC LIMIT 3"),
-    query<LandingSummary[]>("SELECT id, tag, DATE_FORMAT(date, '%M %d, %Y') as date, title, excerpt, read_time as readTime, source, image_url FROM research_summaries WHERE status = 1 ORDER BY date DESC, id DESC LIMIT 3"),
+    query<LandingArticle[]>("SELECT id, tag, DATE_FORMAT(date, '%M %d, %Y') as date, title, excerpt, read_time as readTime, image_url FROM articles WHERE status = 1 ORDER BY articles.date DESC, id DESC LIMIT 3"),
+    query<LandingSummary[]>("SELECT id, tag, DATE_FORMAT(date, '%M %d, %Y') as date, title, excerpt, read_time as readTime, source, image_url FROM research_summaries WHERE status = 1 ORDER BY research_summaries.date DESC, id DESC LIMIT 3"),
     query<LandingStat[]>("SELECT value, label FROM site_stats WHERE status = 1 ORDER BY id ASC"),
     query<SiteSetting[]>("SELECT setting_key, setting_value FROM site_settings WHERE status = 1")
   ]);
