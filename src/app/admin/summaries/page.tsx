@@ -16,7 +16,7 @@ interface SummaryItem {
 
 export default async function AdminSummariesPage() {
   const summaries = (await query<RowDataPacket[]>(
-    "SELECT id, tag, date, title, excerpt, read_time as readTime, source, image_url, status FROM research_summaries ORDER BY date DESC"
+    "SELECT id, tag, date, title, excerpt, read_time as readTime, source, image_url, status FROM research_summaries ORDER BY date DESC, id DESC"
   )) as SummaryItem[];
 
   return <SummaryList initialSummaries={summaries} />;

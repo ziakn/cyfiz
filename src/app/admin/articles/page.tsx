@@ -15,7 +15,7 @@ interface ArticleItem {
 
 export default async function AdminArticlesPage() {
   const articles = (await query<RowDataPacket[]>(
-    "SELECT id, tag, date, title, excerpt, read_time as readTime, image_url, status FROM articles ORDER BY date DESC"
+    "SELECT id, tag, date, title, excerpt, read_time as readTime, image_url, status FROM articles ORDER BY date DESC, id DESC"
   )) as ArticleItem[];
 
   return <ArticleList initialArticles={articles} />;

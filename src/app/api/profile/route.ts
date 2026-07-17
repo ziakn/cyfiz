@@ -50,7 +50,7 @@ export async function GET() {
       query<ProjectRow[]>("SELECT name, description, tags, href, image_url FROM profile_projects WHERE status = 1"),
       query("SELECT institution, degree, period, detail FROM profile_education WHERE status = 1"),
       query<CertificationRow[]>("SELECT certification FROM profile_certifications WHERE status = 1"),
-      query<ResearchPaperRow[]>("SELECT id, title, tag, source, DATE_FORMAT(date, '%M %d, %Y') as date, read_time as readTime FROM research_summaries WHERE status = 1 ORDER BY date DESC LIMIT 3"),
+      query<ResearchPaperRow[]>("SELECT id, title, tag, source, DATE_FORMAT(date, '%M %d, %Y') as date, read_time as readTime FROM research_summaries WHERE status = 1 ORDER BY date DESC, id DESC LIMIT 3"),
       query<SocialLinkRow[]>("SELECT name, href FROM social_links WHERE status = 1 ORDER BY id ASC"),
       query("SELECT value, label FROM site_stats WHERE status = 1 ORDER BY id ASC")
     ]);
