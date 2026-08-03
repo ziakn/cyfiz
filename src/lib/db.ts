@@ -17,6 +17,7 @@ type QueryParams = Array<string | number | boolean | null | Date>;
 const ALLOWED_STATUS_TABLES = new Set([
   "admin_users",
   "articles",
+  "careers",
   "past_quizzes",
   "partners",
   "profile_certifications",
