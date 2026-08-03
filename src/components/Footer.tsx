@@ -46,6 +46,9 @@ export default function Footer() {
               <Link href="/profile" className="text-base font-medium text-zinc-600 transition-colors hover:text-black dark:text-zinc-400 dark:hover:text-white">
                 Who@m!
               </Link>
+              <Link href="/careers" className="text-base font-medium text-zinc-600 transition-colors hover:text-black dark:text-zinc-400 dark:hover:text-white">
+                Careers
+              </Link>
             </div>
           </div>
 
