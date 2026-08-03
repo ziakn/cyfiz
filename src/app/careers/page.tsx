@@ -22,7 +22,7 @@ export interface CareerItem {
 export default async function CareersPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const resolvedParams = await searchParams;
   const page = parseInt(resolvedParams?.page || "1", 10);
-  const pageSize = 9;
+  const pageSize = 12;
   const offset = (page - 1) * pageSize;
 
   const countResult = await query<RowDataPacket[]>("SELECT COUNT(*) as total FROM careers WHERE status = 1");
