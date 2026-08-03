@@ -16,6 +16,7 @@ export interface CareerItem {
   requirements: string | null;
   salary_range: string | null;
   apply_url: string | null;
+  source: string;
 }
 
 export default async function CareersPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
