@@ -6,6 +6,7 @@ export interface CareerItem {
   id: number;
   title: string;
   slug: string;
+  company_name: string | null;
   department: string | null;
   location: string;
   type: string;

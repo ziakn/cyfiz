@@ -21,6 +21,7 @@ export async function deleteCareerAction(id: number) {
 
 export async function addCareerAction(formData: FormData) {
   const title = formData.get("title") as string;
+  const companyName = formData.get("companyName") as string;
   const department = formData.get("department") as string;
   const location = formData.get("location") as string;
   const type = formData.get("type") as string;
@@ -37,8 +38,8 @@ export async function addCareerAction(formData: FormData) {
 
   try {
     await query(
-      "INSERT INTO careers (title, slug, department, location, type, description, requirements, salary_range, apply_url, source, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'internal', 1)",
-      [title, slug, department, location, type, description, requirements, salaryRange, applyUrl]
+      "INSERT INTO careers (title, company_name, slug, department, location, type, description, requirements, salary_range, apply_url, source, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'internal', 1)",
+      [title, companyName || null, slug, department, location, type, description, requirements, salaryRange, applyUrl]
     );
     revalidatePath("/admin/careers");
     revalidatePath("/careers");
@@ -51,6 +52,7 @@ export async function addCareerAction(formData: FormData) {
 
 export async function editCareerAction(id: number, formData: FormData) {
   const title = formData.get("title") as string;
+  const companyName = formData.get("companyName") as string;
   const department = formData.get("department") as string;
   const location = formData.get("location") as string;
   const type = formData.get("type") as string;
@@ -65,8 +67,8 @@ export async function editCareerAction(id: number, formData: FormData) {
 
   try {
     await query(
-      "UPDATE careers SET title = ?, department = ?, location = ?, type = ?, description = ?, requirements = ?, salary_range = ?, apply_url = ? WHERE id = ?",
-      [title, department, location, type, description, requirements, salaryRange, applyUrl, id]
+      "UPDATE careers SET title = ?, company_name = ?, department = ?, location = ?, type = ?, description = ?, requirements = ?, salary_range = ?, apply_url = ? WHERE id = ?",
+      [title, companyName || null, department, location, type, description, requirements, salaryRange, applyUrl, id]
     );
     revalidatePath("/admin/careers");
     revalidatePath("/careers");

@@ -111,7 +111,7 @@ export default function CareerList({ initialCareers }: { initialCareers: CareerI
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-[#3A3541] opacity-[0.87]">{career.title}</span>
-                      <span className="text-[10px] text-[#3A3541] opacity-[0.38]">{career.department || "No Dept"}</span>
+                      <span className="text-[10px] text-[#3A3541] opacity-[0.38]">{career.company_name || "Internal"} • {career.department || "No Dept"}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -205,15 +205,21 @@ export default function CareerList({ initialCareers }: { initialCareers: CareerI
                   <input name="title" required className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Department</label>
-                  <input name="department" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+                  <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Company Name</label>
+                  <input name="companyName" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
+                  <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Department</label>
+                  <input name="department" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+                </div>
+                <div className="space-y-1">
                   <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Location *</label>
                   <input name="location" required className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Type</label>
                   <select name="type" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]">
@@ -302,15 +308,21 @@ export default function CareerList({ initialCareers }: { initialCareers: CareerI
                   <input name="title" required defaultValue={editModal.career.title} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Department</label>
-                  <input name="department" defaultValue={editModal.career.department || ""} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+                  <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Company Name</label>
+                  <input name="companyName" defaultValue={editModal.career.company_name || ""} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
+                  <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Department</label>
+                  <input name="department" defaultValue={editModal.career.department || ""} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+                </div>
+                <div className="space-y-1">
                   <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Location *</label>
                   <input name="location" required defaultValue={editModal.career.location} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Type</label>
                   <select name="type" defaultValue={editModal.career.type} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]">

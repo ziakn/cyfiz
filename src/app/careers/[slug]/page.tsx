@@ -41,9 +41,12 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
                 {career.type}
               </span>
             </div>
-            <h1 className="mb-6 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
               {career.title}
             </h1>
+            <h2 className="mb-6 text-xl font-medium text-white opacity-90">
+              {career.company_name || "Cyfiz"}
+            </h2>
             <div className="flex items-center justify-center gap-6 text-white opacity-80">
               <div className="flex items-center gap-2 text-sm">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
