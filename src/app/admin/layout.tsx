@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "@/lib/auth";
+import "./admin.css";
 import AdminAuthenticatedShell from "./AdminAuthenticatedShell";
 
 export default async function AdminLayout({

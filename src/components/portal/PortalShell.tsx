@@ -16,12 +16,12 @@ export default function PortalShell({
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7F5FA] text-[#07133D]">
-      <header className="h-16 bg-[#2B167C] px-6 text-white">
+    <div className="min-h-screen bg-[#F6F6F3] text-[#111318]">
+      <header className="h-16 bg-[#0C0D10] px-6 text-white">
         <div className="mx-auto flex h-full max-w-7xl items-center justify-between">
           <Link href="/portal/dashboard" className="text-lg font-black tracking-tight">Cyfiz Portal</Link>
           <div className="flex items-center gap-3">
-            <Link href="/" className="rounded-md bg-white/90 px-4 py-2 text-sm font-bold text-[#2B167C]">Main Website</Link>
+            <Link href="/" className="rounded-md bg-white/90 px-4 py-2 text-sm font-bold text-[#0C0D10]">Main Website</Link>
             <form action="/api/portal/logout" method="post">
               <button className="rounded-md border border-white/30 px-4 py-2 text-sm font-bold text-white" type="submit">Log out</button>
             </form>
@@ -40,7 +40,7 @@ export default function PortalShell({
               <Link
                 key={item.href}
                 href={item.href}
-                className="block rounded-lg px-3 py-3 text-sm font-semibold text-[#07133D] transition-colors hover:bg-[#F1EDFF] hover:text-[#2B167C]"
+                className="block rounded-lg px-3 py-3 text-sm font-semibold text-[#111318] transition-colors hover:bg-[#FFF6D6] hover:text-[#0C0D10]"
               >
                 {item.label}
               </Link>

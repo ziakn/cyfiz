@@ -1,0 +1,22 @@
+/* Admin re-skin to the Cyfiz v2 palette (black + yellow). The admin markup still
+   uses its original utility classes, so the old purple is remapped here. */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+
+.admin-root { font-family: Inter, system-ui, sans-serif; }
+.admin-root h1, .admin-root h2, .admin-root h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+.admin-root .bg-\[\#9155FD\] { background-color: #ffc21a !important; color: #0c0d10 !important; box-shadow: none !important; }
+.admin-root .hover\:bg-\[\#804BDF\]:hover { background-color: #f2a900 !important; }
+.admin-root .text-\[\#9155FD\] { color: #8a5f00 !important; }
+.admin-root .hover\:text-\[\#9155FD\]:hover { color: #8a5f00 !important; }
+.admin-root .border-\[\#9155FD\], .admin-root .focus\:border-\[\#9155FD\]:focus { border-color: #ffc21a !important; }
+.admin-root .focus\:ring-\[\#9155FD\]:focus { --tw-ring-color: #ffc21a !important; }
+.admin-root input[type="checkbox"] { accent-color: #0c0d10; }
+
+/* dark sidebar */
+.admin-side a, .admin-side span, .admin-side p, .admin-side button { color: #cbd5e1 !important; opacity: 1 !important; }
+.admin-side p { color: #7c8294 !important; }
+.admin-side a:hover { background-color: #16181d !important; color: #ffc21a !important; }
+.admin-side .bg-\[\#9155FD\] { background-color: #ffc21a !important; }
+.admin-side .bg-\[\#9155FD\], .admin-side .bg-\[\#9155FD\] * { color: #0c0d10 !important; }
+.admin-side [class*="border-t"] { border-color: #23262c !important; }

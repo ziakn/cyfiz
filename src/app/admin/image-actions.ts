@@ -5,13 +5,7 @@ import { join } from "path";
 import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
-const ALLOWED_IMAGE_TABLES = new Set([
-  "articles",
-  "research_summaries",
-  "team_members",
-  "profile_projects",
-  "partners",
-]);
+const ALLOWED_IMAGE_TABLES = new Set(["articles"]);
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 

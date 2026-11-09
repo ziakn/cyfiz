@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cyfiz
 
-## Getting Started
+Next.js (App Router) site with a MySQL backend and an admin panel.
 
-First, run the development server:
+- **Public site** (`src/app/(site)`): Home, Insights (+ article pages), Learn, Who@m!, Contact
+- **Admin** (`/admin`): Articles, Trainings, Contact Messages, Subscribers, Quizzes, Portal Users, Users, Settings
+- **Quiz portal** (`/portal`): learner sign-up, quizzes and attempts
+
+## Deploy (server only needs a pull)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+./deploy.sh        # git pull → npm ci → npm run migrate → npm run build → restart (pm2)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Server prerequisites (once): Node 20+, a `.env` with `MYSQL_URL`, `JWT_SECRET`, optional `SMTP_*`, `CONTACT_TO`, `NEXT_PUBLIC_SITE_URL`, and an `admin_users` row.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Database changes
+- Schema changes are SQL files in `database/migrations/` (`001_…`, `002_…`). `npm run migrate` applies each new file once (tracked in `schema_migrations`), so a deploy never needs manual SQL.
+- To change the database later: add the next numbered file, commit, push, deploy.
+- `database/optional/drop_v1_tables.sql` removes the old v1 tables. It is destructive and never run automatically.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local development
 
-## Learn More
+`npm run migrate` (first time), then `npm run dev`. `npm run lint` · `npm run typecheck` · `npm run build`
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The previous design is kept on the `v1-backup` branch (tag `v1-frontend-backup`).

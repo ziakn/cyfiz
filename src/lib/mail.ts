@@ -130,3 +130,33 @@ This link expires in 30 minutes. If you did not request a password reset, you ca
 export async function sendPortalPasswordResetEmail(email: string, resetUrl: string) {
   await sendPasswordResetEmail({ to: email, resetUrl });
 }
+
+export async function sendContactNotification(data: {
+  topic: string;
+  name: string;
+  email: string;
+  organisation?: string | null;
+  role?: string | null;
+  message: string;
+  to?: string;
+}) {
+  const to = process.env.CONTACT_TO || data.to || "cyfiz@cyfiz.com";
+  const rows: [string, string][] = [
+    ["Topic", data.topic],
+    ["Name", data.name],
+    ["Email", data.email],
+    ["Organisation", data.organisation || "-"],
+    ["Role", data.role || "-"],
+  ];
+
+  await transporter.sendMail({
+    from: process.env.SMTP_FROM || "\"Cyfiz\" <no-reply@cyfiz.com>",
+    to,
+    replyTo: data.email,
+    subject: `[Cyfiz contact] ${data.topic}: ${data.name}`,
+    text: `${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}\n\n${data.message}`,
+    html: `<table cellpadding="6" style="font-family:Arial,Helvetica,sans-serif;font-size:14px">${rows
+      .map(([k, v]) => `<tr><td><strong>${escapeHtml(k)}</strong></td><td>${escapeHtml(v)}</td></tr>`)
+      .join("")}</table><p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;white-space:pre-wrap">${escapeHtml(data.message)}</p>`,
+  });
+}

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { updateStatus } from "@/lib/db";
+import { requireAdmin } from "@/lib/adminGuard";
 
 function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Failed to update status";
@@ -9,6 +10,7 @@ function getErrorMessage(error: unknown) {
 
 export async function toggleStatusAction(table: string, id: number | string, status: number, paths: string | string[]) {
   try {
+    await requireAdmin();
     await updateStatus(table, id, status);
     const revalidateTargets = Array.isArray(paths) ? paths : [paths];
     revalidateTargets.forEach((path) => revalidatePath(path));

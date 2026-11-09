@@ -23,7 +23,7 @@ export default function QuizCards({ quizzes }: { quizzes: QuizCardItem[] }) {
         <div key={quiz.id} className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-xl font-black text-[#07133D]">{quiz.title}</h2>
+              <h2 className="text-xl font-black text-[#111318]">{quiz.title}</h2>
               <p className="mt-2 text-sm leading-6 text-zinc-500">{quiz.description}</p>
             </div>
             {quiz.registered ? (
@@ -37,7 +37,7 @@ export default function QuizCards({ quizzes }: { quizzes: QuizCardItem[] }) {
           </div>
           <div className="mt-6">
             {quiz.registered ? (
-              <Link href={`/portal/quizzes/${quiz.id}`} className="inline-flex rounded-lg bg-[#2B167C] px-5 py-3 text-sm font-black text-white">
+              <Link href={`/portal/quizzes/${quiz.id}`} className="inline-flex rounded-lg bg-[#0C0D10] px-5 py-3 text-sm font-black text-white">
                 Continue Studying
               </Link>
             ) : (
@@ -46,7 +46,7 @@ export default function QuizCards({ quizzes }: { quizzes: QuizCardItem[] }) {
                 onClick={() => startTransition(() => {
                   void registerForQuizAction(quiz.id);
                 })}
-                className="rounded-lg bg-[#2B167C] px-5 py-3 text-sm font-black text-white disabled:opacity-60"
+                className="rounded-lg bg-[#0C0D10] px-5 py-3 text-sm font-black text-white disabled:opacity-60"
               >
                 Register for Quiz
               </button>

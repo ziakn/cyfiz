@@ -33,11 +33,11 @@ export default function PasswordForm() {
     setError(typeof result.error === "string" ? result.error : "Password update failed.");
   }
 
-  const inputClass = "mt-1 w-full rounded-lg border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-[#07133D] outline-none transition-colors placeholder:text-zinc-400 focus:border-[#2B167C] focus:bg-white focus:ring-2 focus:ring-[#2B167C]/10";
+  const inputClass = "mt-1 w-full rounded-lg border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-[#111318] outline-none transition-colors placeholder:text-zinc-400 focus:border-[#0C0D10] focus:bg-white focus:ring-2 focus:ring-[#0C0D10]/10";
 
   return (
     <form onSubmit={submit} className="mt-8 border-t border-zinc-100 pt-8">
-      <h2 className="text-xl font-black text-[#07133D]">Password Change</h2>
+      <h2 className="text-xl font-black text-[#111318]">Password Change</h2>
       <div className="mt-5 grid gap-4">
         <div>
           <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Current password</label>
@@ -58,7 +58,7 @@ export default function PasswordForm() {
       {message && <p className="mt-4 rounded-lg bg-green-50 p-3 text-sm font-semibold text-green-700">{message}</p>}
       {error && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-semibold text-red-600">{error}</p>}
 
-      <button disabled={loading} className="mt-5 rounded-lg bg-[#2B167C] px-5 py-3 text-sm font-black text-white disabled:opacity-60">
+      <button disabled={loading} className="mt-5 rounded-lg bg-[#0C0D10] px-5 py-3 text-sm font-black text-white disabled:opacity-60">
         {loading ? "Updating..." : "Update Password"}
       </button>
     </form>

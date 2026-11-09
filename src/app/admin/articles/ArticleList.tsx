@@ -20,6 +20,11 @@ interface ArticleItem {
   date: string;
   title: string;
   excerpt: string;
+  summary: string;
+  content: string | null;
+  author_name: string | null;
+  author_role: string | null;
+  audience: string | null;
   readTime: string;
   image_url?: string | null;
   status: number;
@@ -170,7 +175,7 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
                     <div className="flex items-center justify-end gap-1">
                       <button 
                         onClick={() => {
-                          setEditExcerpt(article.excerpt);
+                          setEditExcerpt(article.content || article.excerpt);
                           setEditModal({ open: true, article });
                         }}
                         className="p-1.5 text-[#3A3541] opacity-[0.54] hover:text-[#9155FD] hover:opacity-100"
@@ -233,22 +238,26 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
                   <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Category/Tag</label>
                   <select name="tag" required className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]">
                     <option value="AI Security">AI Security</option>
-                    <option value="Privacy">Privacy</option>
-                    <option value="Cybersecurity">Cybersecurity</option>
-                    <option value="AI Policy">AI Policy</option>
-                    <option value="Research">Research</option>
-                    <option value="Tools">Tools</option>
+<option value="AI Governance">AI Governance</option>
+<option value="Cybersecurity">Cybersecurity</option>
+<option value="Privacy">Privacy</option>
+<option value="Robotics">Robotics</option>
                   </select>
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Excerpt</label>
-                <Editor 
-                  value={addExcerpt} 
-                  onChange={setAddExcerpt} 
-                  placeholder="Enter article excerpt..."
-                />
-                <input type="hidden" name="excerpt" value={addExcerpt} />
+                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Summary (shown on cards and as the standfirst)</label>
+                <textarea name="excerpt" required rows={3} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Article body</label>
+                <Editor value={addExcerpt} onChange={setAddExcerpt} placeholder="Write the article..." />
+                <input type="hidden" name="content" value={addExcerpt} />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1"><label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Author name</label><input name="authorName" placeholder="Hafiz Saqib" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" /></div>
+                <div className="space-y-1"><label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Author role</label><input name="authorRole" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" /></div>
+                <div className="space-y-1"><label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Audience</label><input name="audience" placeholder="CISOs, GRC leads" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" /></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
@@ -311,22 +320,26 @@ export default function ArticleList({ initialArticles }: { initialArticles: Arti
                   <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Category/Tag</label>
                   <select name="tag" required defaultValue={editModal.article.tag} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]">
                     <option value="AI Security">AI Security</option>
-                    <option value="Privacy">Privacy</option>
-                    <option value="Cybersecurity">Cybersecurity</option>
-                    <option value="AI Policy">AI Policy</option>
-                    <option value="Research">Research</option>
-                    <option value="Tools">Tools</option>
+<option value="AI Governance">AI Governance</option>
+<option value="Cybersecurity">Cybersecurity</option>
+<option value="Privacy">Privacy</option>
+<option value="Robotics">Robotics</option>
                   </select>
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Excerpt</label>
-                <Editor 
-                  value={editExcerpt} 
-                  onChange={setEditExcerpt} 
-                  placeholder="Edit article excerpt..."
-                />
-                <input type="hidden" name="excerpt" value={editExcerpt} />
+                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Summary (shown on cards and as the standfirst)</label>
+                <textarea name="excerpt" required rows={3} defaultValue={editModal.article.summary} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Article body</label>
+                <Editor value={editExcerpt} onChange={setEditExcerpt} placeholder="Write the article..." />
+                <input type="hidden" name="content" value={editExcerpt} />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1"><label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Author name</label><input name="authorName" defaultValue={editModal.article.author_name ?? ""} placeholder="Hafiz Saqib" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" /></div>
+                <div className="space-y-1"><label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Author role</label><input name="authorRole" defaultValue={editModal.article.author_role ?? ""} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" /></div>
+                <div className="space-y-1"><label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">Audience</label><input name="audience" defaultValue={editModal.article.audience ?? ""} placeholder="CISOs, GRC leads" className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" /></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">

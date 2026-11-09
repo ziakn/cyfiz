@@ -19,13 +19,13 @@ export default async function PortalDashboardPage() {
           <h1 className="mt-2 text-3xl font-black">Welcome back, {user.name}!</h1>
         </div>
 
-        <section className="rounded-2xl bg-gradient-to-br from-[#5D39F2] to-[#B287FF] p-8 text-white shadow-lg">
+        <section className="rounded-2xl bg-gradient-to-br from-[#F2A900] to-[#FFC21A] p-8 text-white shadow-lg">
           <p className="text-xs font-black uppercase tracking-widest text-white/70">Continue where you left off</p>
           <h2 className="mt-2 text-2xl font-black">{registered[0]?.title ?? "Register for your first quiz"}</h2>
           <p className="mt-3 max-w-xl text-sm text-white/75">
             Attend multiple quizzes, save questions, review explanations, and take timed exam attempts from your portal.
           </p>
-          <Link href={registered[0] ? `/portal/quizzes/${registered[0].id}` : "/portal/quizzes"} className="mt-6 inline-flex rounded-lg bg-white px-5 py-3 text-sm font-black text-[#2B167C]">
+          <Link href={registered[0] ? `/portal/quizzes/${registered[0].id}` : "/portal/quizzes"} className="mt-6 inline-flex rounded-lg bg-white px-5 py-3 text-sm font-black text-[#0C0D10]">
             {registered[0] ? "Continue Studying" : "Browse Quizzes"}
           </Link>
         </section>

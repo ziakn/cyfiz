@@ -17,15 +17,15 @@ export default function AdminAuthenticatedShell({ children, user }: AdminAuthent
 
   if (pathname === "/admin" || pathname === "/admin/login") {
     return (
-      <div className="relative min-h-screen bg-[#F4F5FA] text-[#3A3541]">
+      <div className="admin-root relative min-h-screen bg-[#F6F6F3] text-[#3A3541]">
         <main className="relative z-0">{children}</main>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F4F5FA] text-[#3A3541]">
-      <aside className="fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-[0_4px_24px_0_rgba(58,53,65,0.1)] transition-transform sm:translate-x-0">
+    <div className="admin-root flex min-h-screen bg-[#F6F6F3] text-[#3A3541]">
+      <aside className="admin-side fixed inset-y-0 left-0 z-20 w-64 bg-[#0C0D10] shadow-[0_4px_24px_0_rgba(58,53,65,0.1)] transition-transform sm:translate-x-0">
         <div className="flex h-full flex-col overflow-y-auto px-4 py-6">
           <div className="mb-8 flex items-center gap-3 px-2">
             <img src="/logo-transparent.png" alt="Cyfiz Logo" className="h-8 w-auto" />
@@ -45,43 +45,31 @@ export default function AdminAuthenticatedShell({ children, user }: AdminAuthent
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                   Articles
                 </Link>
-                <Link href="/admin/careers" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                  Careers
-                </Link>
-                <Link href="/admin/summaries" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                  Summaries
-                </Link>
-                <Link href="/admin/portfolio" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                  Portfolio (Profile)
+                <Link href="/admin/trainings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg>
+                  Trainings
                 </Link>
               </div>
             </div>
 
             <div className="pt-4">
-              <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Apps & Features</p>
+              <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Learn & Audience</p>
               <div className="mt-2 space-y-1">
-                <Link href="/admin/ai-summarizer" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"></path><circle cx="8.5" cy="14.5" r="1"></circle><circle cx="15.5" cy="14.5" r="1"></circle></svg>
-                  AI Summarizer
-                </Link>
                 <Link href="/admin/quiz" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                   Quizzes
                 </Link>
-                <Link href="/admin/leaderboard" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
-                  Leaderboard
+                <Link href="/admin/messages" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg>
+                  Contact Messages
+                </Link>
+                <Link href="/admin/subscribers" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg>
+                  Subscribers
                 </Link>
                 <Link href="/admin/portal-users" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="m17 11 2 2 4-4"></path></svg>
                   Portal Users
-                </Link>
-                <Link href="/admin/team" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                  Team Members
                 </Link>
               </div>
             </div>
@@ -124,7 +112,7 @@ export default function AdminAuthenticatedShell({ children, user }: AdminAuthent
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-[#3A3541] opacity-[0.38]">Admin Portal</span>
             <span className="text-[#3A3541] opacity-[0.12]">/</span>
-            <span className="text-sm font-semibold text-[#3A3541] opacity-[0.87]">Dashboard</span>
+            <span className="text-sm font-semibold text-[#3A3541] opacity-[0.87]">Cyfiz</span>
           </div>
           <div className="flex items-center gap-4">
             <button className="text-[#3A3541] opacity-[0.6] hover:text-[#9155FD]">

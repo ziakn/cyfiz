@@ -79,7 +79,7 @@ export default function QuizRunner({ quiz, questions }: { quiz: Quiz; questions:
             <button
               key={item}
               onClick={() => setMode(item)}
-              className={`rounded-lg border px-4 py-2 text-sm font-bold capitalize ${mode === item ? "border-[#2B167C] bg-[#F1EDFF] text-[#2B167C]" : "border-zinc-200 text-zinc-600"}`}
+              className={`rounded-lg border px-4 py-2 text-sm font-bold capitalize ${mode === item ? "border-[#0C0D10] bg-[#FFF6D6] text-[#0C0D10]" : "border-zinc-200 text-zinc-600"}`}
             >
               {item === "single" ? "Single Question" : item}
             </button>
@@ -104,7 +104,7 @@ export default function QuizRunner({ quiz, questions }: { quiz: Quiz; questions:
           return (
             <div key={question.id} className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
               <div className="flex items-start gap-4">
-                <span className="rounded-lg bg-[#EDE5FA] px-3 py-2 text-sm font-black text-[#6E38CF]">Q: {questionNumber}</span>
+                <span className="rounded-lg bg-[#FFF6D6] px-3 py-2 text-sm font-black text-[#F2A900]">Q: {questionNumber}</span>
                 <div className="flex-1">
                   <p className="text-lg font-semibold leading-7">{question.question}</p>
                   <div className="mt-5 space-y-2">
@@ -117,7 +117,7 @@ export default function QuizRunner({ quiz, questions }: { quiz: Quiz; questions:
                           key={option}
                           onClick={() => setAnswers((value) => ({ ...value, [question.id]: option }))}
                           className={`block w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
-                            correct ? "border-green-300 bg-green-50" : selected ? "border-[#2B167C] bg-[#F1EDFF]" : "border-zinc-200 hover:bg-zinc-50"
+                            correct ? "border-green-300 bg-green-50" : selected ? "border-[#0C0D10] bg-[#FFF6D6]" : "border-zinc-200 hover:bg-zinc-50"
                           }`}
                         >
                           <span className="font-black">{option}:</span> {text}
@@ -129,10 +129,10 @@ export default function QuizRunner({ quiz, questions }: { quiz: Quiz; questions:
               </div>
 
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                <button onClick={() => toggleSaved(question.id)} className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-bold text-[#2B167C]">
+                <button onClick={() => toggleSaved(question.id)} className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-bold text-[#0C0D10]">
                   {saved[question.id] ? "Saved" : "Save Question"}
                 </button>
-                <button onClick={() => setRevealed((value) => ({ ...value, [question.id]: !value[question.id] }))} className="rounded-lg bg-[#6E38CF] px-4 py-2 text-sm font-black text-white">
+                <button onClick={() => setRevealed((value) => ({ ...value, [question.id]: !value[question.id] }))} className="rounded-lg bg-[#F2A900] px-4 py-2 text-sm font-black text-white">
                   {showAnswer ? "Hide Answer" : "Show Answer"}
                 </button>
               </div>

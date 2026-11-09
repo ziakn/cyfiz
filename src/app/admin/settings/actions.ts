@@ -1,52 +1,27 @@
 "use server";
 
-import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { execute } from "@/lib/db";
+import { requireAdmin } from "@/lib/adminGuard";
+import { SETTING_FIELDS } from "@/lib/siteSettings";
 
-export async function updateSettingAction(id: number, value: string) {
+export async function saveSettingsAction(formData: FormData) {
   try {
-    await query("UPDATE site_settings SET setting_value = ? WHERE id = ?", [value, id]);
-    revalidatePath("/");
+    await requireAdmin();
+    for (const f of SETTING_FIELDS) {
+      const value = String(formData.get(f.key) ?? "").trim();
+      if (f.key.endsWith("_url") && value && !/^https?:\/\//i.test(value)) {
+        return { error: `${f.label} must start with http:// or https://` };
+      }
+      await execute(
+        "INSERT INTO site_settings (setting_key, setting_value, status) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), status = 1",
+        [f.key, value]
+      );
+    }
+    revalidatePath("/", "layout");
     revalidatePath("/admin/settings");
     return { success: true };
   } catch (error) {
-    console.error("Error updating setting:", error);
-    return { success: false, error: "Failed to update setting" };
-  }
-}
-
-export async function updateStatAction(id: number, value: string, label: string) {
-  try {
-    await query("UPDATE site_stats SET value = ?, label = ? WHERE id = ?", [value, label, id]);
-    revalidatePath("/");
-    revalidatePath("/admin/settings");
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating stat:", error);
-    return { success: false, error: "Failed to update stat" };
-  }
-}
-
-export async function addPartnerAction(name: string) {
-  try {
-    await query("INSERT INTO partners (name) VALUES (?)", [name]);
-    revalidatePath("/");
-    revalidatePath("/admin/settings");
-    return { success: true };
-  } catch (error) {
-    console.error("Error adding partner:", error);
-    return { success: false, error: "Failed to add partner" };
-  }
-}
-
-export async function removePartnerAction(id: number) {
-  try {
-    await query("DELETE FROM partners WHERE id = ?", [id]);
-    revalidatePath("/");
-    revalidatePath("/admin/settings");
-    return { success: true };
-  } catch (error) {
-    console.error("Error removing partner:", error);
-    return { success: false, error: "Failed to remove partner" };
+    return { error: error instanceof Error ? error.message : "Failed to save settings" };
   }
 }

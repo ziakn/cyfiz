@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "migrate": "node scripts/migrate.mjs",
+    "deploy": "./deploy.sh"
   },
   "dependencies": {
     "@tiptap/extension-link": "^3.23.4",

@@ -1,47 +1,17 @@
-import { query } from "@/lib/db";
-import { RowDataPacket } from "mysql2";
-import SettingsList from "./SettingsList";
+import { getSiteSettings } from "@/lib/siteData";
+import SettingsForm from "./SettingsForm";
 
-interface SettingRow extends RowDataPacket {
-  id: number;
-  setting_key: string;
-  setting_value: string;
-  status: number;
-}
-
-interface StatRow extends RowDataPacket {
-  id: number;
-  value: string;
-  label: string;
-  status: number;
-}
-
-interface PartnerRow extends RowDataPacket {
-  id: number;
-  name: string;
-  image_url?: string | null;
-  status: number;
-}
+export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
-  const [settings, stats, partners] = await Promise.all([
-    query<SettingRow[]>("SELECT * FROM site_settings ORDER BY id ASC"),
-    query<StatRow[]>("SELECT * FROM site_stats ORDER BY id ASC"),
-    query<PartnerRow[]>("SELECT * FROM partners ORDER BY id ASC")
-  ]);
-
+  const settings = await getSiteSettings();
   return (
-    <div className="p-6">
-      <div className="mb-6">
+    <div className="max-w-2xl space-y-6">
+      <div>
         <h1 className="text-2xl font-bold text-[#3A3541] opacity-[0.87]">Site Settings</h1>
-        <p className="text-sm text-[#3A3541] opacity-[0.6]">Manage landing page content, statistics, and partners.</p>
+        <p className="text-sm text-[#3A3541] opacity-[0.6]">Contact details and social links used in the footer, Contact page and newsletter forms.</p>
       </div>
-      
-      <SettingsList 
-        initialSettings={settings} 
-        initialStats={stats}
-        initialPartners={partners}
-      />
+      <SettingsForm initial={settings} />
     </div>
   );
 }
