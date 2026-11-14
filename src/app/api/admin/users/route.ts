@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import { getAllAdminUsers } from "@/lib/db";
-import { parseAuthCookieHeader, getSessionUserFromCookie } from "@/lib/auth";
+import { can, getAdminContext } from "@/lib/rbac";
 
-export async function GET(request: Request) {
-  const cookieValue = parseAuthCookieHeader(request.headers.get("cookie"));
-  const user = getSessionUserFromCookie(cookieValue);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+export async function GET() {
+  const ctx = await getAdminContext();
+  if (!ctx) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!can(ctx, "admin_users", "view")) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const users = await getAllAdminUsers();
   return NextResponse.json({ users });

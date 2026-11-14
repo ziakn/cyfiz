@@ -1,4 +1,5 @@
 import { RowDataPacket } from "mysql2";
+import { requirePage } from "@/lib/rbac";
 import { query } from "@/lib/db";
 import QuizList from "./QuizList";
 
@@ -33,6 +34,7 @@ interface AdminQuestionRow extends RowDataPacket {
 }
 
 export default async function AdminQuizPage() {
+  await requirePage("quizzes");
   const [quizzes, questions] = await Promise.all([
     query<AdminQuizRow[]>(
       `SELECT q.id, q.title, q.slug, q.description, q.duration_minutes, q.passing_percentage, q.question_order, q.status,

@@ -6,6 +6,15 @@ Next.js (App Router) site with a MySQL backend and an admin panel.
 - **Admin** (`/admin`): Articles, Trainings, Contact Messages, Subscribers, Quizzes, Portal Users, Users, Settings
 - **Quiz portal** (`/portal`): learner sign-up, quizzes and attempts
 
+## Roles & permissions
+
+Admin access is role-based and managed in **Admin → Roles & Permissions**. Each role gets view / add / change / delete per module. Super Admin always has full access; Editor and Viewer ship as editable starting points.
+
+**Adding a module** (permissions sync themselves):
+1. Add it to `src/lib/modules.json` (key, label, group, link, and optional default grants for `editor` / `viewer` as view/create/update/delete bits, e.g. `"1110"`).
+2. Guard its page with `requirePage("key")` and its actions with `guard("key", "create|update|delete")`.
+3. Deploy. `npm run migrate` (run by `./deploy.sh`) syncs the module into Roles & Permissions: built-in roles get their defaults if they have none yet, grants for deleted modules are removed, and changes you made in the admin are never overwritten. Custom roles are never auto-granted; tick the new module for them in Roles & Permissions. Run it alone with `npm run sync:permissions`.
+
 ## Deploy (server only needs a pull)
 
 ```bash

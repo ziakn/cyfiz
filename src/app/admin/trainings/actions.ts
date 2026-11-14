@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { execute } from "@/lib/db";
-import { requireAdmin } from "@/lib/adminGuard";
+import { guard } from "@/lib/rbac";
 
 const msg = (e: unknown, fb: string) => (e instanceof Error ? e.message : fb);
 const refresh = () => { revalidatePath("/admin/trainings"); revalidatePath("/learn"); };
@@ -16,8 +16,9 @@ function read(formData: FormData) {
 }
 
 export async function addTrainingAction(formData: FormData) {
+  const denied = await guard("trainings", "create");
+  if (denied) return { error: denied.error };
   try {
-    await requireAdmin();
     const t = read(formData);
     if (!t.title || !t.category || !t.summary) return { error: "Title, category and summary are required" };
     await execute(
@@ -30,8 +31,9 @@ export async function addTrainingAction(formData: FormData) {
 }
 
 export async function editTrainingAction(id: number, formData: FormData) {
+  const denied = await guard("trainings", "update");
+  if (denied) return { error: denied.error };
   try {
-    await requireAdmin();
     const t = read(formData);
     if (!t.title || !t.category || !t.summary) return { error: "Title, category and summary are required" };
     await execute(
@@ -44,8 +46,9 @@ export async function editTrainingAction(id: number, formData: FormData) {
 }
 
 export async function deleteTrainingAction(id: number) {
+  const denied = await guard("trainings", "delete");
+  if (denied) return { error: denied.error };
   try {
-    await requireAdmin();
     await execute("DELETE FROM trainings WHERE id = ?", [id]);
     refresh();
     return { success: true };

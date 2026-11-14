@@ -1,4 +1,5 @@
 import { query } from "@/lib/db";
+import { requirePage } from "@/lib/rbac";
 import { RowDataPacket } from "mysql2";
 import ArticleList from "./ArticleList";
 import { truncate } from "@/lib/utils";
@@ -20,6 +21,7 @@ interface ArticleItem {
 }
 
 export default async function AdminArticlesPage() {
+  await requirePage("articles");
   const articles = (await query<RowDataPacket[]>(
     "SELECT id, tag, date, title, excerpt, content, author_name, author_role, audience, read_time as readTime, image_url, status FROM articles ORDER BY date DESC, id DESC"
   )) as ArticleItem[];

@@ -1,0 +1,124 @@
+{
+  "_comment": "Single source of truth for admin modules. Add a module here and deploy: `npm run migrate` syncs it into Roles & Permissions. editor/viewer = default grants as view/create/update/delete bits (e.g. 1110); omit for no access. Super Admin always gets everything; custom roles are never auto-granted.",
+  "modules": [
+    {
+      "key": "articles",
+      "label": "Articles",
+      "group": "Content",
+      "href": "/admin/articles",
+      "description": "Insights articles and blog posts",
+      "editor": "1111",
+      "viewer": "1000"
+    },
+    {
+      "key": "trainings",
+      "label": "Trainings",
+      "group": "Content",
+      "href": "/admin/trainings",
+      "description": "Learn page trainings",
+      "editor": "1111",
+      "viewer": "1000"
+    },
+    {
+      "key": "packages",
+      "label": "Packages",
+      "group": "Content",
+      "href": "/admin/packages",
+      "description": "Free and paid packages on the Packages page",
+      "editor": "1111",
+      "viewer": "1000"
+    },
+    {
+      "key": "credentials",
+      "label": "Certifications",
+      "group": "Who@m! page",
+      "href": "/admin/credentials",
+      "description": "Professional certifications list",
+      "editor": "1111",
+      "viewer": "1000"
+    },
+    {
+      "key": "expertise",
+      "label": "Core Expertise",
+      "group": "Who@m! page",
+      "href": "/admin/expertise",
+      "description": "The three expertise cards",
+      "editor": "1111",
+      "viewer": "1000"
+    },
+    {
+      "key": "speaking",
+      "label": "Speaking",
+      "group": "Who@m! page",
+      "href": "/admin/speaking",
+      "description": "Speaking engagements",
+      "editor": "1111",
+      "viewer": "1000"
+    },
+    {
+      "key": "research",
+      "label": "Research Papers",
+      "group": "Who@m! page",
+      "href": "/admin/research",
+      "description": "Published and under-review papers",
+      "editor": "1111",
+      "viewer": "1000"
+    },
+    {
+      "key": "messages",
+      "label": "Contact Messages",
+      "group": "Audience",
+      "href": "/admin/messages",
+      "description": "Messages sent from the Contact page",
+      "editor": "1010",
+      "viewer": "1000"
+    },
+    {
+      "key": "subscribers",
+      "label": "Subscribers",
+      "group": "Audience",
+      "href": "/admin/subscribers",
+      "description": "Newsletter signups",
+      "editor": "1000",
+      "viewer": "1000"
+    },
+    {
+      "key": "quizzes",
+      "label": "Quizzes",
+      "group": "Learn",
+      "href": "/admin/quiz",
+      "description": "Quizzes and their questions",
+      "editor": "1111",
+      "viewer": "1000"
+    },
+    {
+      "key": "portal_users",
+      "label": "Portal Users",
+      "group": "Learn",
+      "href": "/admin/portal-users",
+      "description": "Learners registered in the quiz portal"
+    },
+    {
+      "key": "admin_users",
+      "label": "Admin Users",
+      "group": "Administration",
+      "href": "/admin/users",
+      "description": "Staff accounts and their roles"
+    },
+    {
+      "key": "roles",
+      "label": "Roles & Permissions",
+      "group": "Administration",
+      "href": "/admin/roles",
+      "description": "Create roles and choose what each can do"
+    },
+    {
+      "key": "settings",
+      "label": "Settings",
+      "group": "Administration",
+      "href": "/admin/settings",
+      "description": "Contact details and social links",
+      "editor": "1000"
+    }
+  ]
+}

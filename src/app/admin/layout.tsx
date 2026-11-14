@@ -1,23 +1,18 @@
-import { cookies } from "next/headers";
-import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "@/lib/auth";
 import "./admin.css";
 import AdminAuthenticatedShell from "./AdminAuthenticatedShell";
+import { getAdminContext } from "@/lib/rbac";
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const cookiesStore = await cookies();
-  const cookieValue = cookiesStore.get(AUTH_COOKIE_NAME)?.value ?? null;
-  const user = getSessionUserFromCookie(cookieValue);
+export const dynamic = "force-dynamic";
 
-  if (!user) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const ctx = await getAdminContext();
+
+  if (!ctx) {
     return <>{children}</>;
   }
 
   return (
-    <AdminAuthenticatedShell user={{ email: user.email, role: user.role }}>
+    <AdminAuthenticatedShell user={{ email: ctx.user.email, role: ctx.user.roleName }} permissions={ctx.perms}>
       {children}
     </AdminAuthenticatedShell>
   );

@@ -20,3 +20,5 @@
 .admin-side .bg-\[\#9155FD\] { background-color: #ffc21a !important; }
 .admin-side .bg-\[\#9155FD\], .admin-side .bg-\[\#9155FD\] * { color: #0c0d10 !important; }
 .admin-side [class*="border-t"] { border-color: #23262c !important; }
+
+.admin-side .admin-nav-active { background-color: #16181d !important; color: #ffc21a !important; }

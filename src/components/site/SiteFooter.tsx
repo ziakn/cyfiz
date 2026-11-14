@@ -21,7 +21,7 @@ export default function SiteFooter() {
           <div style={{ flex: "2 1 300px", display: "flex", flexDirection: "column", gap: "16px" }}>
             <Link href="/" aria-label="Cyfiz home" style={{ display: "flex", alignSelf: "flex-start", textDecoration: "none" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-transparent.png" alt="Cyfiz" style={{ height: "44px", width: "auto", display: "block" }} />
+              <img src="/logo-cyfiz.png" alt="Cyfiz" style={{ height: "44px", width: "auto", display: "block" }} />
             </Link>
             <p style={{ margin: 0, fontSize: "15px", lineHeight: 1.6, maxWidth: "360px" }}>Explore what matters, uncover what others miss and use practical frameworks to build what comes next.</p>
           </div>
@@ -30,6 +30,7 @@ export default function SiteFooter() {
             <Link href="/" style={linkStyle}>Home</Link>
             <Link href="/insights" style={linkStyle}>Insights</Link>
             <Link href="/learn" style={linkStyle}>Learn</Link>
+            <Link href="/packages" style={linkStyle}>Packages</Link>
             <Link href="/profile" style={linkStyle}>Who@m!</Link>
             <Link href="/contact" style={linkStyle}>Contact</Link>
           </div>

@@ -3,11 +3,13 @@
 import { useState } from "react";
 import StatusToggle from "@/components/admin/StatusToggle";
 import { toggleStatusAction } from "../actions";
+import { useModulePerms } from "@/components/admin/AdminPermissions";
 import { deleteSubscriberAction } from "./actions";
 
 export interface SubscriberRow { id: number; email: string; source: string; status: number; created_at: string }
 
 export default function SubscriberList({ initial }: { initial: SubscriberRow[] }) {
+  const perms = useModulePerms("subscribers");
   const [q, setQ] = useState("");
   const rows = initial.filter((r) => r.email.toLowerCase().includes(q.toLowerCase()));
   const active = initial.filter((r) => r.status === 1);
@@ -27,8 +29,8 @@ export default function SubscriberList({ initial }: { initial: SubscriberRow[] }
             {rows.map((r) => (
               <tr key={r.id} className="hover:bg-[#F9FAFB]">
                 <td className="px-6 py-3">{r.email}</td><td className="px-6 py-3">{r.source}</td><td className="px-6 py-3">{r.created_at}</td>
-                <td className="px-6 py-3"><StatusToggle initialStatus={r.status} onToggle={async (s) => (await toggleStatusAction("newsletter_subscribers", r.id, s, "/admin/subscribers")).success === true} /></td>
-                <td className="px-6 py-3 text-right"><button onClick={async () => { if (confirm(`Delete ${r.email}?`)) await deleteSubscriberAction(r.id); }} className="text-xs font-bold text-red-500">Delete</button></td>
+                <td className="px-6 py-3"><StatusToggle initialStatus={r.status} disabled={!perms.update} onToggle={async (s) => (await toggleStatusAction("newsletter_subscribers", r.id, s, "/admin/subscribers")).success === true} /></td>
+                <td className="px-6 py-3 text-right">{perms.delete && <button onClick={async () => { if (confirm(`Delete ${r.email}?`)) await deleteSubscriberAction(r.id); }} className="text-xs font-bold text-red-500">Delete</button>}</td>
               </tr>
             ))}
             {rows.length === 0 && <tr><td colSpan={5} className="px-6 py-10 text-center opacity-60">No subscribers.</td></tr>}

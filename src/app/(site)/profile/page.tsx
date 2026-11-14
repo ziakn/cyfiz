@@ -5,35 +5,18 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import SiteNav from "@/components/site/SiteNav";
 import SiteFooter from "@/components/site/SiteFooter";
-import { getSiteSettings } from "@/lib/siteData";
+import ExpertiseIcon from "@/components/site/ExpertiseIcon";
+import { getProfileContent, getSiteSettings, parseLinkLines } from "@/lib/siteData";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Who@m! — Cyfiz",
   description: "Securing the age of AI: cybersecurity, AI governance, AI security and data privacy expertise.",
 };
 
-interface Cert { name: string; detail: string }
-
-const DEFAULT_CERTS: Cert[] = [
-  { name: "CISSP", detail: "Certified Information Systems Security Professional" },
-  { name: "OSCP", detail: "Offensive Security Certified Professional" },
-  { name: "AIGP", detail: "Artificial Intelligence Governance Professional" },
-  { name: "CIPM", detail: "Certified Information Privacy Manager" },
-  { name: "ISO/IEC 27001", detail: "Lead Implementer & Lead Auditor" },
-  { name: "ISO/IEC 42001", detail: "Lead Implementer" },
-  { name: "Microsoft", detail: "Cybersecurity Architect Expert" },
-  { name: "Microsoft", detail: "Azure AI Engineer Associate" },
-  { name: "Google", detail: "Professional Machine Learning Engineer" },
-  { name: "CCSK", detail: "Certificate of Cloud Security Knowledge" },
-  { name: "PMP", detail: "Project Management Professional" },
-  { name: "NIA", detail: "NIA Implementer" },
-  { name: "ITIL", detail: "ITIL Foundation" },
-  { name: "PECB", detail: "Certified Trainer" },
-];
-
 export default async function ProfilePage() {
-  const settings = await getSiteSettings();
-  const certs = DEFAULT_CERTS;
+  const [settings, { credentials: certs, expertise, speaking, research }] = await Promise.all([getSiteSettings(), getProfileContent()]);
   // Drop public/profile-portrait.png in to show the portrait in the hero.
   const hasPortrait = fs.existsSync(path.join(process.cwd(), "public", "profile-portrait.png"));
 
@@ -106,8 +89,8 @@ export default async function ProfilePage() {
 <h3 style={{ margin: "0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "26px", fontWeight: "800", color: "#111318" }}>Professional certifications</h3>
 <div style={{ background: "#FFFFFF", border: "1px solid #E5E7EB", borderRadius: "20px", padding: "28px 36px" }}>
 <ul style={{ margin: "0", padding: "0", listStyle: "none", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 420px), 1fr))", columnGap: "48px" }}>
-{certs.map((c, i) => (
-<li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "14px", padding: "12px 0" }}><span aria-hidden="true" style={{ flex: "0 0 26px", width: "26px", height: "26px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span style={{ display: "flex", flexDirection: "column", gap: "2px" }}><span style={{ fontSize: "16px", lineHeight: "1.45", color: "#111318" }}><strong style={{ fontWeight: "700" }}>{c.name}</strong>{c.detail ? " · " + c.detail : null}</span></span></li>
+{certs.map((c) => (
+<li key={c.id} style={{ display: "flex", alignItems: "flex-start", gap: "14px", padding: "12px 0" }}><span aria-hidden="true" style={{ flex: "0 0 26px", width: "26px", height: "26px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span style={{ display: "flex", flexDirection: "column", gap: "2px" }}><span style={{ fontSize: "16px", lineHeight: "1.45", color: "#111318" }}><strong style={{ fontWeight: "700" }}>{c.name}</strong>{c.detail ? " · " + c.detail : null}</span></span></li>
 ))}
 </ul>
 </div>
@@ -124,51 +107,22 @@ export default async function ProfilePage() {
 <p style={{ margin: "0", fontSize: "18px", lineHeight: "1.65", color: "#4B5160", maxWidth: "680px" }}>From the boardroom to the cloud: strategy, governance and the technical controls that make them real.</p>
 </div>
 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
-<div style={{ background: "#FFFFFF", border: "1px solid #E5E7EB", borderRadius: "20px", padding: "32px", display: "flex", flexDirection: "column", gap: "18px" }}>
+{expertise.map((e, i) => (
+<div key={e.id} style={{ background: "#FFFFFF", border: "1px solid #E5E7EB", borderRadius: "20px", padding: "32px", display: "flex", flexDirection: "column", gap: "18px" }}>
 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
-<span style={{ width: "52px", height: "52px", borderRadius: "14px", background: "#0C0D10", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg></span>
-<span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "14px", fontWeight: "800", color: "#8A5F00" }}>01</span>
+<span style={{ width: "52px", height: "52px", borderRadius: "14px", background: "#0C0D10", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center" }}><ExpertiseIcon name={e.icon} /></span>
+<span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "14px", fontWeight: "800", color: "#8A5F00" }}>{String(i + 1).padStart(2, "0")}</span>
 </div>
-<h3 style={{ margin: "0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "23px", fontWeight: "800", lineHeight: "1.25", color: "#111318" }}>Cybersecurity Strategy &amp; GRC</h3>
-<p style={{ margin: "0", fontSize: "16px", lineHeight: "1.65", color: "#4B5160" }}>Acting as virtual CISO to align security strategy with business goals and regulatory mandates, from first gap analysis to a funded roadmap.</p>
-<div style={{ padding: "12px 14px", borderRadius: "12px", background: "#FFF6D6", fontSize: "14px", lineHeight: "1.5", color: "#3D3000" }}><strong style={{ fontWeight: "700" }}>Virtual CISO</strong> for clients across government, oil &amp; gas and financial services</div>
+<h3 style={{ margin: "0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "23px", fontWeight: "800", lineHeight: "1.25", color: "#111318" }}>{e.title}</h3>
+<p style={{ margin: "0", fontSize: "16px", lineHeight: "1.65", color: "#4B5160" }}>{e.summary}</p>
+{(e.highlight_bold || e.highlight_text) ? (<div style={{ padding: "12px 14px", borderRadius: "12px", background: "#FFF6D6", fontSize: "14px", lineHeight: "1.5", color: "#3D3000" }}><strong style={{ fontWeight: "700" }}>{e.highlight_bold}</strong> {e.highlight_text}</div>) : null}
 <ul style={{ margin: "0", padding: "0", listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>vCISO advisory, security strategy &amp; roadmaps</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>ISO/IEC 27001 ISMS design, risk &amp; gap assessment</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Compliance programmes: NIS2, QCSF, NIA, PDPPL</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Security budgeting and executive reporting</span></li>
+{(e.bullets ?? "").split("\n").map((x) => x.trim()).filter(Boolean).map((b, bi) => (
+<li key={bi} style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>{b}</span></li>
+))}
 </ul>
 </div>
-<div style={{ background: "#FFFFFF", border: "1px solid #E5E7EB", borderRadius: "20px", padding: "32px", display: "flex", flexDirection: "column", gap: "18px" }}>
-<div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
-<span style={{ width: "52px", height: "52px", borderRadius: "14px", background: "#0C0D10", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="3"></rect><path d="M9 9h6v6H9z"></path><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"></path></svg></span>
-<span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "14px", fontWeight: "800", color: "#8A5F00" }}>02</span>
-</div>
-<h3 style={{ margin: "0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "23px", fontWeight: "800", lineHeight: "1.25", color: "#111318" }}>AI Governance &amp; Data Privacy</h3>
-<p style={{ margin: "0", fontSize: "16px", lineHeight: "1.65", color: "#4B5160" }}>Helping organizations adopt AI safely, with governance, privacy and security built in, backed by published research on AI regulation.</p>
-<div style={{ padding: "12px 14px", borderRadius: "12px", background: "#FFF6D6", fontSize: "14px", lineHeight: "1.5", color: "#3D3000" }}><strong style={{ fontWeight: "700" }}>AI governance projects</strong> delivered, aligning AI adoption with security, privacy and regulation</div>
-<ul style={{ margin: "0", padding: "0", listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>EU AI Act readiness and ISO/IEC 42001 AI management systems</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>AI risk and impact assessment, AI security governance</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>GDPR and privacy programme design as subject matter expert</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Policies, procedures and governance toolkits</span></li>
-</ul>
-</div>
-<div style={{ background: "#FFFFFF", border: "1px solid #E5E7EB", borderRadius: "20px", padding: "32px", display: "flex", flexDirection: "column", gap: "18px" }}>
-<div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
-<span style={{ width: "52px", height: "52px", borderRadius: "14px", background: "#0C0D10", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9.5a4.25 4.25 0 0 1-.5 8.5Z"></path><path d="M12 11v5M9.5 13.5h5"></path></svg></span>
-<span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "14px", fontWeight: "800", color: "#8A5F00" }}>03</span>
-</div>
-<h3 style={{ margin: "0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "23px", fontWeight: "800", lineHeight: "1.25", color: "#111318" }}>Security Architecture &amp; Operations</h3>
-<p style={{ margin: "0", fontSize: "16px", lineHeight: "1.65", color: "#4B5160" }}>Turning policy into protection: designing and reviewing secure cloud and on-premises environments and testing them under real-world pressure.</p>
-<div style={{ padding: "12px 14px", borderRadius: "12px", background: "#FFF6D6", fontSize: "14px", lineHeight: "1.5", color: "#3D3000" }}><strong style={{ fontWeight: "700" }}>National-level cloud</strong> architecture reviews, with recommendations adopted by government entities</div>
-<ul style={{ margin: "0", padding: "0", listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Secure cloud landing zone design (Microsoft Azure)</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>NDR, MDM and MAM delivery end to end</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Vulnerability assessment, penetration testing &amp; red teaming</span></li>
-<li style={{ display: "flex", gap: "12px", fontSize: "15px", lineHeight: "1.5", color: "#2A2E37" }}><span aria-hidden="true" style={{ flex: "0 0 22px", width: "22px", height: "22px", marginTop: "1px", borderRadius: "50%", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Incident response, investigations and playbooks</span></li>
-</ul>
-</div>
+))}
 </div>
 </div>
 </section>
@@ -187,7 +141,10 @@ export default async function ProfilePage() {
 <span style={{ position: "relative", width: "56px", height: "56px", borderRadius: "16px", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 10a7 7 0 0 0 14 0"></path><path d="M12 17v5"></path><path d="M8 22h8"></path></svg></span>
 <h3 style={{ position: "relative", margin: "0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "28px", fontWeight: "800" }}>Speaker</h3>
 <p style={{ position: "relative", margin: "0", fontSize: "16px", lineHeight: "1.6", color: "#E2E4EA" }}>Keynotes, roundtables and workshops for executives, practitioners and students.</p>
-<ul style={{ position: "relative", margin: "0", padding: "0", listStyle: "none", display: "flex", flexDirection: "column", gap: "10px", flexGrow: "1" }}><li style={{ display: "flex", gap: "10px", fontSize: "15px", lineHeight: "1.5", color: "#C7CCDA" }}><span aria-hidden="true" style={{ flex: "0 0 6px", height: "6px", marginTop: "9px", borderRadius: "50%", background: "var(--accent)" }}></span><span>Data Privacy &amp; AI Governance Roundtable, Qatar</span></li><li style={{ display: "flex", gap: "10px", fontSize: "15px", lineHeight: "1.5", color: "#C7CCDA" }}><span aria-hidden="true" style={{ flex: "0 0 6px", height: "6px", marginTop: "9px", borderRadius: "50%", background: "var(--accent)" }}></span><span>Workshop: Using AI in the Gulf States’ Community, HBKU</span></li><li style={{ display: "flex", gap: "10px", fontSize: "15px", lineHeight: "1.5", color: "#C7CCDA" }}><span aria-hidden="true" style={{ flex: "0 0 6px", height: "6px", marginTop: "9px", borderRadius: "50%", background: "var(--accent)" }}></span><span>[Event name, organiser, city · year]</span></li><li style={{ display: "flex", gap: "10px", fontSize: "15px", lineHeight: "1.5", color: "#C7CCDA" }}><span aria-hidden="true" style={{ flex: "0 0 6px", height: "6px", marginTop: "9px", borderRadius: "50%", background: "var(--accent)" }}></span><span>[Event name, organiser, city · year]</span></li><li style={{ display: "flex", gap: "10px", fontSize: "15px", lineHeight: "1.5", color: "#C7CCDA" }}><span aria-hidden="true" style={{ flex: "0 0 6px", height: "6px", marginTop: "9px", borderRadius: "50%", background: "var(--accent)" }}></span><span>[Topics you speak on: e.g. EU AI Act readiness, AI risk for boards]</span></li></ul>
+<ul style={{ position: "relative", margin: "0", padding: "0", listStyle: "none", display: "flex", flexDirection: "column", gap: "10px", flexGrow: "1" }}>{speaking.map((t) => (
+<li key={t.id} style={{ display: "flex", gap: "10px", fontSize: "15px", lineHeight: "1.5", color: "#C7CCDA" }}><span aria-hidden="true" style={{ flex: "0 0 6px", height: "6px", marginTop: "9px", borderRadius: "50%", background: "var(--accent)" }}></span><span>{t.title}</span></li>
+))}
+</ul>
 <Link href="/contact" style={{ position: "relative", color: "var(--accent)", fontWeight: "700", textDecoration: "none" }}>Invite me to speak →</Link>
 </div>
 <div style={{ position: "relative", overflow: "hidden", background: "#0C0D10", color: "#FFFFFF", borderRadius: "24px", padding: "40px", display: "flex", flexDirection: "column", gap: "18px" }}>
@@ -196,25 +153,28 @@ export default async function ProfilePage() {
 <h3 style={{ position: "relative", margin: "0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "28px", fontWeight: "800" }}>Researcher</h3>
 <p style={{ position: "relative", margin: "0", fontSize: "16px", lineHeight: "1.6", color: "#E2E4EA" }}>Peer-reviewed research on how regulation, security and privacy shape emerging AI technologies.</p>
 <ul style={{ position: "relative", margin: "0", padding: "0", listStyle: "none", display: "flex", flexDirection: "column", flexGrow: "1" }}>
-<li style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "14px 0" }}>
-<div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "10px" }}><span style={{ padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "700", background: "var(--accent)", color: "#0C0D10" }}>Published</span><span style={{ fontSize: "14px", fontWeight: "600", color: "#A9AEBB" }}>2025</span></div>
-<a href="https://doi.org/10.1007/s44163-025-00736-5" style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px", fontWeight: "600", lineHeight: "1.5", color: "#FFFFFF", textDecoration: "none" }}>Comparative analysis of AI regulation for fintech cybersecurity and privacy in the European Union and Qatar</a>
-<span style={{ fontSize: "14px", lineHeight: "1.5", color: "#A9AEBB" }}>Discover Artificial Intelligence (Springer Nature), Vol. 6 · with Hira Amin · HBKU</span>
+{research.map((r) => {
+const links = parseLinkLines(r.links);
+const published = r.kind === "Published";
+return (
+<li key={r.id} style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "14px 0" }}>
+<div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "10px" }}><span style={{ padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "700", ...(published ? { background: "var(--accent)", color: "#0C0D10" } : { background: "transparent", color: "#E2E4EA", border: "1px solid #4A4E58" }) }}>{r.kind}</span><span style={{ fontSize: "14px", fontWeight: "600", color: "#A9AEBB" }}>{r.year}</span></div>
+{r.url ? (
+<a href={r.url} style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px", fontWeight: "600", lineHeight: "1.5", color: "#FFFFFF", textDecoration: "none" }}>{r.title}</a>
+) : (
+<span style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px", fontWeight: "600", lineHeight: "1.5", color: "#FFFFFF" }}>{r.title}</span>
+)}
+{r.venue ? <span style={{ fontSize: "14px", lineHeight: "1.5", color: "#A9AEBB" }}>{r.venue}</span> : null}
+{links.length > 0 ? (
 <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "4px" }}>
-<a href="https://link.springer.com/article/10.1007/s44163-025-00736-5" style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "8px 14px", borderRadius: "999px", border: "1px solid var(--accent)", color: "var(--accent)", fontSize: "14px", fontWeight: "700", textDecoration: "none" }}>Read the paper on Springer<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"></path></svg></a>
-<a href="https://elmi.hbku.edu.qa/en/publications/comparative-analysis-of-ai-regulation-for-fintech-cybersecurity-a/" style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "8px 14px", borderRadius: "999px", border: "1px solid var(--accent)", color: "var(--accent)", fontSize: "14px", fontWeight: "700", textDecoration: "none" }}>Read the paper on HBKU<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"></path></svg></a>
+{links.map((l) => (
+<a key={l.href} href={l.href} style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "8px 14px", borderRadius: "999px", border: "1px solid var(--accent)", color: "var(--accent)", fontSize: "14px", fontWeight: "700", textDecoration: "none" }}>{l.label}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"></path></svg></a>
+))}
 </div>
+) : null}
 </li>
-<li style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "14px 0" }}>
-<div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "10px" }}><span style={{ padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "700", background: "transparent", color: "#E2E4EA", border: "1px solid #4A4E58" }}>Under review</span><span style={{ fontSize: "14px", fontWeight: "600", color: "#A9AEBB" }}>[Year]</span></div>
-<span style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px", fontWeight: "600", lineHeight: "1.5", color: "#FFFFFF" }}>Holistic Cybersecurity and Privacy Framework for Embodied AI</span>
-<span style={{ fontSize: "14px", lineHeight: "1.5", color: "#A9AEBB" }}>Higher Colleges of Technology (HCT), UAE</span>
-</li>
-<li style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "14px 0" }}>
-<div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "10px" }}><span style={{ padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "700", background: "transparent", color: "#E2E4EA", border: "1px solid #4A4E58" }}>Under review</span><span style={{ fontSize: "14px", fontWeight: "600", color: "#A9AEBB" }}>[Year]</span></div>
-<span style={{ fontFamily: "Inter, system-ui, sans-serif", fontSize: "14px", fontWeight: "600", lineHeight: "1.5", color: "#FFFFFF" }}>Autonomous Vehicle Cybersecurity Governance and the Sovereignty Gap for Importing</span>
-<span style={{ fontSize: "14px", lineHeight: "1.5", color: "#A9AEBB" }}>Hamad Bin Khalifa University (HBKU), Qatar</span>
-</li>
+);
+})}
 </ul>
 </div>
 </div>

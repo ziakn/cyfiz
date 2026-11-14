@@ -101,7 +101,7 @@ export default async function ArticlePage({ params }: Props) {
 <div aria-hidden="true" className="hero-grid" style={{ position: "absolute", inset: "0" }}></div>
 <div aria-hidden="true" style={{ position: "absolute", inset: "0", background: "linear-gradient(160deg, #FFD54A 0%, #FFC21A 50%, #F2A900 100%)", clipPath: "polygon(70% 0, 82% 0, 58% 100%, 46% 100%)", opacity: "0.85" }}></div>
 <div style={{ position: "absolute", left: "48px", right: "48px", bottom: "44px", display: "flex", flexDirection: "column", gap: "18px", maxWidth: "620px" }}>
-<img src="/logo-transparent.png" alt="" style={{ height: "36px", width: "auto", alignSelf: "flex-start" }} />
+<img src="/logo-cyfiz.png" alt="" style={{ height: "36px", width: "auto", alignSelf: "flex-start" }} />
 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "44px", fontWeight: "800", lineHeight: "1.12", letterSpacing: "-0.02em", color: "#FFFFFF" }}>{article.title}</span>
 <span style={{ alignSelf: "flex-start", padding: "6px 12px", borderRadius: "999px", background: "var(--accent)", color: "#0C0D10", fontSize: "13px", fontWeight: "700", letterSpacing: "0.06em", textTransform: "uppercase" }}>{article.tag}</span>
 </div>

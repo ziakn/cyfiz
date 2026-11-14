@@ -16,6 +16,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid credentials." }, { status: 401 });
   }
 
+  if (user.status === 0) {
+    return NextResponse.json({ error: "This account has been deactivated." }, { status: 403 });
+  }
+
   const token = createAuthToken({ id: user.id, email: user.email, role: user.role });
   const response = NextResponse.json({ success: true });
   response.cookies.set(AUTH_COOKIE_NAME, token, {

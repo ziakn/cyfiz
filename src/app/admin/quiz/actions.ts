@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { execute } from "@/lib/db";
+import { guard } from "@/lib/rbac";
 
 const REVALIDATE_PATHS = ["/admin/quiz", "/quiz", "/portal/dashboard", "/portal/quizzes"];
 
@@ -97,6 +98,8 @@ function getCsvValue(row: string[], headerMap: Map<string, number>, key: string)
 }
 
 export async function addQuizAction(formData: FormData) {
+  const denied = await guard("quizzes", "create");
+  if (denied) return { error: denied.error };
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const duration = Number(formData.get("duration_minutes") ?? 60);
@@ -118,6 +121,8 @@ export async function addQuizAction(formData: FormData) {
 }
 
 export async function editQuizAction(id: number, formData: FormData) {
+  const denied = await guard("quizzes", "update");
+  if (denied) return { error: denied.error };
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const duration = Number(formData.get("duration_minutes") ?? 60);
@@ -139,6 +144,8 @@ export async function editQuizAction(id: number, formData: FormData) {
 }
 
 export async function deleteQuizAction(id: number) {
+  const denied = await guard("quizzes", "delete");
+  if (denied) return { error: denied.error };
   try {
     await execute("DELETE FROM quizzes WHERE id = ?", [id]);
     revalidateQuizPaths();
@@ -149,6 +156,8 @@ export async function deleteQuizAction(id: number) {
 }
 
 export async function addQuestionAction(formData: FormData) {
+  const denied = await guard("quizzes", "create");
+  if (denied) return { error: denied.error };
   const quizId = Number(formData.get("quiz_id"));
   const question = String(formData.get("question") ?? "").trim();
   const optionA = String(formData.get("option_a") ?? "").trim();
@@ -179,6 +188,8 @@ export async function addQuestionAction(formData: FormData) {
 }
 
 export async function importQuestionsCsvAction(formData: FormData) {
+  const denied = await guard("quizzes", "create");
+  if (denied) return { error: denied.error };
   const quizId = Number(formData.get("quiz_id"));
   const file = formData.get("questions_csv");
 
@@ -258,6 +269,8 @@ export async function importQuestionsCsvAction(formData: FormData) {
 }
 
 export async function editQuestionAction(id: number, formData: FormData) {
+  const denied = await guard("quizzes", "update");
+  if (denied) return { error: denied.error };
   const question = String(formData.get("question") ?? "").trim();
   const optionA = String(formData.get("option_a") ?? "").trim();
   const optionB = String(formData.get("option_b") ?? "").trim();
@@ -283,6 +296,8 @@ export async function editQuestionAction(id: number, formData: FormData) {
 }
 
 export async function deleteQuestionAction(id: number) {
+  const denied = await guard("quizzes", "delete");
+  if (denied) return { error: denied.error };
   try {
     await execute("DELETE FROM quiz_questions WHERE id = ?", [id]);
     revalidateQuizPaths();

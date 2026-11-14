@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server";
-import { parseAuthCookieHeader, getSessionUserFromCookie } from "@/lib/auth";
+import { getAdminContext } from "@/lib/rbac";
 
-export async function GET(request: Request) {
-  const cookieValue = parseAuthCookieHeader(request.headers.get("cookie"));
-  const user = getSessionUserFromCookie(cookieValue);
-
-  if (!user) {
-    return NextResponse.json({ user: null }, { status: 401 });
-  }
-
-  return NextResponse.json({ user });
+export async function GET() {
+  const ctx = await getAdminContext();
+  if (!ctx) return NextResponse.json({ user: null }, { status: 401 });
+  return NextResponse.json({ user: ctx.user, permissions: ctx.perms });
 }

@@ -1,4 +1,5 @@
 import { RowDataPacket } from "mysql2";
+import { requirePage } from "@/lib/rbac";
 import { query } from "@/lib/db";
 import PortalUserList from "./PortalUserList";
 
@@ -41,6 +42,7 @@ export interface PortalUserAttemptAnswerRow extends RowDataPacket {
 }
 
 export default async function AdminPortalUsersPage() {
+  await requirePage("portal_users");
   const [users, registrations, attemptAnswers] = await Promise.all([
     query<PortalUserRow[]>(
       `SELECT pu.id, pu.first_name, pu.last_name, pu.email, pu.status, pu.created_at,

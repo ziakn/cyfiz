@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { SETTING_FIELDS, type SiteSettings } from "@/lib/siteSettings";
+import { useModulePerms } from "@/components/admin/AdminPermissions";
 import { saveSettingsAction } from "./actions";
 
 export default function SettingsForm({ initial }: { initial: SiteSettings }) {
+  const perms = useModulePerms("settings");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   async function save(formData: FormData) {
@@ -17,12 +19,12 @@ export default function SettingsForm({ initial }: { initial: SiteSettings }) {
       {SETTING_FIELDS.map((f) => (
         <div key={f.key} className="space-y-1">
           <label className="text-xs font-semibold text-[#3A3541] opacity-[0.6]">{f.label}</label>
-          <input name={f.key} defaultValue={initial[f.key]} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
+          <input name={f.key} defaultValue={initial[f.key]} disabled={!perms.update} className="w-full rounded-md border border-[#3A3541] border-opacity-[0.22] px-3 py-2 text-sm outline-none focus:border-[#9155FD]" />
           <p className="text-xs opacity-50">{f.hint}</p>
         </div>
       ))}
       {msg && <p className={`text-sm font-semibold ${msg.ok ? "text-green-600" : "text-red-500"}`}>{msg.text}</p>}
-      <button type="submit" className="rounded-md bg-[#9155FD] px-6 py-2 text-xs font-bold uppercase tracking-wider text-white">Save settings</button>
+      {perms.update && <button type="submit" className="rounded-md bg-[#9155FD] px-6 py-2 text-xs font-bold uppercase tracking-wider text-white">Save settings</button>}
     </form>
   );
 }

@@ -1,11 +1,12 @@
 import Link from "next/link";
 
-export type SiteNavKey = "home" | "insights" | "learn" | "profile" | "contact";
+export type SiteNavKey = "home" | "insights" | "learn" | "packages" | "profile" | "contact";
 
 const links: { key: SiteNavKey; href: string; label: string }[] = [
   { key: "home", href: "/", label: "Home" },
   { key: "insights", href: "/insights", label: "Insights" },
   { key: "learn", href: "/learn", label: "Learn" },
+  { key: "packages", href: "/packages", label: "Packages" },
   { key: "profile", href: "/profile", label: "Who@m!" },
 ];
 
@@ -14,9 +15,9 @@ export default function SiteNav({ active }: { active: SiteNavKey }) {
     <nav style={{ position: "relative", maxWidth: "1440px", margin: "0 auto", padding: "26px 40px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "16px", boxSizing: "border-box" }}>
       <Link href="/" aria-label="Cyfiz home" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-transparent.png" alt="Cyfiz" style={{ height: "52px", width: "auto", display: "block" }} />
+        <img src="/logo-cyfiz.png" alt="Cyfiz" style={{ height: "52px", width: "auto", display: "block" }} />
       </Link>
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "36px", fontSize: "19px", fontWeight: 500, letterSpacing: "0.02em" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "32px", fontSize: "19px", fontWeight: 500, letterSpacing: "0.02em" }}>
         {links.map((l) => (
           <Link
             key={l.key}

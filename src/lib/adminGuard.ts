@@ -1,10 +1,8 @@
-import { cookies } from "next/headers";
-import { AUTH_COOKIE_NAME, getSessionUserFromCookie } from "./auth";
+import { getAdminContext } from "./rbac";
 
-/** Throws unless the request carries a valid admin session. Use at the top of every admin server action. */
+/** Throws unless the request carries a valid, active admin session. Prefer `guard(module, action)` from ./rbac. */
 export async function requireAdmin() {
-  const store = await cookies();
-  const user = getSessionUserFromCookie(store.get(AUTH_COOKIE_NAME)?.value ?? null);
-  if (!user) throw new Error("Unauthorized");
-  return user;
+  const ctx = await getAdminContext();
+  if (!ctx) throw new Error("Unauthorized");
+  return ctx.user;
 }

@@ -31,7 +31,7 @@ function escapeHtml(value: string) {
 export async function sendPasswordResetEmail({ to, resetUrl }: { to: string; resetUrl: string }) {
   const escapedResetUrl = escapeHtml(resetUrl);
   const appOrigin = new URL(resetUrl).origin;
-  const logoUrl = `${appOrigin}/logo-transparent.png`;
+  const logoUrl = `${appOrigin}/logo-cyfiz.png`;
 
   const result = await transporter.sendMail({
     from: process.env.SMTP_FROM || "\"Cyfiz\" <no-reply@cyfiz.com>",

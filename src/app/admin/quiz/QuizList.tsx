@@ -1,5 +1,6 @@
 "use client";
 
+import { useModulePerms } from "@/components/admin/AdminPermissions";
 import { useState } from "react";
 import StatusToggle from "@/components/admin/StatusToggle";
 import { toggleStatusAction } from "../actions";
@@ -47,6 +48,7 @@ export default function QuizList({
   initialQuizzes: AdminQuiz[];
   initialQuestions: AdminQuestion[];
 }) {
+  const perms = useModulePerms("quizzes");
   const [quizModal, setQuizModal] = useState<{ open: boolean; data: Partial<AdminQuiz> | null }>({ open: false, data: null });
   const [questionModal, setQuestionModal] = useState<{ open: boolean; data: Partial<AdminQuestion> | null; quizId?: number }>({ open: false, data: null });
   const [selectedQuizId, setSelectedQuizId] = useState(initialQuizzes[0]?.id ?? 0);
@@ -70,9 +72,11 @@ export default function QuizList({
           <h1 className="text-2xl font-bold text-[#3A3541]">Quiz Bank</h1>
           <p className="mt-1 text-sm text-[#3A3541] opacity-60">Manage portal quizzes, questions, answers, explanations, and publishing.</p>
         </div>
+        {perms.create && (
         <button onClick={() => setQuizModal({ open: true, data: null })} className="rounded-md bg-[#9155FD] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white">
           Add Quiz
         </button>
+        )}
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
@@ -88,7 +92,7 @@ export default function QuizList({
                   <h2 className="font-bold text-[#3A3541]">{quiz.title}</h2>
                   <p className="mt-1 line-clamp-2 text-xs text-[#3A3541] opacity-60">{quiz.description}</p>
                 </div>
-                <StatusToggle initialStatus={quiz.status} onToggle={(status) => toggleQuiz(quiz.id, status)} />
+                <StatusToggle initialStatus={quiz.status} disabled={!perms.update} onToggle={(status) => toggleQuiz(quiz.id, status)} />
               </div>
               <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-bold text-[#3A3541] opacity-60">
                 <span>{quiz.question_count} questions</span>
@@ -98,8 +102,8 @@ export default function QuizList({
                 <span>{quiz.passing_percentage}% pass</span>
               </div>
               <div className="mt-4 flex gap-2">
-                <span onClick={(event) => { event.stopPropagation(); setQuizModal({ open: true, data: quiz }); }} className="rounded-md border border-[#3A3541]/20 px-3 py-1 text-xs font-bold text-[#3A3541]">Edit</span>
-                <span onClick={(event) => { event.stopPropagation(); actions.deleteQuizAction(quiz.id); }} className="rounded-md border border-red-200 px-3 py-1 text-xs font-bold text-red-500">Delete</span>
+                {perms.update && <span onClick={(event) => { event.stopPropagation(); setQuizModal({ open: true, data: quiz }); }} className="rounded-md border border-[#3A3541]/20 px-3 py-1 text-xs font-bold text-[#3A3541]">Edit</span>}
+                {perms.delete && <span onClick={(event) => { event.stopPropagation(); actions.deleteQuizAction(quiz.id); }} className="rounded-md border border-red-200 px-3 py-1 text-xs font-bold text-red-500">Delete</span>}
               </div>
             </button>
           ))}
@@ -116,6 +120,7 @@ export default function QuizList({
               >
                 CSV Template
               </a>
+              {perms.create && (<>
               <form
                 action={async (formData) => {
                   const result = await actions.importQuestionsCsvAction(formData);
@@ -153,6 +158,7 @@ export default function QuizList({
               >
                 Add Question
               </button>
+              </>)}
             </div>
           </div>
 
@@ -167,11 +173,11 @@ export default function QuizList({
                       <p className="text-xs font-bold uppercase tracking-wider text-[#9155FD]">Q{question.sort_order || question.id} · Answer {question.correct_option}</p>
                       <p className="mt-2 text-sm font-semibold text-[#3A3541]">{question.question}</p>
                     </div>
-                    <StatusToggle initialStatus={question.status} onToggle={(status) => toggleQuestion(question.id, status)} />
+                    <StatusToggle initialStatus={question.status} disabled={!perms.update} onToggle={(status) => toggleQuestion(question.id, status)} />
                   </div>
                   <div className="mt-3 flex gap-2">
-                    <button onClick={() => setQuestionModal({ open: true, data: question })} className="rounded-md border border-[#3A3541]/20 px-3 py-1 text-xs font-bold text-[#3A3541]">Edit</button>
-                    <button onClick={() => actions.deleteQuestionAction(question.id)} className="rounded-md border border-red-200 px-3 py-1 text-xs font-bold text-red-500">Delete</button>
+                    {perms.update && <button onClick={() => setQuestionModal({ open: true, data: question })} className="rounded-md border border-[#3A3541]/20 px-3 py-1 text-xs font-bold text-[#3A3541]">Edit</button>}
+                    {perms.delete && <button onClick={() => actions.deleteQuestionAction(question.id)} className="rounded-md border border-red-200 px-3 py-1 text-xs font-bold text-red-500">Delete</button>}
                   </div>
                 </div>
               ))

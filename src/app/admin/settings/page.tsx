@@ -1,9 +1,11 @@
 import { getSiteSettings } from "@/lib/siteData";
+import { requirePage } from "@/lib/rbac";
 import SettingsForm from "./SettingsForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
+  await requirePage("settings");
   const settings = await getSiteSettings();
   return (
     <div className="max-w-2xl space-y-6">

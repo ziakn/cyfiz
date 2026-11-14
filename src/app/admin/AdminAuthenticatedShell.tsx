@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "./LogoutButton";
+import { AdminPermissionsProvider } from "@/components/admin/AdminPermissions";
+import { MODULES, type PermissionMap } from "@/lib/permissions";
 
 interface AdminAuthenticatedShellProps {
   children: React.ReactNode;
@@ -10,10 +12,17 @@ interface AdminAuthenticatedShellProps {
     email: string;
     role: string;
   };
+  permissions: PermissionMap;
 }
 
-export default function AdminAuthenticatedShell({ children, user }: AdminAuthenticatedShellProps) {
+const navClass = (active: boolean) =>
+  `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]${active ? " admin-nav-active" : ""}`;
+
+export default function AdminAuthenticatedShell({ children, user, permissions }: AdminAuthenticatedShellProps) {
   const pathname = usePathname();
+  const groups = Array.from(new Set(MODULES.map((m) => m.group)))
+    .map((name) => ({ name, items: MODULES.filter((m) => m.group === name && permissions[m.key]?.view) }))
+    .filter((g) => g.items.length > 0);
 
   if (pathname === "/admin" || pathname === "/admin/login") {
     return (
@@ -24,69 +33,34 @@ export default function AdminAuthenticatedShell({ children, user }: AdminAuthent
   }
 
   return (
+    <AdminPermissionsProvider value={permissions}>
     <div className="admin-root flex min-h-screen bg-[#F6F6F3] text-[#3A3541]">
       <aside className="admin-side fixed inset-y-0 left-0 z-20 w-64 bg-[#0C0D10] shadow-[0_4px_24px_0_rgba(58,53,65,0.1)] transition-transform sm:translate-x-0">
         <div className="flex h-full flex-col overflow-y-auto px-4 py-6">
           <div className="mb-8 flex items-center gap-3 px-2">
-            <img src="/logo-transparent.png" alt="Cyfiz Logo" className="h-8 w-auto" />
+            <img src="/logo-cyfiz.png" alt="Cyfiz Logo" className="h-8 w-auto" />
             <span className="text-xl font-bold uppercase tracking-tight text-[#3A3541] opacity-[0.87]">Cyfiz Admin</span>
           </div>
 
           <nav className="flex-1 space-y-1">
-            <Link href="/admin/dashboard" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
+            <Link href="/admin/dashboard" className={navClass(pathname === "/admin/dashboard")}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
               Dashboard
             </Link>
 
-            <div className="pt-4">
-              <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Content Management</p>
-              <div className="mt-2 space-y-1">
-                <Link href="/admin/articles" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                  Articles
-                </Link>
-                <Link href="/admin/trainings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg>
-                  Trainings
-                </Link>
+            {groups.map((g) => (
+              <div key={g.name} className="pt-4">
+                <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">{g.name}</p>
+                <div className="mt-2 space-y-1">
+                  {g.items.map((m) => (
+                    <Link key={m.key} href={m.href} className={navClass(pathname.startsWith(m.href))}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle></svg>
+                      {m.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-
-            <div className="pt-4">
-              <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Learn & Audience</p>
-              <div className="mt-2 space-y-1">
-                <Link href="/admin/quiz" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                  Quizzes
-                </Link>
-                <Link href="/admin/messages" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg>
-                  Contact Messages
-                </Link>
-                <Link href="/admin/subscribers" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg>
-                  Subscribers
-                </Link>
-                <Link href="/admin/portal-users" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="m17 11 2 2 4-4"></path></svg>
-                  Portal Users
-                </Link>
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#3A3541] opacity-[0.38]">Administration</p>
-              <div className="mt-2 space-y-1">
-                <Link href="/admin/users" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                  User Management
-                </Link>
-                <Link href="/admin/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[#F9FAFB] hover:text-[#9155FD]">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                  Settings
-                </Link>
-              </div>
-            </div>
+            ))}
           </nav>
 
           <div className="mt-auto border-t border-[#3A3541] border-opacity-[0.12] pt-4">
@@ -123,5 +97,6 @@ export default function AdminAuthenticatedShell({ children, user }: AdminAuthent
         <main className="p-8">{children}</main>
       </div>
     </div>
+    </AdminPermissionsProvider>
   );
 }

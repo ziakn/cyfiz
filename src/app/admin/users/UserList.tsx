@@ -4,16 +4,22 @@ import { useState } from "react";
 import { addUserAction, editUserAction, removeUserAction, updateUserStatusAction } from "./actions";
 import DeleteConfirmationModal from "@/components/admin/DeleteConfirmationModal";
 import StatusToggle from "@/components/admin/StatusToggle";
+import { useModulePerms } from "@/components/admin/AdminPermissions";
 
 interface AdminUser {
   id: number;
   email: string;
   role: string;
+  roleId: number | null;
+  roleName: string;
   status: number;
   createdAt: string;
 }
 
-export default function UserList({ initialUsers, currentUserEmail }: { initialUsers: AdminUser[], currentUserEmail: string }) {
+export interface RoleOption { id: number; name: string }
+
+export default function UserList({ initialUsers, currentUserEmail, roles }: { initialUsers: AdminUser[]; currentUserEmail: string; roles: RoleOption[] }) {
+  const perms = useModulePerms("admin_users");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +36,7 @@ export default function UserList({ initialUsers, currentUserEmail }: { initialUs
 
   const filteredUsers = initialUsers.filter(u => 
     u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    u.role.toLowerCase().includes(searchQuery.toLowerCase())
+    u.roleName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -101,6 +107,7 @@ export default function UserList({ initialUsers, currentUserEmail }: { initialUs
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
             Export
           </button>
+          {perms.create && (
           <button 
             onClick={() => { setEditingUser(null); setIsModalOpen(true); }}
             className="inline-flex items-center gap-2 rounded-md bg-[#9155FD] px-6 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[0_2px_10px_0_rgba(145,85,253,0.3)] transition-all hover:bg-[#804BDF]"
@@ -108,6 +115,7 @@ export default function UserList({ initialUsers, currentUserEmail }: { initialUs
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             Add New User
           </button>
+          )}
         </div>
       </div>
 
@@ -145,13 +153,14 @@ export default function UserList({ initialUsers, currentUserEmail }: { initialUs
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-[#3A3541] opacity-[0.6]">
-                    {admin.role.charAt(0).toUpperCase() + admin.role.slice(1)}
+                    {admin.roleName}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <StatusToggle 
                         initialStatus={admin.status} 
                         onToggle={(newStatus) => handleStatusToggle(admin.id, newStatus)} 
+                        disabled={!perms.update || admin.email === currentUserEmail}
                       />
                       <span className={`text-[10px] font-bold uppercase tracking-wider ${
                         admin.status === 1 ? "text-[#56CA00]" : "text-gray-400"
@@ -165,13 +174,15 @@ export default function UserList({ initialUsers, currentUserEmail }: { initialUs
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-1">
+                      {perms.update && (
                       <button 
                         onClick={() => { setEditingUser(admin); setIsModalOpen(true); }}
                         className="p-1.5 text-[#3A3541] opacity-[0.54] hover:text-[#9155FD] hover:opacity-100"
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                       </button>
-                      {admin.email !== currentUserEmail && (
+                      )}
+                      {perms.delete && admin.email !== currentUserEmail && (
                         <button 
                           onClick={() => handleDeleteClick(admin)}
                           className="p-1.5 text-[#3A3541] opacity-[0.54] hover:text-[#FF4D49] hover:opacity-100"
@@ -258,12 +269,12 @@ export default function UserList({ initialUsers, currentUserEmail }: { initialUs
               <div>
                 <label className="block text-xs font-semibold text-[#3A3541] opacity-[0.38] uppercase mb-1">Role</label>
                 <select 
-                  name="role" 
-                  defaultValue={editingUser?.role || "editor"}
+                  name="roleId" 
+                  required
+                  defaultValue={editingUser?.roleId ?? roles.find((r) => r.name === "Viewer")?.id ?? roles[0]?.id}
                   className="w-full rounded-md border border-[#3A3541] border-opacity-[0.12] bg-[#F9FAFB] px-4 py-2.5 text-sm focus:border-[#9155FD] focus:outline-none"
                 >
-                  <option value="admin">Admin</option>
-                  <option value="editor">Editor</option>
+                  {roles.map((r) => (<option key={r.id} value={r.id}>{r.name}</option>))}
                 </select>
               </div>
               

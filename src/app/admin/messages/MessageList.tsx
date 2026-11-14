@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useModulePerms } from "@/components/admin/AdminPermissions";
 import { deleteMessageAction, setMessageHandledAction } from "./actions";
 
 export interface MessageRow {
@@ -17,6 +18,7 @@ export interface MessageRow {
 }
 
 export default function MessageList({ initial }: { initial: MessageRow[] }) {
+  const perms = useModulePerms("messages");
   const [filter, setFilter] = useState<"new" | "all">("new");
   const rows = initial.filter((m) => filter === "all" || m.status === 1);
 
@@ -46,8 +48,8 @@ export default function MessageList({ initial }: { initial: MessageRow[] }) {
           <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed">{m.message}</p>
           <div className="mt-4 flex gap-4 text-xs font-bold uppercase">
             <a href={`mailto:${m.email}?subject=Re: your message to Cyfiz`} className="text-[#9155FD]">Reply</a>
-            <button onClick={() => setMessageHandledAction(m.id, m.status === 1)} className="text-[#3A3541]">{m.status === 1 ? "Mark handled" : "Mark new"}</button>
-            <button onClick={async () => { if (confirm("Delete this message?")) await deleteMessageAction(m.id); }} className="text-red-500">Delete</button>
+            {perms.update && <button onClick={() => setMessageHandledAction(m.id, m.status === 1)} className="text-[#3A3541]">{m.status === 1 ? "Mark handled" : "Mark new"}</button>}
+            {perms.delete && <button onClick={async () => { if (confirm("Delete this message?")) await deleteMessageAction(m.id); }} className="text-red-500">Delete</button>}
           </div>
         </div>
       ))}

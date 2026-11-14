@@ -9,7 +9,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "migrate": "node scripts/migrate.mjs",
-    "deploy": "./deploy.sh"
+    "deploy": "./deploy.sh",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "sync:permissions": "node scripts/sync-permissions.mjs"
   },
   "dependencies": {
     "@tiptap/extension-link": "^3.23.4",

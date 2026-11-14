@@ -2,12 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { execute } from "@/lib/db";
-import { requireAdmin } from "@/lib/adminGuard";
+import { guard } from "@/lib/rbac";
 import { SETTING_FIELDS } from "@/lib/siteSettings";
 
 export async function saveSettingsAction(formData: FormData) {
+  const denied = await guard("settings", "update");
+  if (denied) return { error: denied.error };
   try {
-    await requireAdmin();
     for (const f of SETTING_FIELDS) {
       const value = String(formData.get(f.key) ?? "").trim();
       if (f.key.endsWith("_url") && value && !/^https?:\/\//i.test(value)) {

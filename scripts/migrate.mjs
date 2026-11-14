@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import mysql from "mysql2/promise";
+import { syncPermissions } from "./sync-permissions.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -53,6 +54,7 @@ try {
     ran++;
   }
   console.log(ran ? `Done: ${ran} migration(s) applied.` : "Database is up to date.");
+  await syncPermissions(conn);
 } finally {
   await conn.end();
 }

@@ -15,7 +15,6 @@ const pool = mysql.createPool({
 type QueryParams = Array<string | number | boolean | null | Date>;
 
 const ALLOWED_STATUS_TABLES = new Set([
-  "admin_users",
   "articles",
   "contact_messages",
   "newsletter_subscribers",
@@ -38,27 +37,35 @@ export async function execute(sql: string, params: QueryParams = []) {
 
 export async function getAdminUserByEmail(email: string) {
   const rows = await query<RowDataPacket[]>(
-    "SELECT id, email, password_hash AS passwordHash, role FROM admin_users WHERE email = ? LIMIT 1",
+    "SELECT id, email, password_hash AS passwordHash, role, status FROM admin_users WHERE email = ? LIMIT 1",
     [email]
   );
   return rows[0] ?? null;
 }
 
 export async function getAllAdminUsers() {
-  return await query<RowDataPacket[]>(
-    "SELECT id, email, role, status, created_at AS createdAt FROM admin_users ORDER BY created_at DESC"
-  );
+  try {
+    return await query<RowDataPacket[]>(
+      `SELECT u.id, u.email, u.role, u.role_id AS roleId, COALESCE(r.name, u.role) AS roleName, u.status, u.created_at AS createdAt
+       FROM admin_users u LEFT JOIN roles r ON r.id = u.role_id ORDER BY u.created_at DESC`
+    );
+  } catch {
+    // roles table not migrated yet
+    return await query<RowDataPacket[]>(
+      "SELECT id, email, role, NULL AS roleId, role AS roleName, status, created_at AS createdAt FROM admin_users ORDER BY created_at DESC"
+    );
+  }
 }
 
-export async function createAdminUser(data: { email: string; passwordHash: string; role: string }) {
+export async function createAdminUser(data: { email: string; passwordHash: string; roleId: number; roleSlug: string }) {
   const result = await execute(
-    "INSERT INTO admin_users (email, password_hash, role) VALUES (?, ?, ?)",
-    [data.email, data.passwordHash, data.role]
+    "INSERT INTO admin_users (email, password_hash, role, role_id) VALUES (?, ?, ?, ?)",
+    [data.email, data.passwordHash, data.roleSlug, data.roleId]
   );
   return result.insertId;
 }
 
-export async function updateAdminUser(id: number, data: { email?: string; passwordHash?: string; role?: string }) {
+export async function updateAdminUser(id: number, data: { email?: string; passwordHash?: string; roleId?: number; roleSlug?: string }) {
   const updates: string[] = [];
   const values: QueryParams = [];
 
@@ -70,9 +77,9 @@ export async function updateAdminUser(id: number, data: { email?: string; passwo
     updates.push("password_hash = ?");
     values.push(data.passwordHash);
   }
-  if (data.role !== undefined) {
-    updates.push("role = ?");
-    values.push(data.role);
+  if (data.roleId !== undefined) {
+    updates.push("role_id = ?", "role = ?");
+    values.push(data.roleId, data.roleSlug ?? "");
   }
 
   if (updates.length === 0) return;

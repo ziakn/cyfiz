@@ -3,6 +3,7 @@
 import { useState } from "react";
 import StatusToggle from "@/components/admin/StatusToggle";
 import { toggleStatusAction } from "../actions";
+import { useModulePerms } from "@/components/admin/AdminPermissions";
 import { addTrainingAction, deleteTrainingAction, editTrainingAction } from "./actions";
 
 export interface TrainingRow {
@@ -22,6 +23,7 @@ const label = "text-xs font-semibold text-[#3A3541] opacity-[0.6]";
 const CATEGORIES = ["Cybersecurity", "Privacy", "AI Governance", "AI Security", "Robotics"];
 
 export default function TrainingList({ initial }: { initial: TrainingRow[] }) {
+  const perms = useModulePerms("trainings");
   const [modal, setModal] = useState<{ open: boolean; row: TrainingRow | null }>({ open: false, row: null });
   const [q, setQ] = useState("");
   const rows = initial.filter((r) => (r.title + r.category).toLowerCase().includes(q.toLowerCase()));
@@ -43,9 +45,11 @@ export default function TrainingList({ initial }: { initial: TrainingRow[] }) {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4 rounded-lg bg-white p-6 shadow-[0_2px_10px_0_rgba(58,53,65,0.1)]">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search trainings" className={`${input} max-w-sm`} />
+        {perms.create && (
         <button onClick={() => setModal({ open: true, row: null })} className="rounded-md bg-[#9155FD] px-6 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#804BDF]">
           Add Training
         </button>
+        )}
       </div>
 
       <div className="overflow-hidden rounded-lg bg-white shadow-[0_2px_10px_0_rgba(58,53,65,0.1)]">
@@ -61,11 +65,11 @@ export default function TrainingList({ initial }: { initial: TrainingRow[] }) {
                 <td className="px-6 py-4">{[r.format, r.duration].filter(Boolean).join(" · ") || "—"}</td>
                 <td className="px-6 py-4">{r.sort_order}</td>
                 <td className="px-6 py-4">
-                  <StatusToggle initialStatus={r.status} onToggle={async (s) => (await toggleStatusAction("trainings", r.id, s, ["/admin/trainings", "/learn"])).success === true} />
+                  <StatusToggle initialStatus={r.status} disabled={!perms.update} onToggle={async (s) => (await toggleStatusAction("trainings", r.id, s, ["/admin/trainings", "/learn"])).success === true} />
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <button onClick={() => setModal({ open: true, row: r })} className="px-2 text-xs font-bold text-[#9155FD]">Edit</button>
-                  <button onClick={() => remove(r)} className="px-2 text-xs font-bold text-red-500">Delete</button>
+                  {perms.update && <button onClick={() => setModal({ open: true, row: r })} className="px-2 text-xs font-bold text-[#9155FD]">Edit</button>}
+                  {perms.delete && <button onClick={() => remove(r)} className="px-2 text-xs font-bold text-red-500">Delete</button>}
                 </td>
               </tr>
             ))}

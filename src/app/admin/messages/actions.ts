@@ -2,13 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { execute } from "@/lib/db";
-import { requireAdmin } from "@/lib/adminGuard";
+import { guard } from "@/lib/rbac";
 
 const msg = (e: unknown) => (e instanceof Error ? e.message : "Action failed");
 
 export async function setMessageHandledAction(id: number, handled: boolean) {
+  const denied = await guard("messages", "update");
+  if (denied) return { error: denied.error };
   try {
-    await requireAdmin();
     await execute("UPDATE contact_messages SET status = ? WHERE id = ?", [handled ? 0 : 1, id]);
     revalidatePath("/admin/messages");
     return { success: true };
@@ -16,8 +17,9 @@ export async function setMessageHandledAction(id: number, handled: boolean) {
 }
 
 export async function deleteMessageAction(id: number) {
+  const denied = await guard("messages", "delete");
+  if (denied) return { error: denied.error };
   try {
-    await requireAdmin();
     await execute("DELETE FROM contact_messages WHERE id = ?", [id]);
     revalidatePath("/admin/messages");
     return { success: true };

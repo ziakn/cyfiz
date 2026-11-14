@@ -23,9 +23,9 @@ export const metadata: Metadata = {
   title: "Cyfiz - Cyber Intelligence & Research",
   description: "Advanced cybersecurity frameworks, research summaries, and AI security intelligence.",
   icons: {
-    icon: "/favicon-transparent.png",
-    shortcut: "/favicon-transparent.png",
-    apple: "/logo-transparent.png",
+    icon: [{ url: "/favicon-cyfiz.png", type: "image/png" }, { url: "/favicon.ico", sizes: "any" }],
+    shortcut: "/favicon-cyfiz.png",
+    apple: "/apple-touch-icon.png",
   }
 };
 

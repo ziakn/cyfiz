@@ -4,6 +4,7 @@ import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { query } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { guard } from "@/lib/rbac";
 
 const ALLOWED_IMAGE_TABLES = new Set(["articles"]);
 
@@ -14,6 +15,8 @@ function getErrorMessage(error: unknown) {
 }
 
 export async function uploadImageAction(formData: FormData) {
+  const denied = await guard("articles", "update");
+  if (denied) return { error: denied.error };
   try {
     const file = formData.get("file") as File;
     const table = formData.get("table") as string;

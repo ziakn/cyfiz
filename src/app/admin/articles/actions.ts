@@ -3,15 +3,16 @@
 import { query } from "@/lib/db";
 import { toDateValue } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
-import { requireAdmin } from "@/lib/adminGuard";
+import { guard } from "@/lib/rbac";
 
 function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
 export async function deleteArticleAction(id: number) {
+  const denied = await guard("articles", "delete");
+  if (denied) return { error: denied.error };
   try {
-    await requireAdmin();
     await query("DELETE FROM articles WHERE id = ?", [id]);
     revalidatePath("/admin/articles");
     revalidatePath("/insights");
@@ -24,6 +25,8 @@ export async function deleteArticleAction(id: number) {
 }
 
 export async function addArticleAction(formData: FormData) {
+  const denied = await guard("articles", "create");
+  if (denied) return { error: denied.error };
   const title = formData.get("title") as string;
   const tag = formData.get("tag") as string;
   const excerpt = formData.get("excerpt") as string;
@@ -39,7 +42,6 @@ export async function addArticleAction(formData: FormData) {
   }
 
   try {
-    await requireAdmin();
     await query(
       "INSERT INTO articles (title, tag, excerpt, content, author_name, author_role, audience, read_time, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)",
       [title, tag, excerpt, content, authorName, authorRole, audience, readTime, date]
@@ -54,6 +56,8 @@ export async function addArticleAction(formData: FormData) {
   }
 }
 export async function editArticleAction(id: number, formData: FormData) {
+  const denied = await guard("articles", "update");
+  if (denied) return { error: denied.error };
   const title = formData.get("title") as string;
   const tag = formData.get("tag") as string;
   const excerpt = formData.get("excerpt") as string;
@@ -69,7 +73,6 @@ export async function editArticleAction(id: number, formData: FormData) {
   }
 
   try {
-    await requireAdmin();
     await query(
       "UPDATE articles SET title = ?, tag = ?, excerpt = ?, content = ?, author_name = ?, author_role = ?, audience = ?, read_time = ?, date = ? WHERE id = ?",
       [title, tag, excerpt, content, authorName, authorRole, audience, readTime, date, id]

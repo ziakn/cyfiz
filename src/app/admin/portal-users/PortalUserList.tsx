@@ -1,5 +1,6 @@
 "use client";
 
+import { useModulePerms } from "@/components/admin/AdminPermissions";
 import { useState } from "react";
 import DeleteConfirmationModal from "@/components/admin/DeleteConfirmationModal";
 import StatusToggle from "@/components/admin/StatusToggle";
@@ -15,6 +16,7 @@ export default function PortalUserList({
   registrations: PortalUserRegistrationRow[];
   attemptAnswers: PortalUserAttemptAnswerRow[];
 }) {
+  const perms = useModulePerms("portal_users");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedUserId, setExpandedUserId] = useState<number | null>(null);
   const [deleteModal, setDeleteModal] = useState<{ open: boolean; userId: number | null; email: string }>({
@@ -103,7 +105,7 @@ export default function PortalUserList({
                       <td className="px-6 py-4 text-sm font-bold text-[#3A3541]">{user.avg_score ? `${Number(user.avg_score).toFixed(0)}%` : "-"}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <StatusToggle initialStatus={user.status} onToggle={(status) => toggleStatus(user.id, status)} />
+                          <StatusToggle initialStatus={user.status} disabled={!perms.update} onToggle={(status) => toggleStatus(user.id, status)} />
                           <span className={`text-[10px] font-bold uppercase tracking-wider ${user.status === 1 ? "text-[#56CA00]" : "text-gray-400"}`}>
                             {user.status === 1 ? "Active" : "Inactive"}
                           </span>
@@ -113,9 +115,9 @@ export default function PortalUserList({
                         <button onClick={() => setExpandedUserId(isExpanded ? null : user.id)} className="rounded-md border border-[#3A3541]/20 px-3 py-1 text-xs font-bold text-[#3A3541]">
                           {isExpanded ? "Hide" : "View"}
                         </button>
-                        <button onClick={() => setDeleteModal({ open: true, userId: user.id, email: user.email })} className="ml-2 rounded-md border border-red-200 px-3 py-1 text-xs font-bold text-red-500">
+                        {perms.delete && (<button onClick={() => setDeleteModal({ open: true, userId: user.id, email: user.email })} className="ml-2 rounded-md border border-red-200 px-3 py-1 text-xs font-bold text-red-500">
                           Delete
-                        </button>
+                        </button>)}
                       </td>
                     </tr>
                     {isExpanded && (
