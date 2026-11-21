@@ -68,8 +68,8 @@ export default function CookiePolicyPage() {
               <h2 className="text-xl font-black text-[#111318]">Contact</h2>
               <p className="mt-3 text-sm leading-7 text-zinc-600">
                 Questions about this policy can be sent to{" "}
-                <a href="mailto:hello@cyfiz.ai" className="font-bold text-[#0C0D10] underline underline-offset-4">
-                  hello@cyfiz.ai
+                <a href="mailto:cyfiz.null@gmail.com" className="font-bold text-[#0C0D10] underline underline-offset-4">
+                  cyfiz.null@gmail.com
                 </a>.
               </p>
             </section>

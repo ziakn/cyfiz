@@ -1,6 +1,6 @@
 -- Starter data. Safe to re-run.
 INSERT INTO site_settings (setting_key, setting_value) VALUES
-('contact_email', 'cyfiz@cyfiz.com'),
+('contact_email', 'cyfiz.null@gmail.com'),
 ('linkedin_url', ''),
 ('x_url', ''),
 ('youtube_url', ''),

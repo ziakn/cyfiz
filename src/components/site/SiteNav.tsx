@@ -1,14 +1,17 @@
 import Link from "next/link";
+import { SHOW_LEARN, SHOW_PACKAGES } from "@/lib/siteFlags";
 
 export type SiteNavKey = "home" | "insights" | "learn" | "packages" | "profile" | "contact";
 
-const links: { key: SiteNavKey; href: string; label: string }[] = [
+const allLinks: { key: SiteNavKey; href: string; label: string }[] = [
   { key: "home", href: "/", label: "Home" },
   { key: "insights", href: "/insights", label: "Insights" },
   { key: "learn", href: "/learn", label: "Learn" },
   { key: "packages", href: "/packages", label: "Packages" },
   { key: "profile", href: "/profile", label: "Who@m!" },
 ];
+
+const links = allLinks.filter((l) => (l.key !== "learn" || SHOW_LEARN) && (l.key !== "packages" || SHOW_PACKAGES));
 
 export default function SiteNav({ active }: { active: SiteNavKey }) {
   return (

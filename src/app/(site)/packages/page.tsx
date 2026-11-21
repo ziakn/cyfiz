@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { SHOW_PACKAGES } from "@/lib/siteFlags";
 import SiteNav from "@/components/site/SiteNav";
 import SiteFooter from "@/components/site/SiteFooter";
 import NewsletterForm from "@/components/site/NewsletterForm";
@@ -64,6 +66,7 @@ function PackageCard({ p }: { p: SitePackage }) {
 }
 
 export default async function PackagesPage() {
+  if (!SHOW_PACKAGES) notFound();
   const packages = await getPublishedPackages();
 
   return (

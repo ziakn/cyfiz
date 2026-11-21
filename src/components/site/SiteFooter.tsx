@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SHOW_LEARN, SHOW_PACKAGES } from "@/lib/siteFlags";
 import { useSiteSettings } from "./SiteSettingsContext";
 
 const linkStyle = { color: "#CBD5E1", textDecoration: "none" } as const;
@@ -29,8 +30,8 @@ export default function SiteFooter() {
             <h3 style={{ margin: "0 0 4px", fontSize: "15px", color: "#FFFFFF" }}>Platform</h3>
             <Link href="/" style={linkStyle}>Home</Link>
             <Link href="/insights" style={linkStyle}>Insights</Link>
-            <Link href="/learn" style={linkStyle}>Learn</Link>
-            <Link href="/packages" style={linkStyle}>Packages</Link>
+            {SHOW_LEARN && <Link href="/learn" style={linkStyle}>Learn</Link>}
+            {SHOW_PACKAGES && <Link href="/packages" style={linkStyle}>Packages</Link>}
             <Link href="/profile" style={linkStyle}>Who@m!</Link>
             <Link href="/contact" style={linkStyle}>Contact</Link>
           </div>

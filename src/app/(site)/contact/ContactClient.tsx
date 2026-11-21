@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { SHOW_LEARN } from "@/lib/siteFlags";
 import SiteNav from "@/components/site/SiteNav";
 import SiteFooter from "@/components/site/SiteFooter";
 import { useSiteSettings } from "@/components/site/SiteSettingsContext";
@@ -151,7 +152,7 @@ export default function ContactClient() {
 <div style={{ background: "#FFFFFF", border: "1px solid #E5E7EB", borderRadius: "24px", padding: "28px 32px", display: "flex", flexDirection: "column", gap: "16px" }}>
 <h2 style={{ margin: "0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "20px", fontWeight: "800", color: "#111318" }}>Before you write</h2>
 <Link href="/insights" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", padding: "12px 0", borderBottom: "1px solid #E5E7EB", color: "#111318", textDecoration: "none", fontSize: "16px", fontWeight: "600" }}>Browse the latest insights<span aria-hidden="true" style={{ color: "#8A5F00" }}>→</span></Link>
-<Link href="/learn" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", padding: "12px 0", color: "#111318", textDecoration: "none", fontSize: "16px", fontWeight: "600" }}>Explore trainings &amp; quizzes<span aria-hidden="true" style={{ color: "#8A5F00" }}>→</span></Link>
+{SHOW_LEARN && (<Link href="/learn" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", padding: "12px 0", color: "#111318", textDecoration: "none", fontSize: "16px", fontWeight: "600" }}>Explore trainings &amp; quizzes<span aria-hidden="true" style={{ color: "#8A5F00" }}>→</span></Link>)}
 </div>
 </aside>
 

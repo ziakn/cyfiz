@@ -13,7 +13,7 @@ export type SiteSettingKey = (typeof SETTING_FIELDS)[number]["key"];
 export type SiteSettings = Record<SiteSettingKey, string>;
 
 export const DEFAULT_SETTINGS: SiteSettings = {
-  contact_email: "cyfiz@cyfiz.com",
+  contact_email: "cyfiz.null@gmail.com",
   linkedin_url: "",
   x_url: "",
   youtube_url: "",

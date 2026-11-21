@@ -140,7 +140,7 @@ export async function sendContactNotification(data: {
   message: string;
   to?: string;
 }) {
-  const to = process.env.CONTACT_TO || data.to || "cyfiz@cyfiz.com";
+  const to = process.env.CONTACT_TO || data.to || "cyfiz.null@gmail.com";
   const rows: [string, string][] = [
     ["Topic", data.topic],
     ["Name", data.name],

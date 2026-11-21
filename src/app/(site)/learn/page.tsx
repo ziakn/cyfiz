@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { SHOW_LEARN } from "@/lib/siteFlags";
 import { getPublishedQuizzes } from "@/lib/quizPortal";
 import { getPublishedTrainings } from "@/lib/siteData";
 import LearnClient, { type QuizItem, type TrainingItem } from "./LearnClient";
@@ -11,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function LearnPage() {
+  if (!SHOW_LEARN) notFound();
   const [trainingRows, quizRows] = await Promise.all([getPublishedTrainings(), getPublishedQuizzes()]);
 
   const trainings: TrainingItem[] = trainingRows.map((t) => ({

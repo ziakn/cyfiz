@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SHOW_LEARN } from "@/lib/siteFlags";
 import SiteNav from "@/components/site/SiteNav";
 import SiteFooter from "@/components/site/SiteFooter";
 import NewsletterForm from "@/components/site/NewsletterForm";
@@ -45,7 +46,7 @@ export default async function HomePage() {
 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
 <Link href="/insights" style={{ display: "flex", alignItems: "center", gap: "16px", background: "rgba(20,22,27,0.9)", border: "1px solid rgba(255,255,255,0.14)", color: "#FFFFFF", padding: "16px 20px", borderRadius: "18px", textDecoration: "none" }}><span aria-hidden="true" style={{ flex: "0 0 44px", width: "44px", height: "44px", borderRadius: "12px", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18h6M10 21h4"></path><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"></path></svg></span><span style={{ display: "flex", flexDirection: "column", gap: "2px" }}><span style={{ fontSize: "18px", fontWeight: "700" }}>Explore Insights</span><span style={{ fontSize: "14px", color: "#A9AEBB" }}>Expert analysis on security, privacy and AI</span></span></Link>
 <a href="#insights" style={{ display: "flex", alignItems: "center", gap: "16px", background: "rgba(20,22,27,0.9)", border: "1px solid rgba(255,255,255,0.14)", color: "#FFFFFF", padding: "16px 20px", borderRadius: "18px", textDecoration: "none" }}><span aria-hidden="true" style={{ flex: "0 0 44px", width: "44px", height: "44px", borderRadius: "12px", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></span><span style={{ display: "flex", flexDirection: "column", gap: "2px" }}><span style={{ fontSize: "18px", fontWeight: "700" }}>Frameworks &amp; Toolkits</span><span style={{ fontSize: "14px", color: "#A9AEBB" }}>Practical models you can put to work</span></span></a>
-<Link href="/learn" style={{ display: "flex", alignItems: "center", gap: "16px", background: "rgba(20,22,27,0.9)", border: "1px solid rgba(255,255,255,0.14)", color: "#FFFFFF", padding: "16px 20px", borderRadius: "18px", textDecoration: "none" }}><span aria-hidden="true" style={{ flex: "0 0 44px", width: "44px", height: "44px", borderRadius: "12px", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"></path><path d="M12 17h.01"></path></svg></span><span style={{ display: "flex", flexDirection: "column", gap: "2px" }}><span style={{ fontSize: "18px", fontWeight: "700" }}>Knowledge &amp; Quizzes</span><span style={{ fontSize: "14px", color: "#A9AEBB" }}>Test what you know, find the gaps</span></span></Link>
+{SHOW_LEARN && (<Link href="/learn" style={{ display: "flex", alignItems: "center", gap: "16px", background: "rgba(20,22,27,0.9)", border: "1px solid rgba(255,255,255,0.14)", color: "#FFFFFF", padding: "16px 20px", borderRadius: "18px", textDecoration: "none" }}><span aria-hidden="true" style={{ flex: "0 0 44px", width: "44px", height: "44px", borderRadius: "12px", background: "var(--accent)", color: "#0C0D10", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"></path><path d="M12 17h.01"></path></svg></span><span style={{ display: "flex", flexDirection: "column", gap: "2px" }}><span style={{ fontSize: "18px", fontWeight: "700" }}>Knowledge &amp; Quizzes</span><span style={{ fontSize: "14px", color: "#A9AEBB" }}>Test what you know, find the gaps</span></span></Link>)}
 </div>
 </div>
 </div>
@@ -85,6 +86,7 @@ export default async function HomePage() {
 </div>
 </section>
 
+{SHOW_LEARN && (<>
 {/* LEARN TEASER */}
 <section id="learn" style={{ background: "#FFFFFF" }}>
 <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "96px 24px", display: "flex", flexDirection: "column", gap: "40px" }}>
@@ -113,6 +115,7 @@ export default async function HomePage() {
 </div>
 </div>
 </section>
+</>)}
 
 <NewsletterForm variant="light" />
 

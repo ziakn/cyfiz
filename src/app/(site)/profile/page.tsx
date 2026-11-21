@@ -145,7 +145,10 @@ export default async function ProfilePage() {
 <li key={t.id} style={{ display: "flex", gap: "10px", fontSize: "15px", lineHeight: "1.5", color: "#C7CCDA" }}><span aria-hidden="true" style={{ flex: "0 0 6px", height: "6px", marginTop: "9px", borderRadius: "50%", background: "var(--accent)" }}></span><span>{t.title}</span></li>
 ))}
 </ul>
-<Link href="/contact" style={{ position: "relative", color: "var(--accent)", fontWeight: "700", textDecoration: "none" }}>Invite me to speak →</Link>
+<div style={{ position: "relative", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "20px" }}>
+<Link href="/contact" style={{ color: "var(--accent)", fontWeight: "700", textDecoration: "none" }}>Invite me to speak →</Link>
+<Link href="/insights" style={{ display: "inline-flex", alignItems: "center", padding: "8px 18px", borderRadius: "999px", border: "1px solid var(--accent)", color: "var(--accent)", fontWeight: "700", fontSize: "15px", textDecoration: "none" }}>Learn more</Link>
+</div>
 </div>
 <div style={{ position: "relative", overflow: "hidden", background: "#0C0D10", color: "#FFFFFF", borderRadius: "24px", padding: "40px", display: "flex", flexDirection: "column", gap: "18px" }}>
 <div aria-hidden="true" style={{ position: "absolute", inset: "0", background: "rgba(255,194,26,0.10)", clipPath: "polygon(78% 0, 100% 0, 100% 40%, 60% 0)" }}></div>
