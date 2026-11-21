@@ -14,7 +14,7 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const articles = await getPublishedArticles(3);
+  const articles = await getPublishedArticles(6);
 
   return (
     <>
